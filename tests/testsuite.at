@@ -1,0 +1,28 @@
+# Process this file with autom4te to create testsuite.
+
+AT_INIT
+
+AT_TESTED([blame])
+
+m4_defun([MAC_CHECK_STDERR], [
+if $at_diff $at_devnull stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+])
+
+m4_include([argv.at])
+m4_include([pairing.at])
+m4_include([rcs.at])
+m4_include([rev.at])
+m4_include([branch.at])
+m4_include([working.at])
+m4_include([date.at])
+m4_include([state.at])
+m4_include([author.at])
+m4_include([expand.at])
+m4_include([version.at])
+m4_include([suffixes.at])
+m4_include([mixed.at])
+m4_include([log.at])
+m4_include([rcsinit.at])

@@ -1,0 +1,195 @@
+AT_BANNER([[-k and --expand options.]])
+
+AT_SETUP([Default substitutions])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2001/01/01 01:01:01 \$
+1.1          (username 01-Jan-01): \$Header: $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+1.1          (username 01-Jan-01): \$Locker:  \$
+1.1          (username 01-Jan-01): \$Log: keywords,v \$
+1.1          (username 01-Jan-01): Revision 1.1  2001/01/01 01:01:01  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Default substitutions, with timezone])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2000-12-31 20:01:01-05 \$
+1.1          (username 01-Jan-01): \$Header: $testdir/keywords,v 1.1 2000-12-31 20:01:01-05 username Exp \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2000-12-31 20:01:01-05 username Exp \$
+1.1          (username 01-Jan-01): \$Locker:  \$
+1.1          (username 01-Jan-01): \$Log: keywords,v \$
+1.1          (username 01-Jan-01): Revision 1.1  2000-12-31 20:01:01-05  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -zEST $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Missing keyword substitution argument])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame $testdir/keywords,v -k]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Keys and values (-kkv)])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2001/01/01 01:01:01 \$
+1.1          (username 01-Jan-01): \$Header: $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+1.1          (username 01-Jan-01): \$Locker:  \$
+1.1          (username 01-Jan-01): \$Log: keywords,v \$
+1.1          (username 01-Jan-01): Revision 1.1  2001/01/01 01:01:01  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -kkv $testdir/keywords,v]], 0, expout, experr)
+AT_CHECK([[blame --expand=kv $testdir/keywords,v]], 0, expout, experr)
+AT_CHECK([[blame --expand kv $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Keys, values and locker (-kkvl)])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2001/01/01 01:01:01 \$
+1.1          (username 01-Jan-01): \$Header: $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp username \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2001/01/01 01:01:01 username Exp username \$
+1.1          (username 01-Jan-01): \$Locker: username \$
+1.1          (username 01-Jan-01): \$Log: keywords,v \$
+1.1          (username 01-Jan-01): Revision 1.1  2001/01/01 01:01:01  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -kkvl $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Keys only (-kk)])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author\$
+1.1          (username 01-Jan-01): \$Date\$
+1.1          (username 01-Jan-01): \$Header\$
+1.1          (username 01-Jan-01): \$Id\$
+1.1          (username 01-Jan-01): \$Locker\$
+1.1          (username 01-Jan-01): \$Log\$
+1.1          (username 01-Jan-01): Revision 1.1  2001/01/01 01:01:01  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): \$Name\$
+1.1          (username 01-Jan-01): \$RCSfile\$
+1.1          (username 01-Jan-01): \$Revision\$
+1.1          (username 01-Jan-01): \$Source\$
+1.1          (username 01-Jan-01): \$State\$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -kk $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Old keywords strings (-ko)])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author\$
+1.1          (username 01-Jan-01): \$Date\$
+1.1          (username 01-Jan-01): \$Header\$
+1.1          (username 01-Jan-01): \$Id\$
+1.1          (username 01-Jan-01): \$Locker\$
+1.1          (username 01-Jan-01): \$Log\$
+1.1          (username 01-Jan-01): \$Name\$
+1.1          (username 01-Jan-01): \$RCSfile\$
+1.1          (username 01-Jan-01): \$Revision\$
+1.1          (username 01-Jan-01): \$Source\$
+1.1          (username 01-Jan-01): \$State\$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -ko $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Binary image of old keywords strings (-kb)])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author\$
+1.1          (username 01-Jan-01): \$Date\$
+1.1          (username 01-Jan-01): \$Header\$
+1.1          (username 01-Jan-01): \$Id\$
+1.1          (username 01-Jan-01): \$Locker\$
+1.1          (username 01-Jan-01): \$Log\$
+1.1          (username 01-Jan-01): \$Name\$
+1.1          (username 01-Jan-01): \$RCSfile\$
+1.1          (username 01-Jan-01): \$Revision\$
+1.1          (username 01-Jan-01): \$Source\$
+1.1          (username 01-Jan-01): \$State\$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -kb $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Values only (-kv)])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): username
+1.1          (username 01-Jan-01): 2001/01/01 01:01:01
+1.1          (username 01-Jan-01): $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp
+1.1          (username 01-Jan-01): keywords,v 1.1 2001/01/01 01:01:01 username Exp
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): keywords,v
+1.1          (username 01-Jan-01): Revision 1.1  2001/01/01 01:01:01  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): keywords,v
+1.1          (username 01-Jan-01): 1.1
+1.1          (username 01-Jan-01): $testdir/keywords,v
+1.1          (username 01-Jan-01): Exp
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -kv $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Multiple substitution types])
+AT_KEYWORDS([expand])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -ko -kkvl $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

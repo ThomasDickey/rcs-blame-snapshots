@@ -1,0 +1,151 @@
+AT_BANNER([[-r and --revision options.]])
+
+AT_SETUP([No revision])
+AT_KEYWORDS([rev])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r -- $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame --revision -- $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Multiple revisions])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -r1.1 -r1.2 $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Single dot])
+AT_KEYWORDS([rev])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r. $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame --revision=. $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Valid trunk branch])
+AT_KEYWORDS([rev])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r1 $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid trunk branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -r4 $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid trunk branch and dot])
+AT_KEYWORDS([rev])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r1. $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid trunk branch and dot])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -r4. $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Dot and revision])
+AT_KEYWORDS([rev])
+cp $testdir/simple-1.1.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r.1 $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and late revision])
+AT_KEYWORDS([rev])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r.10 $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and early revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -r.0 $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Symbolic trunk branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -rfoo $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic trunk branch and dot])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -rfoo. $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic trunk branch and revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.1.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -rfoo.1 $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic trunk branch and late revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -rfoo.10 $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic trunk branch and early revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([symbol])
+AT_CHECK([[blame -rfoo.0 $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Symbolic revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -rbar $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and symbolic revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.1.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -r.foo $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic trunk branch and symbolic revision])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/simple-1.1.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -rfoo.foo $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid symbol])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([symbol])
+AT_CHECK([[blame -rbaz $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r.baz $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -rbaz. $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r1.baz $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

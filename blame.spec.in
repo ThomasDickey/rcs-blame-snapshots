@@ -1,0 +1,41 @@
+Summary: An RCS file annotator
+Name: @PACKAGE_TARNAME@
+Version: @PACKAGE_VERSION@
+Release: @RELEASE@
+Copyright: GPL Version 2
+Group: Development/Tools
+Source0: %{name}-%{version}.tar.gz
+URL: http://blame.sourceforge.net/
+Vendor: Michael Chapman
+Packager: Michael Chapman <@PACKAGE_BUGREPORT@>
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+Prefix: %{_prefix}
+
+%description
+Blame displays the last modification for each line in an RCS file.
+It is the RCS equivalent of CVS's "annotate" command.
+
+%prep
+%setup
+
+%build
+%{configure}
+%{__make}
+%{__make} check
+
+%install
+%{makeinstall}
+
+%clean
+if test "$RPM_BUILD_ROOT" != "/"; then
+	%{__rm} -rf $RPM_BUILD_ROOT
+fi
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog INSTALL NEWS README
+%{_bindir}/*
+%{_mandir}/*/*
+
+%changelog
+@NEWS@

@@ -1,0 +1,331 @@
+.de Id
+.ds Rv \\$3
+.ds Dt \\$4
+..
+.Id $Id: blame.1,v 1.2 2004/11/10 11:10:46 foonly Exp $
+.ds b \fBblame\fP
+.ds i \&\s-1ISO\s0
+.ds r \&\s-1RCS\s0
+.ds u \&\s-1UTC\s0
+.TH BLAME 1 \*(Dt "" ""
+.SH NAME
+\*b \- annotate RCS files
+.SH SYNOPSIS
+.B \*b
+.RI [ options ] " file " .\|.\|.
+.SH DESCRIPTION
+.B \*b
+outputs an annotated revision from each \*r file.
+An annotated RCS file describes the
+revision and date in which each line was added to the file, and the
+author of each line.
+.PP
+Pathnames matching an \*r suffix denote \*r files;
+all others denote working files.
+Names are paired as explained in
+.BR ci (1).
+.PP
+A revision is selected by options for revision or branch number,
+checkin date/time, author, or state.
+When the selection options
+are applied in combination,
+.B \*b
+retrieves the latest revision
+that satisfies all of them.
+If none of the selection options
+is specified,
+.B \*b
+retrieves the latest revision
+on the default branch (normally the trunk, see the
+.B \-b
+option of
+.BR rcs (1)).
+The options
+.BR "\-d " ( \-\^\-date ),
+.BR "\-s " ( \-\^\-state ),
+and
+.BR "\-w " ( \-\^\-author )
+retrieve from a single branch, the
+.I selected
+branch,
+which is specified by
+.BR "\-r " ( \-\-revision ),
+or the default branch.
+.PP
+.B \*b
+always performs keyword substitution (see
+.SM "KEYWORD SUBSTITUTION"
+in
+.BR co (1)).
+.SH OPTIONS
+.TP
+.BR \-r ", " \-\^\-revision "[=\fIrev\fP]"
+Retrieves the latest revision whose number is less than or equal to
+.IR rev .
+If
+.I rev
+indicates a branch rather than a revision,
+the latest revision on that branch is retrieved.
+If
+.I rev
+is omitted, the latest revision on the default branch
+(see the
+.B \-b
+option of
+.BR rcs (1))
+is annotated.
+If
+.I rev
+is
+.BR $ ,
+.B \*b
+determines the revision number from keyword values in the working file.
+Otherwise, a revision is composed of one or more numeric or symbolic fields
+separated by periods.
+If
+.I rev
+begins with a period,
+then the default branch (normally the trunk) is prepended to it.
+If
+.I rev
+is a branch number followed by a period,
+then the latest revision on that branch is used.
+The numeric equivalent of a symbolic field
+is specified with the
+.B \-n
+option of the commands
+.BR ci (1)
+and
+.BR rcs (1).
+.TP
+.BR \-kkv ", " \-\^\-expand "=kv"
+Generate keyword strings using the default form, e.g.\&
+.B "$\&Revision: \*(Rv $"
+for the
+.B Revision
+keyword.
+This is the default.
+.TP
+.BR \-kkvl ", " \-\^\-expand "=kvl"
+Like
+.BR \-kkv ,
+except that a locker's name is inserted into the value of the
+.BR Header ,
+.BR Id ,
+and
+.B Locker
+keyword strings
+if the given revision is currently locked.
+.TP
+.BR \-kk ", " \-\^\-expand "=k"
+Generate only keyword names in keyword strings; omit their values.
+See
+.SM "KEYWORD SUBSTITUTION"
+in
+.BR co (1).
+For example, for the
+.B Revision
+keyword, generate the string
+.B $\&Revision$
+instead of
+.BR "$\&Revision: \*(Rv $" .
+Log messages are inserted after
+.B $\&Log$
+keywords even if
+this option
+is specified.
+.TP
+.BR \-ko ", " \-\^\-expand "=o"
+Generate the old keyword string,
+present in the working file just before it was checked in.
+For example, for the
+.B Revision
+keyword, generate the string
+.B "$\&Revision: 1.1 $"
+instead of
+.B "$\&Revision: \*(Rv $"
+if that is how the string appeared when the file was checked in.
+.TP
+.BR \-kb ", " \-\^\-expand "=b"
+Generate a binary image of the old keyword string.
+This acts like
+.BR \-ko ,
+except it performs all working file input and output in binary mode.
+This makes little difference on Posix and Unix hosts.
+.TP
+.BR \-kv ", " \-\^\-expand "=v"
+Generate only keyword values for keyword strings.
+For example, for the
+.B Revision
+keyword, generate the string
+.B \*(Rv
+instead of
+.BR "$\&Revision: \*(Rv $" .
+.TP
+.BR \-d ", " \-\^\-date "=\fIdate\fP"
+Retrieves the latest revision on the selected branch whose checkin date/time is
+less than or equal to
+.IR date .
+The date and time can be given in free format.
+The time zone
+.B LT
+stands for local time;
+other common time zone names are understood.
+For example, the following
+.IR date s
+are equivalent
+if local time is January 11, 1990, 8pm Pacific Standard Time,
+eight hours west of Coordinated Universal Time (\*u):
+.RS
+.LP
+.RS
+.nf
+.ta \w'\f3Thu, 11 Jan 1990 20:00:00 \-0800\fP  'u
+.ne 10
+\f38:00 pm lt\fP
+\f34:00 AM, Jan. 12, 1990\fP	default is \*u
+\f31990-01-12 04:00:00+00\fP	\*i 8601 (\*u)
+\f31990-01-11 20:00:00\-08\fP	\*i 8601 (local time)
+\f31990/01/12 04:00:00\fP	traditional \*r format
+\f3Thu Jan 11 20:00:00 1990 LT\fP	output of \f3ctime\fP(3) + \f3LT\fP
+\f3Thu Jan 11 20:00:00 PST 1990\fP	output of \f3date\fP(1)
+\f3Fri Jan 12 04:00:00 GMT 1990\fP
+\f3Thu, 11 Jan 1990 20:00:00 \-0800\fP	Internet RFC 822
+\f312-January-1990, 04:00 WET\fP
+.ta 4n +4n +4n +4n
+.fi
+.RE
+.LP
+Most fields in the date and time can be defaulted.
+The default time zone is normally \*u, but this can be overridden by the
+.B \-z
+option.
+The other defaults are determined in the order year, month, day,
+hour, minute, and second (most to least significant).  At least one of these
+fields must be provided.  For omitted fields that are of higher significance
+than the highest provided field, the time zone's current values are assumed.
+For all other omitted fields,
+the lowest possible values are assumed.
+For example, without
+.BR \-z ,
+the date
+.B "20, 10:30"
+defaults to
+10:30:00 \*u of the 20th of the \*u time zone's current month and year.
+The date/time must be quoted if it contains spaces.
+.RE
+.TP
+.BR \-s ", " \-\^\-state "=\fIstate\fP"
+Retrieves the latest revision on the selected branch whose state is set to
+.IR state .
+.TP
+.BR \-w ", " \-\^\-login "[=\fIlogin\fP]"
+Retrieves the latest revision on the selected branch which was checked in
+by the user with login name
+.IR login .
+If the argument
+.I login
+is
+omitted, the caller's login is assumed.
+.TP
+.BR \-V ", " \-\^\-version "[=\fIver\fP]"
+If no argument is supplied, print \*b's version number, and the version of
+\*r it emulates by default. Otherwise emulate the specified version.
+See
+.BR co (1)
+for details.
+.TP
+.BR \-x ", " \-\^\-suffixes "=\fIsuffixes\fP"
+Use
+.I suffixes
+to characterize \*r files.
+See
+.BR ci (1)
+for details.
+.TP
+.BR \-z ", " \-\^\-zone "=\fIzone\fP"
+Specifies the date output format in keyword substitution,
+and specifies the default time zone for
+.I date
+in the
+.BI \-d date
+option.
+The
+.I zone
+should be empty, a numeric \*u offset, or the special string
+.B LT
+for local time.
+The default is an empty
+.IR zone ,
+which uses the traditional \*r format of \*u without any time zone indication
+and with slashes separating the parts of the date;
+otherwise, times are output in \*i 8601 format with time zone indication.
+For example, if local time is January 11, 1990, 8pm Pacific Standard Time,
+eight hours west of \*u,
+then the time is output as follows:
+.RS
+.LP
+.RS
+.nf
+.ta \w'\f3\-z+05:30\fP  'u +\w'\f31990-01-11 09:30:00+05:30\fP  'u
+.ne 4
+\f2option\fP	\f2time output\fP
+\f3\-z\fP	\f31990/01/12 04:00:00\fP	\f2(default)\fP
+\f3\-zLT\fP	\f31990-01-11 20:00:00\-08\fP
+\f3\-z+05:30\fP	\f31990-01-12 09:30:00+05:30\fP
+.ta 4n +4n +4n +4n
+.fi
+.RE
+.RE
+.SH "KEYWORD SUBSTITUION"
+Strings of the form
+.BI $ keyword $
+and
+.BI $ keyword : .\|.\|. $
+embedded in
+the text are replaced
+with strings of the form
+.BI $ keyword : value $
+as described in
+.BR co (1).
+.SH FILES
+\*b
+never changes an \*r or working file.
+It uses the effective user for all accesses,
+and it does not even read the working file unless a revision number of
+.B $
+is specified.
+.SH ENVIRONMENT
+.TP
+.B \s-1RCSINIT\s0
+Options prepended to the argument list, separated by spaces.
+See
+.BR ci (1)
+for details.
+.SH DIAGNOSTICS
+The working pathname and a separator line is written to the diagnostic output.
+The exit status is zero if and only if all operations were successful.
+.SH EXAMPLES
+One day, there will be a whole bunch of useful examples here.  
+.SH SEE ALSO
+.BR rcsintro (1),
+.BR ci (1),
+.BR co (1),
+.BR ctime (3),
+.BR date (1),
+.BR rcs (1),
+.BR rcsfile (5)
+.SH AUTHOR
+Michael Chapman <foonly@users.sourceforge.net>
+.PP
+Portions of this manual page are from
+.BR ci (1)
+and
+.BR co (1)
+by Walter F. Tichy and Paul Eggert.
+.SH "COPYRIGHT AND LICENSE"
+\*b is copyright \(co 2004 Michael Chapman.
+.PP
+\*b is released under the terms and conditions of the
+\s-1GNU\s0 General Public License version 2.
+Please read the \s-1COPYING\s0 file carefully.

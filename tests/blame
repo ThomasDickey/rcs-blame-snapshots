@@ -1,0 +1,6 @@
+#! /bin/sh
+
+case $# in
+0) exec $PRELOAD $BLAME ;;
+*) exec $PRELOAD $BLAME "$@" ;;
+esac

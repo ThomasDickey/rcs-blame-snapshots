@@ -1,0 +1,52 @@
+AT_BANNER([[Filename pairing.]])
+
+AT_SETUP([Working file, then corresponding RCS file])
+AT_KEYWORDS([pairing])
+cp $testdir/simple-1.2.expout expout
+cat $testdir/simple.experr | sed "s,simple,$testdir/simple,g" > experr
+AT_CHECK([[blame $testdir/simple $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Working file, then independent working file])
+AT_KEYWORDS([pairing])
+cat $testdir/simple-1.2.expout $testdir/complex-3.8.expout > expout
+(
+	cat $testdir/simple.experr | sed "s,simple,$testdir/simple,g"
+	cat $testdir/complex.experr | sed "s,complex,$testdir/complex,g"
+) > experr
+AT_CHECK([[blame $testdir/simple $testdir/complex]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Working file, then independent RCS file])
+AT_KEYWORDS([pairing])
+cat $testdir/simple-1.2.expout $testdir/complex-3.8.expout > expout
+(
+	cat $testdir/simple.experr | sed "s,simple,$testdir/simple,g"
+	cat $testdir/complex.experr
+) > experr
+AT_CHECK([[blame $testdir/simple $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([RCS file, then corresponding working file])
+AT_KEYWORDS([pairing])
+cp $testdir/simple-1.2.expout expout
+cat $testdir/simple.experr | sed "s,simple,$testdir/simple,g" > experr
+AT_CHECK([[blame $testdir/simple,v $testdir/simple]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([RCS file, then independent working file])
+AT_KEYWORDS([pairing])
+cat $testdir/simple-1.2.expout $testdir/complex-3.8.expout > expout
+(
+	cat $testdir/simple.experr
+	cat $testdir/complex.experr | sed "s,complex,$testdir/complex,g"
+) > experr
+AT_CHECK([[blame $testdir/simple,v $testdir/complex]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([RCS file, then independent RCS file])
+AT_KEYWORDS([pairing])
+cat $testdir/simple-1.2.expout $testdir/complex-3.8.expout > expout
+cat $testdir/simple.experr $testdir/complex.experr > experr
+AT_CHECK([[blame $testdir/simple,v $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP

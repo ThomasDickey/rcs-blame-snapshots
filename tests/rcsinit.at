@@ -1,0 +1,33 @@
+AT_BANNER([[RCSINIT environment variable support.]])
+
+AT_SETUP([Empty RCSINIT])
+AT_KEYWORDS([rcsinit])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([state])
+cp $testdir/complex-3.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[RCSINIT= blame -r3.4 -sA $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([RCSINIT with options])
+AT_KEYWORDS([rcsinit])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([state])
+cp $testdir/complex-3.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[RCSINIT='-r3.4 -sA' blame $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([RCSINIT with invalid options])
+AT_KEYWORDS([rcsinit])
+AT_KEYWORDS([errors])
+AT_CHECK([[RCSINIT='--foo' blame]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([RCSINIT with a filename])
+AT_KEYWORDS([rcsinit])
+cp $testdir/complex-3.8.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[RCSINIT="$testdir/complex,v" blame]], 0, expout, experr)
+AT_CLEANUP

@@ -1,0 +1,51 @@
+AT_BANNER([[Command line argument parsing.]])
+
+AT_SETUP([No arguments])
+AT_KEYWORDS([argv])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Invalid argument])
+AT_KEYWORDS([argv])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame --footle]], 1, , stderr)
+AT_CLEANUP
+
+AT_SETUP([-? and --help])
+AT_KEYWORDS([argv])
+AT_CHECK([[blame -?]], 0, ignore, )
+AT_CHECK([[blame --help]], 0, ignore, )
+AT_CLEANUP
+
+AT_SETUP([-V and --version])
+AT_KEYWORDS([argv])
+cat <<EOF > expout
+$package_string; emulating RCS version 5
+EOF
+AT_CHECK([[blame -V]], 0, expout, )
+AT_CHECK([[blame --version]], 0, stdout, )
+AT_CLEANUP
+
+AT_SETUP([Non-existant working file])
+AT_KEYWORDS([argv])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame /nonexistant]], 1, , stderr)
+AT_CLEANUP
+
+AT_SETUP([Non-existant RCS file])
+AT_KEYWORDS([argv])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame /nonexistant,v]], 1, , stderr)
+AT_CLEANUP
+
+AT_SETUP([Filenames only])
+AT_KEYWORDS([argv])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame $testdir/simple,v]], 0, expout, experr)
+rm -f experr
+cat $testdir/simple.experr | sed "s,simple,$testdir/simple,g" > experr
+AT_CHECK([[blame $testdir/simple]], 0, expout, experr)
+AT_CLEANUP

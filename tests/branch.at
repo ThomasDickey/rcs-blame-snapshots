@@ -1,0 +1,211 @@
+AT_BANNER([[Resolving revisions on branches.]])
+
+AT_SETUP([Revision on branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.2.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.2.1.2 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Revision on deep branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.1.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.2.1.1.1.1 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Valid branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.2.1.1.1 $testdir/complex,v]], 0, , experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -r1.2.1.3.1 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid branch and dot])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.2.1.1.1. $testdir/complex,v]], 0, , experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid branch and dot])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -r1.2.1.3.1. $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Dot and revision on branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.2.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.2.1.2 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and late revision on branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.2.1.10 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and early revision on branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_CHECK([[blame -r.2.1.0 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Dot and branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.2.1 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot, branch and dot])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.2.1. $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rbar $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic branch and dot])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rbar. $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic branch and revision])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.2.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rbar.2 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic branch and late revision])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rbar.10 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic branch and early revision])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+AT_CHECK([[blame -rbar.0 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Symbolic revision on branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rbaz $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and symbolic revision on branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.1.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.quux $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot and syumbolic branch])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.fred $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Dot, symbolic branch and dot])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+cp $testdir/complex-1.2.1.3.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r.fred. $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbolic branch and symbolic revision])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.1.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rplugh.quux $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Number, symbol and symbol])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.1.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.fred.xyzzy $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbol, number and symbol])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rfoo.1.plugh $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Symbol, symbol and number])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -rfoo.plugh.1 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Number, symbol and number])
+AT_KEYWORDS([branch])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([symbol])
+cp $testdir/complex-1.2.1.1.1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.2.xyzzy.1 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP

@@ -1,0 +1,41 @@
+AT_BANNER([[-w and --author options.]])
+
+AT_SETUP([No author])
+AT_KEYWORDS([author])
+AT_XFAIL_IF([test -z "$username"])
+AT_XFAIL_IF([test "$username" = username])
+AT_XFAIL_IF([test "$username" = somebody])
+replace="$username        "
+replace="${replace:0:8}"
+AT_CHECK([[blame -w -- $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+cat $testdir/simple,v | sed "s/somebody/$replace/g" > input,v
+cat $testdir/simple-1.2.expout | sed "s/somebody/$replace/g" > expout
+cat $testdir/simple.experr | sed "s/simple/input/g" > experr
+AT_CHECK([[blame -w -- input,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Known author])
+AT_KEYWORDS([author])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -wsomebody $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -wusername $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame --author=username $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Unknown author])
+AT_KEYWORDS([author])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -wfloopy $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Multiple authors])
+AT_KEYWORDS([author])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -wusername -wsomebody $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

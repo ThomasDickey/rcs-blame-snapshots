@@ -1,0 +1,133 @@
+AT_BANNER([[-d and --date options.]])
+
+AT_SETUP([Missing date argument])
+AT_KEYWORDS([date])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame $testdir/simple,v -d]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Date after all revisions])
+AT_KEYWORDS([date])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -d'2002-02-03 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame --date='2002-02-03 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Date just after a revision])
+AT_KEYWORDS([date])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -d'2002-02-02 02:02:03 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Date on a revision])
+AT_KEYWORDS([date])
+cp $testdir/simple-1.2.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -d'2002-02-02 02:02:02 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Date just before a revision])
+AT_KEYWORDS([date])
+cp $testdir/simple-1.1.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -d'2002-02-02 02:02:01 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Date between revisions])
+AT_KEYWORDS([date])
+cp $testdir/simple-1.1.expout expout
+cp $testdir/simple.experr experr
+AT_CHECK([[blame -d'2001-01-02 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Date before all revisions])
+AT_KEYWORDS([date])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -d'2000-01-01 UTC' $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Unparseable date])
+AT_KEYWORDS([date])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -d'floopy' $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Unknown timezone])
+AT_KEYWORDS([date])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([zone])
+AT_CHECK([[blame -d'2000-01-01 FLOOPY' $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([No timezone])
+AT_KEYWORDS([date])
+AT_KEYWORDS([zone])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -d'2002-02-02 02:02:03' $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'2002-02-02 02:02:02' $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -d'2002-02-02 02:02:01' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([dd-Mon-yyyy hh:mm:ss])
+AT_KEYWORDS([date])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -d'02-Feb-2002 02:02:03 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'02-Feb-2002 02:02:02 UTC' $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -d'02-Feb-2002 02:02:01 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([h:mm:ss AM yyyymmdd])
+AT_KEYWORDS([date])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -d'2:02:03 am 02-Feb-2002 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'2:02:02 am 02-Feb-2002 UTC' $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -d'2:02:01 am 02-Feb-2002 UTC' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Unusual timezone])
+AT_KEYWORDS([date])
+AT_KEYWORDS([zone])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -d'11:02:03 am 02-Feb-2002 AWSST' $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'04:02:02 am 02-Feb-2002 FWT' $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'09:32:02 pm 01-Feb-2002 -04:30' $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -d'09:32:01 pm 01-Feb-2002 -04:30' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([With -z or --zone option])
+AT_KEYWORDS([date])
+AT_KEYWORDS([zone])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -d'11:02:03 am 02-Feb-2002' -z AWSST $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'04:02:02 am 02-Feb-2002' -z FWT $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame -d'09:32:02 pm 01-Feb-2002' -z -04:30 $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -z -04:30 -d'09:32:01 pm 01-Feb-2002' $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Multiple dates])
+AT_KEYWORDS([date])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -d'2001-01-01 01:01:01 UTC' -d'2002-02-02 02:02:02 UTC' $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

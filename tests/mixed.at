@@ -1,0 +1,236 @@
+AT_BANNER([[Mixing -r, -d, -s and -w options.]])
+
+AT_SETUP([Valid -r and -d combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+cp $testdir/complex-3.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r3.4 -d'2001/01/01 03:04:01' $testdir/complex,v]], 0, expout, experr)
+AT_CHECK([[blame -r3.4 -d'2001/01/01 03:04:00' $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r and -d combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_CHECK([[blame -r3.4 -d'2001/01/01 03:03:59' $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -r and -s combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([state])
+cp $testdir/complex-3.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r3.4 -sA $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r and -s combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([state])
+AT_CHECK([[blame -r3.4 -sB $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -r and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([author])
+cp $testdir/complex-3.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r3.4 -wuser1 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -r3.4 -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -d and -s combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+cp $testdir/complex-1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -d'2001/01/01 01:01:00' -sA $testdir/complex,v]], 0, expout, experr)
+AT_CHECK([[blame -d'2001/01/01 01:01:30' -sA $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -d and -s combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+AT_CHECK([[blame -d'2001/01/01 01:01:30' -sB $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -d and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([date])
+AT_KEYWORDS([author])
+cp $testdir/complex-1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -d'2001/01/01 01:01:00' -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CHECK([[blame -d'2001/01/01 01:01:30' -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -d and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([date])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -d'2001/01/01 01:01:30' -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+cp $testdir/complex-1.1.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -sA -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -sC -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -r, -d and -s combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+cp $testdir/complex-2.2.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r2.2 -d'2001/01/01 03:10:00' -sC $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r, -d and -s combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+AT_CHECK([[blame -r2.1 -d'2001/01/01 03:10:00' -sC $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r2.2 -d'2001/01/01 01:10:00' -sC $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r2.2 -d'2001/01/01 03:10:00' -sA $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -r, -d and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_KEYWORDS([author])
+cp $testdir/complex-2.2.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r2.2 -d'2001/01/01 03:10:00' -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r, -d and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -r2.1 -d'2001/01/01 03:10:00' -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r2.2 -d'2001/01/01 01:10:00' -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r2.2 -d'2001/01/01 03:10:00' -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -r, -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+cp $testdir/complex-2.2.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r2.2 -sC -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r, -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -r2.1 -sC -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r2.2 -sA -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r2.2 -sC -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -d, -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+cp $testdir/complex-1.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -d'2001/01/01 01:10:00' -sB -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -d, -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -d'2001/01/01 01:02:30' -sB -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -d'2001/01/01 01:10:00' -sC -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -d'2001/01/01 01:10:00' -sB -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Valid -r, -d, -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+cp $testdir/complex-1.4.expout expout
+cp $testdir/complex.experr experr
+AT_CHECK([[blame -r1.4 -d'2001/01/01 01:10:00' -sB -wuser3 $testdir/complex,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Invalid -r, -d, -s and -w combo])
+AT_KEYWORDS([mixed])
+AT_KEYWORDS([errors])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([date])
+AT_KEYWORDS([state])
+AT_KEYWORDS([author])
+AT_CHECK([[blame -r1.3 -d'2001/01/01 01:10:00' -sB -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r1.4 -d'2001/01/01 01:02:30' -sB -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r1.4 -d'2001/01/01 01:10:00' -sC -wuser3 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame -r1.4 -d'2001/01/01 01:10:00' -sB -wuser2 $testdir/complex,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

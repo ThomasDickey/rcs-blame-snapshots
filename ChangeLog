@@ -1,0 +1,344 @@
+2004-11-25  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Released 1.1.
+
+2004-11-24  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Said GCC 3.4 bugs weren't actually bugs.
+	* Remove function attributes -- they're too dangerous!
+	* blame.spec.in (%build): Run tests after build.
+
+2004-11-23  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Resync with gnulib...
+	* getopt_.h (__need_getopt, __getopt_argv_const),
+	  getopt.m4 (gl_GETOPT): ... and remove local fixes.
+	
+	* tests/blame: Replace ${1+"$@"}, so that Zsh (such as on Mac OS X)
+	  works.
+	
+	* keyword.c (keyword_expand): Work around "cast used as lvalue" warning.
+	* hash.c (_hash_entry_new): Remove useless assertion.
+	
+	* Released 1.0.
+	
+	* Rebuild RPM with -mtune=i386 to work around GCC 3.4 bugs.
+
+2004-11-20  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Resync with gnulib...
+	* getopt_.h (__need_getopt, __getopt_argv_const),
+	  getopt.m4 (gl_GETOPT): ... modulo some fixes.
+	
+	* configure.ac (RELEASE): Bump release number.
+	
+2004-11-18  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c (parse_options): Fix ordering of options in --help.
+
+2004-11-14  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* lines.c (lines_apply): Handle a delta text without an empty last line
+	  properly. Bug discovered by Bob Proulx <bob@proulx.com>.
+	* rcs.at: Check the bug doesn't happen again.
+	* More testdata for new test.
+
+2004-11-11  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* branch.at: Fix duplicated test.
+
+	* Released 0.3.
+
+2004-11-10  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* argv.at: -V output has changed.
+	* blame.c (parse_options): Store the correct version in rcs_emulation.
+	* date.c (date_parse),
+	  keyword.c (_keyword_escape, keyword_expand): Emulate old RCS versions.
+	* rcs.h (_rcs): Comment prefix in RCS files is now used.
+	
+	* log.at, version.at: New tests.
+	* More testdata for new tests.
+	* blame.1: Documentation update.
+
+2004-11-09  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c: Parse -V[VER] and --version[=VER] (but the result is not
+	  used yet).
+
+2004-11-08  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* doc/blame.1: Initial cut of manpage.
+
+2004-11-07  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c (parse_options, main): Use $RCSINIT environment variable.
+	* rcsinit.at, testsuite.at: New tests.
+	
+	* Resync with gnulib.
+
+2004-10-23  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c (main): s/TAG/REV/, and make --rev an alias for --revision.
+
+2004-10-22  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* configure.ac (RELEASE): Bump release number.
+	
+	* README: Turn "Known Issues" into "Getting Help" -- it didn't describe
+	  any actual known issues...
+
+2004-10-21  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* lexer.l, parser.y: No need for a pure parser.
+	
+	* configure.ac (AC_INIT): Use my Sourceforge email address.
+	* Released 0.2.
+
+2004-10-20  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* configure.ac (gl_MODULES): Update list.
+	
+	* parser.y (deltatext): Move declaration of delta to top of block.
+	
+	* blame.c (annotate), lines.c (lines_append_nocopy),
+	  system.h (OINIT, OALLOC, _OALLOC, OFREEALL): Use obstacks to allocate
+	  lines.
+	* blame.c (main): Set program_name from argv[0].
+
+2004-10-19  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Major reworking of memory management. Profiling showed that most time
+	  was spent in redundant memory movement. By mmapping the file into we
+	  can form pointers to interesting bits of it, rather than copying the
+	  interesting bits in the lexer. Using a private mmap means we can
+	  modify it by strategically placing '\0' characters in it. This also
+	  means many of the program's data structures no longer need to concern
+	  themselves with memory management.
+	* The algorithm to apply deltas has been modified to be far more
+	  efficient. The line buffer is memcpy'ed at most once during a single
+	  lines_apply call. No memory is malloced or freed at all during the
+	  entire annotation run.
+	
+	* configure.ac: Add -fprofile-arcs -ftest-coverage for profiling.
+	* src/Makefile.am (AM_LFLAGS): Add -f.
+	
+	* llist.c, llist.h: Removed.
+	* Globally replace llist with vector.
+	* Scrap vector iterators.
+	
+	* vector.c (vector_insert, vector_insert_nocopy, vector_remove):
+	  Functions not used any more (because of dedicated vector handling
+	  for line buffers in lines.c).
+	* vector.c (vector_append_nocopy), vector.h (vector_append): New
+	  functions.
+	
+	* blame.c (annotate_revision): Always exit function at the bottom.
+	* blame.c (annotate_revision): Copy rev so that it can be modified on
+	  the fly. Use pointer comparisons rather than string comparisons
+	  wherever possible.
+	
+	* rcs.c (rcs_parse): Mmap the input file and pass the buffer to the
+	  lexer.
+	* delta.c, delta.h: Point to locations in mmapped file rather than
+	  using duplicates.
+	* delta.h (for_each_branch_base): A delta may not have a branch hash.	
+	* lines.c, lines.h: Almost a complete rewrite. Shrink amount to memcpy
+	  as much as possible, by reading and writing different line buffers.
+	  Text is pointers into mmapped file.
+	* blame.c (annotate_revision): Use spare line buffer, swapping with
+	  current buffer after applying each delta.
+	
+	* lexer.l: Rework rules to grab as much as possible per yylex call.
+	* parser.y: Use pointers into mmapped file.
+	* keyword.c (_keyword_append_mem): Handle @@ -> @ conversion here,
+	  rather than the lexer.
+	
+	* blame.c (annotate): When extracting a revision from a working file,
+	  ensure it is valid.
+	
+	* blame.c (parse_options), data.h, hash.c, hash.h: Make NULL/NULL be
+	  no-op dup and free functions; explicitly use string_dup/string_free
+	  for the old behaviour.
+	
+	* pairing.at, working.at: New tests.
+	* More testdata for new tests.
+	
+	* Resync with gnulib.
+
+2004-10-08  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* system.h (ALLOCA): New macro.
+	* blame.c (annotate_revision): Make prefix an auto variable.
+	* keyword.c (keyword_extract_revision): Allocate buffer on stack.
+	* lines.c (lines_new): Allocate ll on stack.
+	
+	* Resync with gnulib.
+	
+	* configure.ac (RELEASE): Bump release number.
+
+2004-09-28  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* date.c (date_sprintf), system.h (_UNUSED, _UNUSED_LABEL):
+	  Split macros up.
+	* configure.ac (RELEASE): Bump release number.
+	
+	* date.c (date_parse_rev): Handle old RCS files with dates before year
+	  2000. Original patch from Mats Kronberg <Mats.Kronberg@saab.se>.
+
+2004-09-27  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* util.c (does_working_filename_match_rcs_filename)
+	         (find_matching_rcs_filename, find_matching_working_filename):
+	  Use the gnulib-supplied base_name.
+	* rcs.c (rcs_parse): Call canonicalize_file_name and base_name directly.
+	* fs.c, fs.h: Removed -- no longer used.
+	
+	* Released 0.1.
+
+2004-09-26  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c (main): Change assignments to argp_program_version and
+	  argp_program_bug_address to global variable definitions, so that picky
+	  linkers don't complain about undefined symbols.
+	
+	* atlocal.in: Replace computing $testdir with an experimental test. This
+	  automatically resolves ".", ".." and symlinks all at once.
+	* *.at: Check that stderr is not empty when it shouldn't be.
+	* rev.at, branch.at: New tests.
+	* More testdata for new tests.
+	
+	* blame.c (annotate_revision),
+	  date.c (_date_parse_decimal, date_parse_zone, parse_pattern_letter)
+	         (date_parse),
+	  lines.c (lines_apply),
+	  rcs.c (_isidchar, rcs_rev_is_valid, rcs_branch_is_valid),
+	  system.h (ISALNUM, ISALPHA, ISDIGIT, ISGRAPH, ISSPACE): Explicitly
+	  cast argument to all character classification functions, since they're
+	  macros with a subscript lookup on some platforms.
+	
+	* rcs.c (_rcs_get_base, _rcs_find_rev, _rcs_find_rev_before)
+	        (rcs_resolve_tag): Move error messages deeper down.
+
+2004-09-25  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* src/Makefile.am [GCC] (AM_CFLAGS): More aggressive warnings.
+	* blame.c (main): Assign parser.options at run-time, since it's value
+	  isn't known at compile-time.
+	
+	* blame.c (main), date.c: End all struct initializers properly.
+	* date.c (parse_pattern_letter): Remove assertion that am and pm differ
+	  (it generates too much for older CPP implementations). Use AM/PM if
+	  the locale doesn't have its own values.
+	* parser.y (rcstext): Cast count to unsigned when comparing.
+	
+	* system.h (UNUSED, PURE, MALLOC, NONNULL, NONNULL_PARAMS): New macros.
+	* delta.h (delta_ref_free): Mark delta with UNUSED.
+	* parser.y (yyerror): Mark rcs with UNUSED.
+	* src/*.h: Mark functions with appropriate attributes.
+	
+	* rcs.c (rcs_resolve_tag): Add zone_offset parameter. Use it when
+	  formatting error messages containing dates.
+	
+	* mixed.at: Added expout for tests that should succeed.
+	
+	* date.c (date_sprintf): Handle missing tm_gmtoff member.
+	* date.c (date_sprintf_prefix): UTC time not local time. I think.
+	* m4/langinfo.m4, date.c (_date_parse_decimal): Use RADIXCHAR instead
+	  of DECIMAL_POINT, if the latter is not found.
+	
+	* atlocal.in: Make $testdir sed script work on Sparc.
+	* author.at <No author>: Build a replacement string for $username
+	  that's exactly 8 characters long.
+
+2004-09-24  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* atlocal.in: Normalize $testdir.
+	
+	* parser.y (_parser_count_deltalist, rcstext),
+	  rcs.c (rcs_free, _rcs_get_base, _revcmp, _rcs_find_rev_before)
+	        (rcs_resolve_tag),
+	  rcs.h (rcs_t): Build trunk branches.
+	
+	* argv.at, author.at, date.at, expand.at, rev.at, state.at,
+	  suffixes.at, testsuite.at: Copy expected output/errors into
+	  expout/experr rather than using M4 macro.
+	* mixed.at: New tests.
+	* tests/atlocal.in, tests/blame, tests/Makefile.am,
+	  configure.at (AC_CONFIG_TESTDIR): Provide a way to pass tests through
+	  valgrind.
+
+	* Resync with gnulib.
+	
+	* rcs.c (rcs_resolve_tag): Error if a tag is resolved but the date is
+	  too late.
+	* blame.c (parse_options): Error on multiple keyword substituion types.
+
+2004-09-23  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* date.c (_date_parse_decimal): Bugfixes.
+	* argv.at, rev.at, date.at: Extended tests.
+	* date.at, author.at, state.at, expand.at, suffixes.at: New tests.
+	* More testdata for new tests.
+	
+	* configure.ac blame.spec.in: Use NEWS as the AC_SUBST_FILE variable.
+	
+	* configure.ac: Determine directory separator differently.
+	* dirsep.m4: Removed.
+	* blame.c, system.h, util.c: Use different directory separator.
+	* util.c: Fix broken suffix parsing.
+	
+	* keyword.c (keyword_expand): Colon should be output only if both key
+	  and value are to be output.
+
+2004-09-22  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Resync with gnulib.
+	* configure.ac (gl_MODULES): Add getline and setenv.
+	* configure.ac (gl_AC_TYPE_UINTMAX_T): Needed by lib/canonicalize.c.
+	* date.c, lexer.l, system.h, working.c: Add #includes for gnulib
+	  headers.
+	* blame.c (program_name): Needed by lib/error.c.
+	
+	* vector.h (vector_t): Use unsigned int rather than u_int32_t.
+	
+	* tests/*, tests/testdata/*: Added test directory.
+	* argv.at, rev.at, date.at: Added tests.
+
+2004-09-21  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c (annotate_revision): Command-line keyword expansion overrides
+	  the RCS file's default.
+	
+	* parser.y (admin_expand): Free $2 after parsing it.
+	
+	* keyword.c (keyword_expand): Add support for Locker keyword.
+	* rcs.c rcs.h (rcs_get_locker): Added.
+	
+	* fs.c (fs_get_short_name): strdup the return value.
+	
+	* Convert ALLOC to CALLOC/MALLOC/SALLOC variants.
+	
+	* Resync with gnulib.
+	* configure.ac (gl_LIB): Now defined by gnulib
+	* configure.ac (AC_SYS_LONG_FILE_NAMES): Needed by lib/same.c
+
+2004-09-20  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* configure.ac, Makefile.am: Use GCC Automake conditional to control
+	  whether -Wno-format-y2k is used.
+	* keyword.c (_keyword_append_mem): Preallocate 32 extra bytes at a time.
+	* More comments!
+
+2004-09-19  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Comments!
+
+2004-09-18  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* ChangeLog, NEWS, rsxs.spec.in: Added.
+	* configure.ac: Use gnulib.
+
+2004-09-04  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Initial lexer/parser for Blame.
