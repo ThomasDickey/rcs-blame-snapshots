@@ -1,0 +1,111 @@
+AT_BANNER([[Handling RCS tags in working files.]])
+
+AT_SETUP([Valid revision])
+AT_KEYWORDS([working])
+AT_KEYWORDS([rev])
+cp $testdir/keywords.experr experr
+cat <<EOF > keywords
+\$Revision: 1.1 \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+cat <<EOF > keywords
+\$Id: keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+cat <<EOF > keywords
+\$Header: $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+AT_CLEANUP
+
+AT_SETUP([Early revision])
+AT_KEYWORDS([working])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+cat <<EOF > keywords
+\$Revision: 1.0 \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+cat <<EOF > keywords
+\$Id: keywords,v 1.0 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+cat <<EOF > keywords
+\$Header: $testdir/keywords,v 1.0 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+AT_CLEANUP
+
+AT_SETUP([Late revision])
+AT_KEYWORDS([working])
+AT_KEYWORDS([rev])
+cp $testdir/keywords.experr experr
+cat <<EOF > keywords
+\$Revision: 1.2 \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+cat <<EOF > keywords
+\$Id: keywords,v 1.2 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+cat <<EOF > keywords
+\$Header: $testdir/keywords,v 1.2 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+AT_CLEANUP
+
+AT_SETUP([Branch])
+AT_KEYWORDS([working])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+cat <<EOF > keywords
+\$Revision: 1 \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+cat <<EOF > keywords
+\$Id: keywords,v 1 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+cat <<EOF > keywords
+\$Header: $testdir/keywords,v 1 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+AT_CLEANUP
+
+AT_SETUP([Other non-revision])
+AT_KEYWORDS([working])
+AT_KEYWORDS([rev])
+AT_KEYWORDS([errors])
+cat <<EOF > keywords
+\$Revision: bar \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+cat <<EOF > keywords
+\$Id: keywords,v bar 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+cat <<EOF > keywords
+\$Header: $testdir/keywords,v bar 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+AT_CLEANUP
+
+AT_SETUP([Parsing escape sequences])
+AT_KEYWORDS([working])
+AT_KEYWORDS([rev])
+cp $testdir/keywords.experr experr
+cat <<EOF > keywords
+\$Id: file\twith\nweird\\symbols\040in\044it,v 1.1 2001/01/01 01:01:01 username Exp \$
+EOF
+AT_CHECK([[blame -r'$' $testdir/keywords,v]], 0, ignore, experr)
+AT_CLEANUP
+
+AT_SETUP([Producing escape sequences])
+AT_KEYWORDS([working])
+cp $testdir/escape,v 'x$ x,v'
+cat <<EOF > 'x$ x'
+\$Id: x\044\040x,v 1.1 2001/01/01 01:01:01 username Exp \$
+EOF
+cat $testdir/escape.experr | sed 's,escape,x$ x,g' > experr
+AT_CHECK([[blame 'x$ x']], 0, ignore, experr)
+AT_CLEANUP

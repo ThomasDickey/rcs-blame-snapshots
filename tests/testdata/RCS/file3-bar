@@ -1,0 +1,43 @@
+head	1.2;
+access;
+symbols
+	foo:1
+	bar:1.2;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2002.02.02.02.02.02;	author somebody;	state Stab;
+branches;
+next	1.1;
+
+1.1
+date	2001.01.01.01.01.01;	author username;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@TEST TEST TEST TEST
+Example file
+TEST TEST TEST TEST
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 1
+d3 1
+@

@@ -1,0 +1,30 @@
+* Thu Nov 24 2004 Michael Chapman <foonly@users.sourceforge.net> 1.1-1
+- Rebuilt.
+
+* Thu Nov 24 2004 Michael Chapman <foonly@users.sourceforge.net> 1.0-3
+- Said gcc 3.4 bugs weren't actually bugs.
+
+* Thu Nov 23 2004 Michael Chapman <foonly@users.sourceforge.net> 1.0-2
+- Rebuild RPM with -mtune=i386 to work around gcc 3.4 bugs.
+
+* Thu Nov 23 2004 Michael Chapman <foonly@users.sourceforge.net> 1.0-1
+- Stable release.
+
+* Thu Nov 20 2004 Michael Chapman <foonly@users.sourceforge.net> 0.3-2
+- Fixed bug involving delta texts without empty last lines.
+- Fixed --help output.
+
+* Thu Nov 11 2004 Michael Chapman <foonly@users.sourceforge.net> 0.3-1
+- Support for $RCSINIT environment variable.
+- Support for -V and --version to emulate old RCS versions.
+- Minor bugfixes.
+- Added manpage.
+
+* Thu Oct 21 2004 Michael Chapman <foonly@users.sourceforge.net> 0.2-1
+- Major speed improvements.
+
+* Tue Sep 28 2004 Michael Chapman <foonly@users.sourceforge.net> 0.1-2
+- Fixed build for old Red Hat.
+
+* Mon Sep 27 2004 Michael Chapman <foonly@users.sourceforge.net> 0.1-1
+- Initial RPM release.

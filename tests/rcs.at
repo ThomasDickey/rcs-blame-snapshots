@@ -1,0 +1,22 @@
+AT_BANNER([[RCS file parsing.]])
+
+AT_SETUP([No revisions present])
+AT_KEYWORDS([rcs])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame $testdir/empty,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Two-digit year before 2000])
+AT_KEYWORDS([rcs])
+cp $testdir/compat-1.1.expout expout
+cp $testdir/compat.experr experr
+AT_CHECK([[blame -r1.1 $testdir/compat,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Missing empty line after delta text])
+AT_KEYWORDS([rcs])
+cp $testdir/compat-1.2.expout expout
+cp $testdir/compat.experr experr
+AT_CHECK([[blame -r1.2 $testdir/compat,v]], 0, expout, experr)
+AT_CLEANUP

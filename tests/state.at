@@ -1,0 +1,34 @@
+AT_BANNER([[-s and --state options.]])
+
+AT_SETUP([Missing state argument])
+AT_KEYWORDS([state])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame $testdir/simple,v -s]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Known state])
+AT_KEYWORDS([state])
+cp $testdir/simple.experr experr
+cp $testdir/simple-1.1.expout expout
+AT_CHECK([[blame -sExp $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame --state=Exp $testdir/simple,v]], 0, expout, experr)
+rm -f expout
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -sStab $testdir/simple,v]], 0, expout, experr)
+AT_CHECK([[blame --state Stab $testdir/simple,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Unknown state])
+AT_KEYWORDS([state])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -sFloopy $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Multiple states])
+AT_KEYWORDS([state])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -sStab -sExp $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

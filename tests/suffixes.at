@@ -1,0 +1,22 @@
+AT_BANNER([[-x and --suffixes options.]])
+
+AT_SETUP([Default suffixes])
+AT_KEYWORDS([suffixes])
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame $testdir/file1]], 0, expout, ignore)
+AT_CLEANUP
+
+AT_SETUP([Nonstandard suffixes])
+AT_KEYWORDS([suffixes])
+cp $testdir/simple-1.2.expout expout
+AT_CHECK([[blame -x$slash-foo$slash-bar $testdir/file2]], 0, expout, ignore)
+AT_CHECK([[blame --suffixes=$slash-foo$slash-bar $testdir/file3]], 0, expout, ignore)
+AT_CHECK([[blame --suffixes $slash-foo$slash-bar $testdir/file3]], 0, expout, ignore)
+AT_CLEANUP
+
+AT_SETUP([Multiple suffixes specifications])
+AT_KEYWORDS([suffixes])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -x$slash-foo$slash-bar -x$slash-bar$slash-foo $testdir/simple,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP

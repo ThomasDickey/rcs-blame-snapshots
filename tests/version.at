@@ -1,0 +1,82 @@
+AT_BANNER([[-V and --version options.]])
+
+AT_SETUP([Invalid version argument])
+AT_KEYWORDS([version])
+AT_KEYWORDS([errors])
+AT_CHECK([[blame -V1 $testdir/keywords,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CHECK([[blame --version=foo $testdir/keywords,v]], 1, , stderr)
+MAC_CHECK_STDERR
+AT_CLEANUP
+
+AT_SETUP([Emulating RCS version 3])
+AT_KEYWORDS([version])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2001/01/01 01:01:01 \$
+1.1          (username 01-Jan-01): \$Header: keywords,v 1.1 2001/01/01 01:01:01 username Locked \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2001/01/01 01:01:01 username Locked \$
+1.1          (username 01-Jan-01): \$Locker: username \$
+1.1          (username 01-Jan-01): \$Log:	keywords,v \$
+1.1          (username 01-Jan-01): # Revision 1.1  2001/01/01  01:01:01  username
+1.1          (username 01-Jan-01): # Initial revision
+1.1          (username 01-Jan-01): #$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -V3 $testdir/keywords,v]], 0, expout, experr)
+AT_CHECK([[blame --version=3 $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Emulating RCS version 4])
+AT_KEYWORDS([version])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2001/01/01 01:01:01 \$
+1.1          (username 01-Jan-01): \$Header: $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp Locker: username \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2001/01/01 01:01:01 username Exp Locker: username \$
+1.1          (username 01-Jan-01): \$Locker: username \$
+1.1          (username 01-Jan-01): \$Log:	keywords,v \$
+1.1          (username 01-Jan-01): # Revision 1.1  2001/01/01  01:01:01  username
+1.1          (username 01-Jan-01): # Initial revision
+1.1          (username 01-Jan-01): #$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -V4 $testdir/keywords,v]], 0, expout, experr)
+AT_CHECK([[blame --version=4 $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Emulating RCS version 5])
+AT_KEYWORDS([version])
+AT_KEYWORDS([log])
+cat <<EOF > expout
+1.1          (username 01-Jan-01): \$Author: username \$
+1.1          (username 01-Jan-01): \$Date: 2001/01/01 01:01:01 \$
+1.1          (username 01-Jan-01): \$Header: $testdir/keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+1.1          (username 01-Jan-01): \$Id: keywords,v 1.1 2001/01/01 01:01:01 username Exp \$
+1.1          (username 01-Jan-01): \$Locker:  \$
+1.1          (username 01-Jan-01): \$Log: keywords,v \$
+1.1          (username 01-Jan-01): Revision 1.1  2001/01/01 01:01:01  username
+1.1          (username 01-Jan-01): Initial revision
+1.1          (username 01-Jan-01):$space
+1.1          (username 01-Jan-01): \$Name:  \$
+1.1          (username 01-Jan-01): \$RCSfile: keywords,v \$
+1.1          (username 01-Jan-01): \$Revision: 1.1 \$
+1.1          (username 01-Jan-01): \$Source: $testdir/keywords,v \$
+1.1          (username 01-Jan-01): \$State: Exp \$
+EOF
+cp $testdir/keywords.experr experr
+AT_CHECK([[blame -V5 $testdir/keywords,v]], 0, expout, experr)
+AT_CHECK([[blame --version=5 $testdir/keywords,v]], 0, expout, experr)
+AT_CLEANUP
