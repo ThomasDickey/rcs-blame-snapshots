@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1996, 1997, 1998, 2002, 2003, 2004 Free Software
-   Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998, 2002, 2003, 2004, 2006 Free
+   Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -15,13 +15,10 @@
 
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 #ifndef _LIBC
+# include <config.h>
 /* Get specification.  */
 # include "strdup.h"
 #endif
@@ -30,7 +27,9 @@
 #include <string.h>
 
 #undef __strdup
-#undef strdup
+#ifdef _LIBC
+# undef strdup
+#endif
 
 #ifndef weak_alias
 # define __strdup strdup

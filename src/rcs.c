@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ rcs_parse(const char *rcs_filename) {
 		error(0, errno, "%s", rcs_filename);
 		return NULL;
 	}
-	rcs->short_filename = strdup(base_name(rcs_filename));
+	rcs->short_filename = base_name(rcs_filename);
 	
 	if (fstat(fileno(stream), &stat_buf)) {
 		FREE(rcs->full_filename);
@@ -298,14 +298,14 @@ _rcs_find_rev(
 
 	if ((date >= 0) || author || state) {
 		len += 5;
-		cond = REALLOC(cond, len + 1, char);
+		cond = SREALLOC(cond, len);
 		strcat(cond, " has");
 	}
 	
 	if (date >= 0) {
 		char *date_str = date_sprintf(date, zone_offset);
 		len += 15 + strlen(date_str);
-		cond = REALLOC(cond, len + 1, char);
+		cond = SREALLOC(cond, len);
 		strcat(cond, " a date before ");
 		strcat(cond, date_str);
 		FREE(date_str);
@@ -314,7 +314,7 @@ _rcs_find_rev(
 	if (author) {
 		if (date >= 0) len += 4;
 		len += 8 + strlen(author);
-		cond = REALLOC(cond, len + 1, char);
+		cond = SREALLOC(cond, len);
 		if (date >= 0) strcat(cond, " and");
 		strcat(cond, " author ");
 		strcat(cond, author);
@@ -323,7 +323,7 @@ _rcs_find_rev(
 	if (state) {
 		if ((date >= 0) || author) len += 4;
 		len += 7 + strlen(state);
-		cond = REALLOC(cond, len + 1, char);
+		cond = SREALLOC(cond, len);
 		if ((date >= 0) || author) strcat(cond, " and");
 		strcat(cond, " state ");
 		strcat(cond, state);

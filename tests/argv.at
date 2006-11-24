@@ -11,6 +11,7 @@ AT_SETUP([Invalid argument])
 AT_KEYWORDS([argv])
 AT_KEYWORDS([errors])
 AT_CHECK([[blame --footle]], 1, , stderr)
+MAC_CHECK_STDERR
 AT_CLEANUP
 
 AT_SETUP([-? and --help])
@@ -32,12 +33,14 @@ AT_SETUP([Non-existant working file])
 AT_KEYWORDS([argv])
 AT_KEYWORDS([errors])
 AT_CHECK([[blame /nonexistant]], 1, , stderr)
+MAC_CHECK_STDERR
 AT_CLEANUP
 
 AT_SETUP([Non-existant RCS file])
 AT_KEYWORDS([argv])
 AT_KEYWORDS([errors])
 AT_CHECK([[blame /nonexistant,v]], 1, , stderr)
+MAC_CHECK_STDERR
 AT_CLEANUP
 
 AT_SETUP([Filenames only])

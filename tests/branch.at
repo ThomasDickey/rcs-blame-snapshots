@@ -149,7 +149,7 @@ cp $testdir/complex.experr experr
 AT_CHECK([[blame -r.quux $testdir/complex,v]], 0, expout, experr)
 AT_CLEANUP
 
-AT_SETUP([Dot and syumbolic branch])
+AT_SETUP([Dot and symbolic branch])
 AT_KEYWORDS([branch])
 AT_KEYWORDS([rev])
 cp $testdir/complex-1.2.1.3.expout expout

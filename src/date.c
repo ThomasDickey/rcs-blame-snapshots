@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -717,7 +717,7 @@ undefine(struct parse_state *state) {
 	state->tm.tm_sec = state->tm.tm_min = state->tm.tm_hour =
 		state->tm.tm_mday = state->tm.tm_mon = state->tm.tm_year =
 		state->tm.tm_wday = state->tm.tm_yday = state->ymodulus = state->yweek =
-		TM_UNDEFINED;
+		state->tm.tm_isdst = TM_UNDEFINED;
 	state->zone = TM_UNDEFINED_ZONE;
 }
 
@@ -900,6 +900,7 @@ date_parse(const char *s, int use_zone_offset, long zone_offset) {
 	if (!use_zone_offset)
 		zone_offset = (rcs_emulation < 5 ? TM_LOCAL_ZONE : 0);
 	
+	memset(&state, '\0', sizeof(state));
 	undefine(&state);
 	
 	while (*s) {
@@ -1120,14 +1121,10 @@ format_time: _UNUSED_LABEL
 	return result;
 }
 
-char *
-date_sprintf_prefix(time_t date) {
-	char *result;
-	
+size_t
+date_sprintf_prefix(time_t date, char *buffer, size_t len) {
 	assert(date >= 0);
 	
-	result = MALLOC(12, char);
 	/* if RCS version < 5 then localtime ? */
-	strftime(result, 12, "%d-%b-%y", gmtime(&date));
-	return result;
+	return strftime(buffer, len, "%d-%b-%y", gmtime(&date));
 }

@@ -19,7 +19,7 @@ blame_SOURCES = \
 	working.c working.h
 blame_LDADD = $(top_builddir)/lib/libmisc.a
 AM_YFLAGS = -d
-AM_LFLAGS = -f
+AM_LFLAGS = -f -8
 AM_CFLAGS = -Wall
 if GCC
 AM_CFLAGS += -W -Wno-format-y2k
@@ -29,3 +29,4 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 BUILT_SOURCES = parser.h
 
 AUTOMAKE_OPTIONS = $(top_builddir)/lib/ansi2knr
+MAINTAINERCLEANFILES = lexer.c parser.c

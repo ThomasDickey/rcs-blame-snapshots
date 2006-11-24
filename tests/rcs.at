@@ -20,3 +20,10 @@ cp $testdir/compat-1.2.expout expout
 cp $testdir/compat.experr experr
 AT_CHECK([[blame -r1.2 $testdir/compat,v]], 0, expout, experr)
 AT_CLEANUP
+
+AT_SETUP([Binary data])
+AT_KEYWORDS([rcs])
+cp $testdir/binary-1.2.expout expout
+cp $testdir/binary.experr experr
+AT_CHECK([[blame -r1.2 $testdir/binary,v]], 0, expout, experr)
+AT_CLEANUP

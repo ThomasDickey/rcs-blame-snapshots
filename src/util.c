@@ -31,8 +31,10 @@ int
 does_working_filename_match_rcs_filename(
 	const char *working_filename, const char *rcs_filename
 ) {
-	const char *from, *to, *a, *b;
+	const char *from, *to;
+	char *a, *b;
 	size_t al, bl;
+	int result;
 	
 	assert(working_filename && rcs_filename);
 	
@@ -41,18 +43,27 @@ does_working_filename_match_rcs_filename(
 	b = base_name(rcs_filename);
 	bl = base_len(b);
 	
+	result = 1;
+	
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
 		if (al + (to - from) == bl &&
 			!strncmp(a, b, al) &&
-			!strncmp(from, b + bl - (to - from), to - from)) return 1;
+			!strncmp(from, b + bl - (to - from), to - from)) goto out;
 		if (!*to)
 			break;
 		from = to + 1;
 	}
 	
-	return 0;
+	result = 0;
+	
+out:
+	
+	FREE(a);
+	FREE(b);
+	
+	return result;
 }
 
 /*
@@ -94,7 +105,7 @@ find_matching_rcs_filename(const char *working_filename) {
 	
 	assert(working_filename);
 	
-	a = base_name(working_filename);
+	a = last_component(working_filename);
 	
 	first = NULL; first_error = 0;
 	from = (suffixes ? suffixes : SUFFIXES);
@@ -104,10 +115,10 @@ find_matching_rcs_filename(const char *working_filename) {
 		
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
 		
-		length = strlen(working_filename) + (to - from) + 5;
+		length = strlen(working_filename) + (to - from) + 4;
 		
-		buffer = CALLOC(length, char);
-		strncpy(buffer, working_filename, (a - working_filename));
+		buffer = SALLOC(length);
+		strncat(buffer, working_filename, (a - working_filename));
 		strcat(buffer, "RCS" SSLASH);
 		strncat(buffer, a, base_len(a));
 		strncat(buffer, from, to - from);
@@ -155,7 +166,8 @@ find_matching_rcs_filename(const char *working_filename) {
  */
 char *
 find_matching_working_filename(const char *rcs_filename) {
-	const char *from, *to, *a;
+	const char *from, *to;
+	char *a;
 	size_t al;
 	
 	assert(rcs_filename);
@@ -166,12 +178,17 @@ find_matching_working_filename(const char *rcs_filename) {
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
-		if (!strncmp(from, a + al - (to - from), to - from))
-			return strndup(a, al - (to - from));
+		if (!strncmp(from, a + al - (to - from), to - from)) {
+			char *result = strndup(a, al - (to - from));
+			FREE(a);
+			return result;
+		}
 		if (!*to)
 			break;
 		from = to + 1;
 	}
+	
+	FREE(a);
 	
 	return NULL;
 }

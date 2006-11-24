@@ -1,0 +1,47 @@
+1.2          (username 02-Feb-02): Text at top. Three ats: @@@
+1.1          (username 01-Jan-01): 
+1.2          (username 02-Feb-02): === $Log: log,v $
+1.2          (username 02-Feb-02): === Revision 1.2  2002/02/02 02:02:02  username
+1.2          (username 02-Feb-02): === This log line contains an @ symbol...
+1.2          (username 02-Feb-02): === 
+1.2          (username 02-Feb-02): === Revision 1.1  2001/01/01 01:01:01  username
+1.2          (username 02-Feb-02): === Initial revision
+1.2          (username 02-Feb-02): === ===
+1.2          (username 02-Feb-02): 
+1.2          (username 02-Feb-02): # $Log: log,v $
+1.2          (username 02-Feb-02): # Revision 1.2  2002/02/02 02:02:02  username
+1.2          (username 02-Feb-02): # This log line contains an @ symbol...
+1.2          (username 02-Feb-02): # 
+1.2          (username 02-Feb-02): # Revision 1.1  2001/01/01 01:01:01  username
+1.2          (username 02-Feb-02): # Initial revision
+1.2          (username 02-Feb-02): #
+1.1          (username 01-Jan-01): 
+1.1          (username 01-Jan-01): /*
+1.2          (username 02-Feb-02):  * $Log: log,v $
+1.2          (username 02-Feb-02):  * Revision 1.2  2002/02/02 02:02:02  username
+1.2          (username 02-Feb-02):  * This log line contains an @ symbol...
+1.2          (username 02-Feb-02):  * 
+1.2          (username 02-Feb-02):  * Revision 1.1  2001/01/01 01:01:01  username
+1.2          (username 02-Feb-02):  * Initial revision
+1.2          (username 02-Feb-02):  *
+1.1          (username 01-Jan-01):  */
+1.1          (username 01-Jan-01): 
+1.2          (username 02-Feb-02): /* $Log: log,v $
+1.2          (username 02-Feb-02):  * Revision 1.2  2002/02/02 02:02:02  username
+1.2          (username 02-Feb-02):  * This log line contains an @ symbol...
+1.2          (username 02-Feb-02):  * 
+1.2          (username 02-Feb-02):  * Revision 1.1  2001/01/01 01:01:01  username
+1.2          (username 02-Feb-02):  * Initial revision
+1.2          (username 02-Feb-02):  *
+1.1          (username 01-Jan-01):  */
+1.1          (username 01-Jan-01): 
+1.2          (username 02-Feb-02): (* $Log: log,v $
+1.2          (username 02-Feb-02):  * Revision 1.2  2002/02/02 02:02:02  username
+1.2          (username 02-Feb-02):  * This log line contains an @ symbol...
+1.2          (username 02-Feb-02):  * 
+1.2          (username 02-Feb-02):  * Revision 1.1  2001/01/01 01:01:01  username
+1.2          (username 02-Feb-02):  * Initial revision
+1.2          (username 02-Feb-02):  *
+1.1          (username 01-Jan-01):  *)
+1.2          (username 02-Feb-02): 
+1.2          (username 02-Feb-02): Text at bottom.

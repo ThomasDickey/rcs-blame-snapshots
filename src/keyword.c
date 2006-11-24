@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ _keyword_unescape(const char *s) {
 	assert(s);
 	
 	end = s + strlen(s);
-	output = SALLOC(end - s + 1);
+	output = SALLOC(end - s);
 	while ( (escape = strchr(s, '\\')) ) {
 		strncat(output, s, escape - s);
 		switch (escape[1]) {
@@ -88,7 +88,7 @@ _keyword_escape(const char *s) {
 	assert(s);
 	
 	capacity = strlen(s);
-	output = SALLOC(capacity + 1);
+	output = SALLOC(capacity);
 	len = 0;
 	
 	while ( (magic = strpbrk(s, (rcs_emulation >= 5 ? "\t\n $\\" : "\t\n $"))) ) {
@@ -194,363 +194,340 @@ keyword_extract_revision(const char *line, size_t len) {
 }
 
 /*
- * Appends memory from <p>, for length <l> to <buffer> (with current capacity
- * *<capacity> and length *<len>). Returns <buffer>, or a reallocated buffer
- * if its capacity had to be increased (in which case *<capacity> will be
- * updated). *<len> is increased by <l>.
+ * Outputs <data>, of length <len>, to stdout, replacing each occurence of
+ * @@ with @.
  */
-static inline void *
-_keyword_append_mem(
-	void *buffer, size_t *capacity, size_t *len, const void *p, size_t l
-) {
-	void *x;
-	void *at;
+static inline void
+_keyword_shrink_output(const void *data, size_t len) {
+	assert(data);
 	
-	assert(buffer);
-	assert(capacity);
-	assert(len);
-	assert(p);
-	
-	if (*len + l > *capacity) {
-		*capacity = *len + l + 32;
-		buffer = REALLOC(buffer, *capacity, void *);
+	while (len) {
+		char *at = memchr(data, '@', len);
+		if (!at) break;
+		fwrite(data, VOIDP_DIFF(at, data) + 1, 1, stdout);
+		if (*(char *)VOIDP_OFFSET(at, 1) == '@') {
+			len -= VOIDP_DIFF(at, data) + 2;
+			data = VOIDP_OFFSET(at, 2);
+		} else {
+			len -= VOIDP_DIFF(at, data) + 1;
+			data = VOIDP_OFFSET(at, 1);
+		}
 	}
-	x = VOIDP_OFFSET(buffer, *len);
-	while ( (at = memchr(p, '@', l)) && *(char *)VOIDP_OFFSET(at, 1) == '@') {
-		memcpy(x, p, VOIDP_DIFF(at, p) + 1);
-		x = VOIDP_OFFSET(x, at - p + 1);
-		*len += VOIDP_DIFF(at, p) + 1;
-		l -= VOIDP_DIFF(at, p) + 2;
-		p = VOIDP_OFFSET(at, 2);
-	}
-	memcpy(x, p, l);
-	*len += l;
-	
-	return buffer;
+	if (len) fwrite(data, len, 1, stdout);
 }
 
 /*
- * Appends the string <s> to <buffer> (with current capacity *<capacity> and
- * length <len>). Returns <buffer>, or a reallocated buffer if its capacity had
- * to be increased (in which case *<capacity> will be updated). *<len> is
- * increased by the length of <s>.
+ * Annotates <line> and outputs it to stdout.
  */
-static inline void *
-_keyword_append(void *buffer, size_t *capacity, size_t *len, const char *s) {
-	return _keyword_append_mem(buffer, capacity, len, s, strlen(s));
-}
-
-/*
- * If <expand> is EXPAND_OLD_STRING or EXPAND_BINARY_STRING, returns a duplicate
- * of <line>.
- *
- * Otherwise a newly allocated buffer is returned. *<len> is set to the length
- * of the buffer. The buffer consists of <line> (of length *<len>) expanded
- * according to the value of <expand>.
- */
-void *
-keyword_expand(
-	const void *line, size_t *len, const delta_t *delta, const rcs_t *rcs,
-	expand_t expand, const char *symbol, long zone_offset
+void
+keyword_annotate(
+	const line_t *line, const struct rcs *rcs, expand_t expand,
+	const char *symbol, long zone_offset
 ) {
-	const void *end, *d1, *d2, *log_start, *log_end;
-	void *output;
-	char *t;
-	const char *tt, *log, *n;
-	size_t capacity;
-	int local_log_prefix;
+	const void *current, *end, *log_start, *log_end;
+	size_t len;
+	char prefix[36];
+	int do_prefix;
 	
 	assert(line);
-	assert(len);
-	assert(delta);
 	assert(rcs);
 	
-	if (expand == EXPAND_OLD_STRING || expand == EXPAND_BINARY_STRING) {
-		output = MALLOC_VOIDP(*len);
-		memcpy(output, line, *len);
-		return output;
-	}
+	sprintf(prefix, "%-12s (%-8.8s ",
+		delta_get_revision(line->delta),
+		delta_get_author(line->delta)
+	);
+	date_sprintf_prefix(delta_get_date(line->delta), prefix + 23, 10);
+	strcat(prefix, "): ");
 	
-	end = VOIDP_OFFSET(line, *len);
+	current = line->text;
+	len = line->len;
+	end = VOIDP_OFFSET(current, len);
+	do_prefix = 1;
+	
 	if (rcs_emulation >= 5) {
-		log_start = line;
+		log_start = current;
 		log_end = NULL;
 	} else {
 		log_start = rcs_get_comment(rcs);
 		log_end = VOIDP_OFFSET(log_start, strlen((char *)log_start));
 	}
 	
-	capacity = *len;
-	output = MALLOC_VOIDP(capacity);
-	*len = 0;
-	
-	while ( (line < end) && (d1 = memchr(line, '$', VOIDP_DIFF(end, line))) ) {
-		d2 = memchr(VOIDP_OFFSET(d1, 1), '$', VOIDP_DIFF(end, d1) - 1);
-		if (!d2)
-			break;
+	while (current < end) {
+		size_t chunk_len;
+		const void *delim, *delim2, *next;
 		
-		output = _keyword_append_mem(
-			output, &capacity, len, line, VOIDP_DIFF(d1, line)
-		);
-		
-		if (!memcmp(d1, "$Author", 7)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Author");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY)
-				output = _keyword_append(output, &capacity, len,
-					delta_get_author(delta));
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$Date", 5)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Date");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY) {
-				t = date_sprintf(delta_get_date(delta), zone_offset);
-				output = _keyword_append(output, &capacity, len, t);
-				FREE(t);
-			}
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$Header", 7) || !memcmp(d1, "$Id", 3)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(
-					output, &capacity, len,
-					(*(char *)VOIDP_OFFSET(d1, 1) == 'H' ? "$Header" : "$Id")
-				);
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY) {
-				t = _keyword_escape(
-					(*(char *)VOIDP_OFFSET(d1, 1) == 'H') && (rcs_emulation >= 4)
-					? rcs_get_full_filename(rcs)
-					: rcs_get_short_filename(rcs)
-				);
-				output = _keyword_append(output, &capacity, len, t);
-				FREE(t);
-				output = _keyword_append(output, &capacity, len, " ");
-				output = _keyword_append(output, &capacity, len,
-					delta_get_revision(delta));
-				output = _keyword_append(output, &capacity, len, " ");
-				t = date_sprintf(delta_get_date(delta), zone_offset);
-				output = _keyword_append(output, &capacity, len, t);
-				FREE(t);
-				output = _keyword_append(output, &capacity, len, " ");
-				output = _keyword_append(output, &capacity, len,
-					delta_get_author(delta));
-				output = _keyword_append(output, &capacity, len, " ");
-				switch (rcs_emulation) {
-				case 3:
-					if (rcs_get_locker(rcs, delta_get_revision(delta)))
-						output = _keyword_append(output, &capacity, len, "Locked");
-					break;
-				case 4:
-					output = _keyword_append(output, &capacity, len,
-						delta_get_state(delta));
-					if ( (tt = rcs_get_locker(rcs, delta_get_revision(delta))) ) {
-						output = _keyword_append(output, &capacity, len, " Locker: ");
-						output = _keyword_append(output, &capacity, len, tt);
-					}
-					break;
-				default:
-					output = _keyword_append(output, &capacity, len,
-						delta_get_state(delta));
-					if (
-						expand == EXPAND_KEY_VALUE_LOCKER &&
-						(tt = rcs_get_locker(rcs, delta_get_revision(delta)))
-					) {
-						output = _keyword_append(output, &capacity, len, " ");
-						output = _keyword_append(output, &capacity, len, tt);
-					}
-					break;
-				}
-			}
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$Locker", 7)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Locker");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (rcs_emulation <= 4 || expand == EXPAND_KEY_VALUE_LOCKER) {
-				tt = rcs_get_locker(rcs, delta_get_revision(delta));
-				if (tt)
-					output = _keyword_append(output, &capacity, len, tt);
-			}
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$Log", 4)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Log");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(
-					output, &capacity, len, (rcs_emulation >= 5 ? ": " : ":\t")
-				);
-			if (expand != EXPAND_KEY_ONLY) {
-				t = _keyword_escape(rcs_get_short_filename(rcs));
-				output = _keyword_append(output, &capacity, len, t);
-				FREE(t);
-			}
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-			/* Strangely, rcs outputs the log even with if -kk is specified... */
-			
-			local_log_prefix = 0;
-			if (rcs_emulation >= 5) {
-				const void *t2;
-				log_end = d1;
-				for (t2 = log_start; t2 < log_end; t2 = VOIDP_OFFSET(t2, 1))
-					if (!ISSPACE(*(char *)t2))
-						break;
-				if (
-					t2 < log_end - 2 &&
-					(*(char *)t2 == '/' || *(char *)t2 == '(') && 
-					*(char *)VOIDP_OFFSET(t2, 1) == '*'
-				) {
-					void *t3;
-					local_log_prefix = 1;
-					t3 = MALLOC(log_end - log_start, char);
-					memcpy(t3, log_start, log_end - log_start);
-					*(char *)VOIDP_OFFSET(t3, t2 - log_start) = ' ';
-					log_end = VOIDP_OFFSET(t3, log_end - log_start);
-					log_start = t3;
-				}
-			}
-			
-			output = _keyword_append(output, &capacity, len, "\n");
-			output = _keyword_append_mem(
-				output, &capacity, len, log_start, VOIDP_DIFF(log_end, log_start)
-			);
-			output = _keyword_append(output, &capacity, len, "Revision ");
-			output = _keyword_append(output, &capacity, len,
-				delta_get_revision(delta));
-			output = _keyword_append(output, &capacity, len, "  ");
-			t = date_sprintf(delta_get_date(delta), zone_offset);
-			if (rcs_emulation >= 5) {
-				output = _keyword_append(output, &capacity, len, t);
-			} else {
-				char *t2 = strchrnul(t, ' ');
-				if (*t2) *t2++ = '\0';
-				output = _keyword_append(output, &capacity, len, t);
-				output = _keyword_append(output, &capacity, len, "  ");
-				output = _keyword_append(output, &capacity, len, t2);
-			}
-			FREE(t);
-			output = _keyword_append(output, &capacity, len, "  ");
-			output = _keyword_append(output, &capacity, len,
-				delta_get_author(delta));
-			output = _keyword_append(output, &capacity, len, "\n");
-			log = delta_get_log(delta);
-			while ( (n = strchr(log, '\n')) ) {
-				output = _keyword_append_mem(
-					output, &capacity, len, log_start, VOIDP_DIFF(log_end, log_start)
-				);
-				output = _keyword_append_mem(output, &capacity, len, log, n - log + 1);
-				log = n + 1;
-			}
-			output = _keyword_append_mem(
-				output, &capacity, len, log_start, VOIDP_DIFF(log_end, log_start)
-			);
-			output = _keyword_append(output, &capacity, len, log);
-			if (rcs_emulation >= 5) {
-				if (local_log_prefix) {
-					void *alias = (void *)log_start;
-					FREE(alias);
-				}
-				line = d2;
-				do {
-					line = VOIDP_OFFSET(line, 1);
-				} while (
-					*(char *)line && ISSPACE(*(char *)line) && *(char *)line != '\n'
-				);
-				continue;
-			}
-		} else if (!memcmp(d1, "$Name", 5)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Name");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY && symbol)
-				output = _keyword_append(output, &capacity, len, symbol);
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$RCSfile", 8)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$RCSfile");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY) {
-				t = _keyword_escape(rcs_get_short_filename(rcs));
-				output = _keyword_append(output, &capacity, len, t);
-				FREE(t);
-			}
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$Revision", 9)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Revision");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY)
-				output = _keyword_append(output, &capacity, len,
-					delta_get_revision(delta));
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$Source", 7)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$Source");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY) {
-				t = _keyword_escape(rcs_get_full_filename(rcs));
-				output = _keyword_append(output, &capacity, len, t);
-				FREE(t);
-			}
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else if (!memcmp(d1, "$State", 6)) {
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$State");
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, ": ");
-			if (expand != EXPAND_KEY_ONLY)
-				output = _keyword_append(output, &capacity, len,
-					delta_get_state(delta));
-			if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, " ");
-			if (expand != EXPAND_VALUE_ONLY)
-				output = _keyword_append(output, &capacity, len, "$");
-		} else {
-			output = _keyword_append(output, &capacity, len, "$");
-			line = VOIDP_OFFSET(d1, 1);
-			continue;
+		if (do_prefix) {
+			fputs(prefix, stdout);
+			do_prefix = 0;
 		}
-		line = VOIDP_OFFSET(d2, 1);
-	}
-	output = _keyword_append_mem(
-		output, &capacity, len, line, VOIDP_DIFF(end, line)
-	);
 		
-	return output;
+		chunk_len = strcspn(current, (
+			expand == EXPAND_OLD_STRING || expand == EXPAND_BINARY_STRING
+			? "@\n"
+			: "$@\n"
+		));
+		delim = VOIDP_OFFSET(current, chunk_len);
+		switch (*(char *)delim) {
+		case '$':
+			fwrite(current, chunk_len, 1, stdout);
+			delim2 = memchr(VOIDP_OFFSET(delim, 1), '$', VOIDP_DIFF(end, delim) - 1);
+			if (!delim2) {
+				putchar('$');
+				current = VOIDP_OFFSET(delim, 1);
+				break;
+			}
+			
+			if (!memcmp(delim, "$Author", 7)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Author", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY)
+					fputs(delta_get_author(line->delta), stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$Date", 5)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Date", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY) {
+					char *t = date_sprintf(delta_get_date(line->delta), zone_offset);
+					fputs(t, stdout);
+					FREE(t);
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$Header", 7) || !memcmp(delim, "$Id", 3)) {
+				if (expand != EXPAND_VALUE_ONLY) {
+					if (*(char *)VOIDP_OFFSET(delim, 1) == 'H')
+						fputs("$Header", stdout);
+					else
+						fputs("$Id", stdout);
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY) {
+					char *t1 = _keyword_escape(
+						(*(char *)VOIDP_OFFSET(delim, 1) == 'H') && (rcs_emulation >= 4)
+						? rcs_get_full_filename(rcs)
+						: rcs_get_short_filename(rcs)
+					);
+					char *t2 = date_sprintf(delta_get_date(line->delta), zone_offset);
+					const char *t3;
+					printf(
+						"%s %s %s %s ",
+						t1, delta_get_revision(line->delta), t2, delta_get_author(line->delta)
+					);
+					FREE(t1);
+					FREE(t2);
+					switch (rcs_emulation) {
+					case 3:
+						if (rcs_get_locker(rcs, delta_get_revision(line->delta)))
+							fputs("Locked", stdout);
+						break;
+					case 4:
+						fputs(delta_get_state(line->delta), stdout);
+						if ( (t3 = rcs_get_locker(rcs, delta_get_revision(line->delta))) )
+							printf(" Locker: %s", t3);
+						break;
+					default:
+						fputs(delta_get_state(line->delta), stdout);
+						if (
+							expand == EXPAND_KEY_VALUE_LOCKER &&
+							(t3 = rcs_get_locker(rcs, delta_get_revision(line->delta)))
+						)
+							printf(" %s", t3);
+						break;
+					}
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$Locker", 7)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Locker", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (rcs_emulation <= 4 || expand == EXPAND_KEY_VALUE_LOCKER) {
+					const char *t = rcs_get_locker(rcs, delta_get_revision(line->delta));
+					if (t) fputs(t, stdout);
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$Log", 4)) {
+				char *t;
+				const char *log, *n;
+				int local_log_prefix = 0;
+			
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Log", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY) {
+					if (rcs_emulation >= 5)
+						fputs(": ", stdout);
+					else
+						fputs(":\t", stdout);
+				}
+				if (expand != EXPAND_KEY_ONLY) {
+					t = _keyword_escape(rcs_get_short_filename(rcs));
+					fputs(t, stdout);
+					FREE(t);
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+				/* Strangely, rcs outputs the log even with if -kk is specified... */
+
+				if (rcs_emulation >= 5) {
+					const void *t2;
+					log_end = delim;
+					for (t2 = log_start; t2 < log_end; t2 = VOIDP_OFFSET(t2, 1))
+						if (!ISSPACE(*(char *)t2))
+							break;
+					if (
+						t2 < log_end - 2 &&
+						(*(char *)t2 == '/' || *(char *)t2 == '(') && 
+						*(char *)VOIDP_OFFSET(t2, 1) == '*'
+					) {
+						void *t3;
+						local_log_prefix = 1;
+						t3 = MALLOC(log_end - log_start, char);
+						memcpy(t3, log_start, log_end - log_start);
+						*(char *)VOIDP_OFFSET(t3, t2 - log_start) = ' ';
+						log_end = VOIDP_OFFSET(t3, log_end - log_start);
+						log_start = t3;
+					}
+				}
+
+				printf("\n%s", prefix);
+				_keyword_shrink_output(log_start, VOIDP_DIFF(log_end, log_start));
+				printf("Revision %s  ", delta_get_revision(line->delta));
+				t = date_sprintf(delta_get_date(line->delta), zone_offset);
+				if (rcs_emulation >= 5) {
+					fputs(t, stdout);
+				} else {
+					char *t2 = strchrnul(t, ' ');
+					if (*t2) *t2++ = '\0';
+					printf("%s  %s", t, t2);
+				}
+				FREE(t);
+				printf("  %s\n%s", delta_get_author(line->delta), prefix);
+				log = delta_get_log(line->delta);
+				while ( (n = strchr(log, '\n')) ) {
+					_keyword_shrink_output(log_start, VOIDP_DIFF(log_end, log_start));
+					_keyword_shrink_output(log, n - log + 1);
+					fputs(prefix, stdout);
+					log = n + 1;
+				}
+				_keyword_shrink_output(log_start, VOIDP_DIFF(log_end, log_start));
+				fputs(log, stdout);
+				if (rcs_emulation >= 5) {
+					if (local_log_prefix) {
+						void *alias = (void *)log_start;
+						FREE(alias);
+					}
+					current = delim2;
+					do {
+						current = VOIDP_OFFSET(current, 1);
+					} while (
+						*(char *)current && ISSPACE(*(char *)current) && *(char *)current != '\n'
+					);
+					continue;
+				}
+			} else if (!memcmp(delim, "$Name", 5)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Name", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY && symbol)
+					fputs(symbol, stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$RCSfile", 8)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$RCSfile", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY) {
+					char *t = _keyword_escape(rcs_get_short_filename(rcs));
+					fputs(t, stdout);
+					FREE(t);
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$Revision", 9)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Revision", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY)
+					fputs(delta_get_revision(line->delta), stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$Source", 7)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$Source", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY) {
+					char *t = _keyword_escape(rcs_get_full_filename(rcs));
+					fputs(t, stdout);
+					FREE(t);
+				}
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else if (!memcmp(delim, "$State", 6)) {
+				if (expand != EXPAND_VALUE_ONLY)
+					fputs("$State", stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					fputs(": ", stdout);
+				if (expand != EXPAND_KEY_ONLY)
+					fputs(delta_get_state(line->delta), stdout);
+				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY)
+					putchar(' ');
+				if (expand != EXPAND_VALUE_ONLY)
+					putchar('$');
+			} else {
+				putchar('$');
+				delim2 = delim;
+			}
+			
+			current = VOIDP_OFFSET(delim2, 1);
+			break;
+		case '@':
+			if (delim >= end) {
+				fwrite(current, chunk_len, 1, stdout);
+				return;
+			}
+			next = VOIDP_OFFSET(delim, 1);
+			fwrite(current, VOIDP_DIFF(next, current), 1, stdout);
+			current = (*(char *)next == '@' ? VOIDP_OFFSET(next, 1) : next);
+			break;
+		case '\n':
+			fwrite(current, chunk_len + 1, 1, stdout);
+			current = VOIDP_OFFSET(delim, 1);
+			do_prefix = 1;
+			break;
+		case '\0':
+			fwrite(current, chunk_len + 1, 1, stdout);
+			current = VOIDP_OFFSET(delim, 1);
+			break;
+		}
+	}
 }

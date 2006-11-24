@@ -303,7 +303,7 @@ at_times_file=$at_suite_dir/at-times
 # List of the tested programs.
 at_tested='blame'
 # List of the all the test groups.
-at_groups_all=' banner-1 1 2 3 4 5 6 7 banner-2 8 9 10 11 12 13 banner-3 14 15 16 banner-4 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 banner-5 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 banner-6 61 62 63 64 65 66 67 banner-7 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 banner-8 83 84 85 86 banner-9 87 88 89 90 banner-10 91 92 93 94 95 96 97 98 99 100 banner-11 101 102 103 104 banner-12 105 106 107 banner-13 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 banner-14 130 131 banner-15 132 133 134 135'
+at_groups_all=' banner-1 1 2 3 4 5 6 7 banner-2 8 9 10 11 12 13 banner-3 14 15 16 17 banner-4 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 banner-5 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 banner-6 62 63 64 65 66 67 68 69 banner-7 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 banner-8 85 86 87 88 banner-9 89 90 91 92 banner-10 93 94 95 96 97 98 99 100 101 102 banner-11 103 104 105 106 banner-12 107 108 109 banner-13 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 banner-14 132 133 134 banner-15 135 136 137 138'
 # As many dots as there are digits in the last test group number.
 # Used to normalize the test group numbers so that `ls' lists them in
 # numerical order.
@@ -311,11 +311,11 @@ at_format='...'
 # Description of all the test groups.
 at_help_all='1;argv.at:3;No arguments;argv errors;
 2;argv.at:10;Invalid argument;argv errors;
-3;argv.at:16;-? and --help;argv;
-4;argv.at:22;-V and --version;argv;
-5;argv.at:31;Non-existant working file;argv errors;
-6;argv.at:37;Non-existant RCS file;argv errors;
-7;argv.at:43;Filenames only;argv;
+3;argv.at:17;-? and --help;argv;
+4;argv.at:23;-V and --version;argv;
+5;argv.at:32;Non-existant working file;argv errors;
+6;argv.at:39;Non-existant RCS file;argv errors;
+7;argv.at:46;Filenames only;argv;
 8;pairing.at:3;Working file, then corresponding RCS file;pairing;
 9;pairing.at:10;Working file, then independent working file;pairing;
 10;pairing.at:20;Working file, then independent RCS file;pairing;
@@ -325,125 +325,128 @@ at_help_all='1;argv.at:3;No arguments;argv errors;
 14;rcs.at:3;No revisions present;rcs errors;
 15;rcs.at:10;Two-digit year before 2000;rcs;
 16;rcs.at:17;Missing empty line after delta text;rcs;
-17;rev.at:3;No revision;rev;
-18;rev.at:11;Multiple revisions;rev errors;
-19;rev.at:18;Single dot;rev;
-20;rev.at:26;Valid trunk branch;rev;
-21;rev.at:33;Invalid trunk branch;rev errors;
-22;rev.at:40;Valid trunk branch and dot;rev;
-23;rev.at:47;Invalid trunk branch and dot;rev errors;
-24;rev.at:54;Dot and revision;rev;
-25;rev.at:61;Dot and late revision;rev;
-26;rev.at:68;Dot and early revision;rev errors;
-27;rev.at:75;Symbolic trunk branch;rev symbol;
-28;rev.at:83;Symbolic trunk branch and dot;rev symbol;
-29;rev.at:91;Symbolic trunk branch and revision;rev symbol;
-30;rev.at:99;Symbolic trunk branch and late revision;rev symbol;
-31;rev.at:107;Symbolic trunk branch and early revision;rev errors symbol;
-32;rev.at:115;Symbolic revision;rev symbol;
-33;rev.at:123;Dot and symbolic revision;rev symbol;
-34;rev.at:131;Symbolic trunk branch and symbolic revision;rev symbol;
-35;rev.at:139;Invalid symbol;rev errors symbol;
-36;branch.at:3;Revision on branch;branch rev;
-37;branch.at:11;Revision on deep branch;branch rev;
-38;branch.at:19;Valid branch;branch rev;
-39;branch.at:26;Invalid branch;branch rev errors;
-40;branch.at:34;Valid branch and dot;branch rev;
-41;branch.at:41;Invalid branch and dot;branch rev errors;
-42;branch.at:49;Dot and revision on branch;branch rev;
-43;branch.at:57;Dot and late revision on branch;branch rev;
-44;branch.at:65;Dot and early revision on branch;branch errors rev;
-45;branch.at:73;Dot and branch;branch rev;
-46;branch.at:81;Dot, branch and dot;branch rev;
-47;branch.at:89;Symbolic branch;branch rev symbol;
-48;branch.at:98;Symbolic branch and dot;branch rev symbol;
-49;branch.at:107;Symbolic branch and revision;branch rev symbol;
-50;branch.at:116;Symbolic branch and late revision;branch rev symbol;
-51;branch.at:125;Symbolic branch and early revision;branch errors rev symbol;
-52;branch.at:134;Symbolic revision on branch;branch rev symbol;
-53;branch.at:143;Dot and symbolic revision on branch;branch rev symbol;
-54;branch.at:152;Dot and syumbolic branch;branch rev;
-55;branch.at:160;Dot, symbolic branch and dot;branch rev;
-56;branch.at:168;Symbolic branch and symbolic revision;branch rev symbol;
-57;branch.at:177;Number, symbol and symbol;branch rev symbol;
-58;branch.at:186;Symbol, number and symbol;branch rev symbol;
-59;branch.at:195;Symbol, symbol and number;branch rev symbol;
-60;branch.at:204;Number, symbol and number;branch rev symbol;
-61;working.at:3;Valid revision;working rev;
-62;working.at:21;Early revision;working rev errors;
-63;working.at:39;Late revision;working rev;
-64;working.at:57;Branch;working rev errors;
-65;working.at:75;Other non-revision;working rev errors;
-66;working.at:93;Parsing escape sequences;working rev;
-67;working.at:103;Producing escape sequences;working;
-68;date.at:3;Missing date argument;date errors;
-69;date.at:10;Date after all revisions;date;
-70;date.at:18;Date just after a revision;date;
-71;date.at:25;Date on a revision;date;
-72;date.at:32;Date just before a revision;date;
-73;date.at:39;Date between revisions;date;
-74;date.at:46;Date before all revisions;date errors;
-75;date.at:53;Unparseable date;date errors;
-76;date.at:60;Unknown timezone;date errors zone;
-77;date.at:68;No timezone;date zone;
-78;date.at:80;dd-Mon-yyyy hh:mm:ss;date;
-79;date.at:91;h:mm:ss AM yyyymmdd;date;
-80;date.at:102;Unusual timezone;date zone;
-81;date.at:115;With -z or --zone option;date zone;
-82;date.at:128;Multiple dates;date errors;
-83;state.at:3;Missing state argument;state errors;
-84;state.at:10;Known state;state;
-85;state.at:22;Unknown state;state errors;
-86;state.at:29;Multiple states;state errors;
-87;author.at:3;No author;author;
-88;author.at:18;Known author;author;
-89;author.at:29;Unknown author;author errors;
-90;author.at:36;Multiple authors;author errors;
-91;expand.at:3;Default substitutions;expand log;
-92;expand.at:26;Default substitutions, with timezone;expand log;
-93;expand.at:49;Missing keyword substitution argument;expand errors;
-94;expand.at:56;Keys and values (-kkv);expand log;
-95;expand.at:81;Keys, values and locker (-kkvl);expand log;
-96;expand.at:104;Keys only (-kk);expand log;
-97;expand.at:127;Old keywords strings (-ko);expand log;
-98;expand.at:147;Binary image of old keywords strings (-kb);expand log;
-99;expand.at:167;Values only (-kv);expand log;
-100;expand.at:190;Multiple substitution types;expand errors;
-101;version.at:3;Invalid version argument;version errors;
-102;version.at:12;Emulating RCS version 3;version log;
-103;version.at:36;Emulating RCS version 4;version log;
-104;version.at:60;Emulating RCS version 5;version log;
-105;suffixes.at:3;Default suffixes;suffixes;
-106;suffixes.at:9;Nonstandard suffixes;suffixes;
-107;suffixes.at:17;Multiple suffixes specifications;suffixes errors;
-108;mixed.at:3;Valid -r and -d combo;mixed rev date;
-109;mixed.at:13;Invalid -r and -d combo;mixed errors rev date;
-110;mixed.at:22;Valid -r and -s combo;mixed rev state;
-111;mixed.at:31;Invalid -r and -s combo;mixed errors rev state;
-112;mixed.at:40;Valid -r and -w combo;mixed rev author;
-113;mixed.at:49;Invalid -r and -w combo;mixed errors rev author;
-114;mixed.at:58;Valid -d and -s combo;mixed date state;
-115;mixed.at:68;Invalid -d and -s combo;mixed errors date state;
-116;mixed.at:77;Valid -d and -w combo;mixed date author;
-117;mixed.at:87;Invalid -d and -w combo;mixed errors date author;
-118;mixed.at:96;Valid -s and -w combo;mixed state author;
-119;mixed.at:105;Invalid -s and -w combo;mixed errors state author;
-120;mixed.at:114;Valid -r, -d and -s combo;mixed rev date state;
-121;mixed.at:124;Invalid -r, -d and -s combo;mixed errors rev date state;
-122;mixed.at:138;Valid -r, -d and -w combo;mixed rev date author;
-123;mixed.at:148;Invalid -r, -d and -w combo;mixed errors rev date author;
-124;mixed.at:162;Valid -r, -s and -w combo;mixed rev state author;
-125;mixed.at:172;Invalid -r, -s and -w combo;mixed errors rev state author;
-126;mixed.at:186;Valid -d, -s and -w combo;mixed date state author;
-127;mixed.at:196;Invalid -d, -s and -w combo;mixed errors date state author;
-128;mixed.at:210;Valid -r, -d, -s and -w combo;mixed rev date state author;
-129;mixed.at:221;Invalid -r, -d, -s and -w combo;mixed errors rev date state author;
-130;log.at:3;Old Log expansion format;log version;
-131;log.at:11;New Log expansion format;log;
-132;rcsinit.at:3;Empty RCSINIT;rcsinit rev state;
-133;rcsinit.at:12;RCSINIT with options;rcsinit rev state;
-134;rcsinit.at:21;RCSINIT with invalid options;rcsinit errors;
-135;rcsinit.at:28;RCSINIT with a filename;rcsinit;
+17;rcs.at:24;Binary data;rcs;
+18;rev.at:3;No revision;rev;
+19;rev.at:11;Multiple revisions;rev errors;
+20;rev.at:18;Single dot;rev;
+21;rev.at:26;Valid trunk branch;rev;
+22;rev.at:33;Invalid trunk branch;rev errors;
+23;rev.at:40;Valid trunk branch and dot;rev;
+24;rev.at:47;Invalid trunk branch and dot;rev errors;
+25;rev.at:54;Dot and revision;rev;
+26;rev.at:61;Dot and late revision;rev;
+27;rev.at:68;Dot and early revision;rev errors;
+28;rev.at:75;Symbolic trunk branch;rev symbol;
+29;rev.at:83;Symbolic trunk branch and dot;rev symbol;
+30;rev.at:91;Symbolic trunk branch and revision;rev symbol;
+31;rev.at:99;Symbolic trunk branch and late revision;rev symbol;
+32;rev.at:107;Symbolic trunk branch and early revision;rev errors symbol;
+33;rev.at:115;Symbolic revision;rev symbol;
+34;rev.at:123;Dot and symbolic revision;rev symbol;
+35;rev.at:131;Symbolic trunk branch and symbolic revision;rev symbol;
+36;rev.at:139;Invalid symbol;rev errors symbol;
+37;branch.at:3;Revision on branch;branch rev;
+38;branch.at:11;Revision on deep branch;branch rev;
+39;branch.at:19;Valid branch;branch rev;
+40;branch.at:26;Invalid branch;branch rev errors;
+41;branch.at:34;Valid branch and dot;branch rev;
+42;branch.at:41;Invalid branch and dot;branch rev errors;
+43;branch.at:49;Dot and revision on branch;branch rev;
+44;branch.at:57;Dot and late revision on branch;branch rev;
+45;branch.at:65;Dot and early revision on branch;branch errors rev;
+46;branch.at:73;Dot and branch;branch rev;
+47;branch.at:81;Dot, branch and dot;branch rev;
+48;branch.at:89;Symbolic branch;branch rev symbol;
+49;branch.at:98;Symbolic branch and dot;branch rev symbol;
+50;branch.at:107;Symbolic branch and revision;branch rev symbol;
+51;branch.at:116;Symbolic branch and late revision;branch rev symbol;
+52;branch.at:125;Symbolic branch and early revision;branch errors rev symbol;
+53;branch.at:134;Symbolic revision on branch;branch rev symbol;
+54;branch.at:143;Dot and symbolic revision on branch;branch rev symbol;
+55;branch.at:152;Dot and symbolic branch;branch rev;
+56;branch.at:160;Dot, symbolic branch and dot;branch rev;
+57;branch.at:168;Symbolic branch and symbolic revision;branch rev symbol;
+58;branch.at:177;Number, symbol and symbol;branch rev symbol;
+59;branch.at:186;Symbol, number and symbol;branch rev symbol;
+60;branch.at:195;Symbol, symbol and number;branch rev symbol;
+61;branch.at:204;Number, symbol and number;branch rev symbol;
+62;working.at:3;Valid revision;working rev;
+63;working.at:21;Early revision;working rev errors;
+64;working.at:42;Late revision;working rev;
+65;working.at:60;Branch;working rev errors;
+66;working.at:81;Other non-revision;working rev errors;
+67;working.at:102;Parsing escape sequences;working rev;
+68;working.at:112;Producing escape sequences;working;
+69;working.at:122;Mixing escape characters;working;
+70;date.at:3;Missing date argument;date errors;
+71;date.at:10;Date after all revisions;date;
+72;date.at:18;Date just after a revision;date;
+73;date.at:25;Date on a revision;date;
+74;date.at:32;Date just before a revision;date;
+75;date.at:39;Date between revisions;date;
+76;date.at:46;Date before all revisions;date errors;
+77;date.at:53;Unparseable date;date errors;
+78;date.at:60;Unknown timezone;date errors zone;
+79;date.at:68;No timezone;date zone;
+80;date.at:80;dd-Mon-yyyy hh:mm:ss;date;
+81;date.at:91;h:mm:ss AM yyyymmdd;date;
+82;date.at:102;Unusual timezone;date zone;
+83;date.at:115;With -z or --zone option;date zone;
+84;date.at:128;Multiple dates;date errors;
+85;state.at:3;Missing state argument;state errors;
+86;state.at:10;Known state;state;
+87;state.at:22;Unknown state;state errors;
+88;state.at:29;Multiple states;state errors;
+89;author.at:3;No author;author;
+90;author.at:17;Known author;author;
+91;author.at:28;Unknown author;author errors;
+92;author.at:35;Multiple authors;author errors;
+93;expand.at:3;Default substitutions;expand log;
+94;expand.at:26;Default substitutions, with timezone;expand log;
+95;expand.at:49;Missing keyword substitution argument;expand errors;
+96;expand.at:56;Keys and values (-kkv);expand log;
+97;expand.at:81;Keys, values and locker (-kkvl);expand log;
+98;expand.at:104;Keys only (-kk);expand log;
+99;expand.at:127;Old keywords strings (-ko);expand log;
+100;expand.at:147;Binary image of old keywords strings (-kb);expand log;
+101;expand.at:167;Values only (-kv);expand log;
+102;expand.at:190;Multiple substitution types;expand errors;
+103;version.at:3;Invalid version argument;version errors;
+104;version.at:12;Emulating RCS version 3;version log;
+105;version.at:36;Emulating RCS version 4;version log;
+106;version.at:60;Emulating RCS version 5;version log;
+107;suffixes.at:3;Default suffixes;suffixes;
+108;suffixes.at:9;Nonstandard suffixes;suffixes;
+109;suffixes.at:17;Multiple suffixes specifications;suffixes errors;
+110;mixed.at:3;Valid -r and -d combo;mixed rev date;
+111;mixed.at:13;Invalid -r and -d combo;mixed errors rev date;
+112;mixed.at:22;Valid -r and -s combo;mixed rev state;
+113;mixed.at:31;Invalid -r and -s combo;mixed errors rev state;
+114;mixed.at:40;Valid -r and -w combo;mixed rev author;
+115;mixed.at:49;Invalid -r and -w combo;mixed errors rev author;
+116;mixed.at:58;Valid -d and -s combo;mixed date state;
+117;mixed.at:68;Invalid -d and -s combo;mixed errors date state;
+118;mixed.at:77;Valid -d and -w combo;mixed date author;
+119;mixed.at:87;Invalid -d and -w combo;mixed errors date author;
+120;mixed.at:96;Valid -s and -w combo;mixed state author;
+121;mixed.at:105;Invalid -s and -w combo;mixed errors state author;
+122;mixed.at:114;Valid -r, -d and -s combo;mixed rev date state;
+123;mixed.at:124;Invalid -r, -d and -s combo;mixed errors rev date state;
+124;mixed.at:138;Valid -r, -d and -w combo;mixed rev date author;
+125;mixed.at:148;Invalid -r, -d and -w combo;mixed errors rev date author;
+126;mixed.at:162;Valid -r, -s and -w combo;mixed rev state author;
+127;mixed.at:172;Invalid -r, -s and -w combo;mixed errors rev state author;
+128;mixed.at:186;Valid -d, -s and -w combo;mixed date state author;
+129;mixed.at:196;Invalid -d, -s and -w combo;mixed errors date state author;
+130;mixed.at:210;Valid -r, -d, -s and -w combo;mixed rev date state author;
+131;mixed.at:221;Invalid -r, -d, -s and -w combo;mixed errors rev date state author;
+132;log.at:3;Old log expansion format;log version;
+133;log.at:11;New log expansion format;log;
+134;log.at:18;Logs for multiple revisions;log;
+135;rcsinit.at:3;Empty RCSINIT;rcsinit rev state;
+136;rcsinit.at:12;RCSINIT with options;rcsinit rev state;
+137;rcsinit.at:21;RCSINIT with invalid options;rcsinit errors;
+138;rcsinit.at:28;RCSINIT with a filename;rcsinit;
 '
 
 at_keywords=
@@ -470,7 +473,7 @@ do
 	;;
 
     --version | -V )
-	echo "$as_me (blame 1.1)"
+	echo "$as_me (blame 1.3.1)"
 	exit 0
 	;;
 
@@ -626,7 +629,7 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF
-blame 1.1 test suite test groups:
+blame 1.3.1 test suite test groups:
 
  NUM: FILENAME:LINE      TEST-GROUP-NAME
       KEYWORDS
@@ -707,15 +710,15 @@ exec 5>$at_suite_log
 
 # Banners and logs.
 cat <<\_ASBOX
-## --------------------- ##
-## blame 1.1 test suite. ##
-## --------------------- ##
+## ----------------------- ##
+## blame 1.3.1 test suite. ##
+## ----------------------- ##
 _ASBOX
 {
   cat <<\_ASBOX
-## --------------------- ##
-## blame 1.1 test suite. ##
-## --------------------- ##
+## ----------------------- ##
+## blame 1.3.1 test suite. ##
+## ----------------------- ##
 _ASBOX
   echo
 
@@ -953,7 +956,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -1000,51 +1007,36 @@ fi
 
 $at_traceon
 
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+
       $at_traceoff
       $at_times_p && times >$at_times_file
     ) 5>&1 2>&1 | eval $at_tee_pipe
     at_status=`cat $at_status_file`
     ;;
 
-  3 ) # 3. argv.at:16: -? and --help
-    at_setup_line='argv.at:16'
+  3 ) # 3. argv.at:17: -? and --help
+    at_setup_line='argv.at:17'
     at_desc='-? and --help'
     $at_quiet $ECHO_N "  3: -? and --help                                $ECHO_C"
     at_xfail=no
     (
-      echo "3. argv.at:16: testing ..."
+      echo "3. argv.at:17: testing ..."
       $at_traceon
 
 
 $at_traceoff
-echo "argv.at:18: blame -?"
-echo argv.at:18 >$at_check_line_file
-( $at_traceon; blame -? ) >$at_stdout 2>$at_stder1
-at_status=$?
-grep '^ *+' $at_stder1 >&2
-grep -v '^ *+' $at_stder1 >$at_stderr
-at_failed=false
-$at_diff $at_devnull $at_stderr || at_failed=:
-echo stdout:; cat $at_stdout
-case $at_status in
-   77) echo 77 > $at_status_file
-            exit 77;;
-   0) ;;
-   *) echo "argv.at:18: exit code was $at_status, expected 0"
-      at_failed=:;;
-esac
-if $at_failed; then
-
-  echo 1 > $at_status_file
-  exit 1
-fi
-
-$at_traceon
-
-$at_traceoff
-echo "argv.at:19: blame --help"
+echo "argv.at:19: blame -?"
 echo argv.at:19 >$at_check_line_file
-( $at_traceon; blame --help ) >$at_stdout 2>$at_stder1
+( $at_traceon; blame -? ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
@@ -1066,40 +1058,21 @@ fi
 
 $at_traceon
 
-      $at_traceoff
-      $at_times_p && times >$at_times_file
-    ) 5>&1 2>&1 | eval $at_tee_pipe
-    at_status=`cat $at_status_file`
-    ;;
-
-  4 ) # 4. argv.at:22: -V and --version
-    at_setup_line='argv.at:22'
-    at_desc='-V and --version'
-    $at_quiet $ECHO_N "  4: -V and --version                             $ECHO_C"
-    at_xfail=no
-    (
-      echo "4. argv.at:22: testing ..."
-      $at_traceon
-
-
-cat <<EOF > expout
-$package_string; emulating RCS version 5
-EOF
 $at_traceoff
-echo "argv.at:27: blame -V"
-echo argv.at:27 >$at_check_line_file
-( $at_traceon; blame -V ) >$at_stdout 2>$at_stder1
+echo "argv.at:20: blame --help"
+echo argv.at:20 >$at_check_line_file
+( $at_traceon; blame --help ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
 at_failed=false
 $at_diff $at_devnull $at_stderr || at_failed=:
-$at_diff expout $at_stdout || at_failed=:
+echo stdout:; cat $at_stdout
 case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "argv.at:27: exit code was $at_status, expected 0"
+   *) echo "argv.at:20: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -1110,16 +1083,35 @@ fi
 
 $at_traceon
 
+      $at_traceoff
+      $at_times_p && times >$at_times_file
+    ) 5>&1 2>&1 | eval $at_tee_pipe
+    at_status=`cat $at_status_file`
+    ;;
+
+  4 ) # 4. argv.at:23: -V and --version
+    at_setup_line='argv.at:23'
+    at_desc='-V and --version'
+    $at_quiet $ECHO_N "  4: -V and --version                             $ECHO_C"
+    at_xfail=no
+    (
+      echo "4. argv.at:23: testing ..."
+      $at_traceon
+
+
+cat <<EOF > expout
+$package_string; emulating RCS version 5
+EOF
 $at_traceoff
-echo "argv.at:28: blame --version"
+echo "argv.at:28: blame -V"
 echo argv.at:28 >$at_check_line_file
-( $at_traceon; blame --version ) >$at_stdout 2>$at_stder1
+( $at_traceon; blame -V ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
 at_failed=false
 $at_diff $at_devnull $at_stderr || at_failed=:
-echo stdout:; tee stdout <$at_stdout
+$at_diff expout $at_stdout || at_failed=:
 case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
@@ -1135,26 +1127,51 @@ fi
 
 $at_traceon
 
+$at_traceoff
+echo "argv.at:29: blame --version"
+echo argv.at:29 >$at_check_line_file
+( $at_traceon; blame --version ) >$at_stdout 2>$at_stder1
+at_status=$?
+grep '^ *+' $at_stder1 >&2
+grep -v '^ *+' $at_stder1 >$at_stderr
+at_failed=false
+$at_diff $at_devnull $at_stderr || at_failed=:
+echo stdout:; tee stdout <$at_stdout
+case $at_status in
+   77) echo 77 > $at_status_file
+            exit 77;;
+   0) ;;
+   *) echo "argv.at:29: exit code was $at_status, expected 0"
+      at_failed=:;;
+esac
+if $at_failed; then
+
+  echo 1 > $at_status_file
+  exit 1
+fi
+
+$at_traceon
+
       $at_traceoff
       $at_times_p && times >$at_times_file
     ) 5>&1 2>&1 | eval $at_tee_pipe
     at_status=`cat $at_status_file`
     ;;
 
-  5 ) # 5. argv.at:31: Non-existant working file
-    at_setup_line='argv.at:31'
+  5 ) # 5. argv.at:32: Non-existant working file
+    at_setup_line='argv.at:32'
     at_desc='Non-existant working file'
     $at_quiet $ECHO_N "  5: Non-existant working file                    $ECHO_C"
     at_xfail=no
     (
-      echo "5. argv.at:31: testing ..."
+      echo "5. argv.at:32: testing ..."
       $at_traceon
 
 
 
 $at_traceoff
-echo "argv.at:34: blame /nonexistant"
-echo argv.at:34 >$at_check_line_file
+echo "argv.at:35: blame /nonexistant"
+echo argv.at:35 >$at_check_line_file
 ( $at_traceon; blame /nonexistant ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -1166,7 +1183,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "argv.at:34: exit code was $at_status, expected 1"
+   *) echo "argv.at:35: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -1177,26 +1194,36 @@ fi
 
 $at_traceon
 
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+
       $at_traceoff
       $at_times_p && times >$at_times_file
     ) 5>&1 2>&1 | eval $at_tee_pipe
     at_status=`cat $at_status_file`
     ;;
 
-  6 ) # 6. argv.at:37: Non-existant RCS file
-    at_setup_line='argv.at:37'
+  6 ) # 6. argv.at:39: Non-existant RCS file
+    at_setup_line='argv.at:39'
     at_desc='Non-existant RCS file'
     $at_quiet $ECHO_N "  6: Non-existant RCS file                        $ECHO_C"
     at_xfail=no
     (
-      echo "6. argv.at:37: testing ..."
+      echo "6. argv.at:39: testing ..."
       $at_traceon
 
 
 
 $at_traceoff
-echo "argv.at:40: blame /nonexistant,v"
-echo argv.at:40 >$at_check_line_file
+echo "argv.at:42: blame /nonexistant,v"
+echo argv.at:42 >$at_check_line_file
 ( $at_traceon; blame /nonexistant,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -1208,7 +1235,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "argv.at:40: exit code was $at_status, expected 1"
+   *) echo "argv.at:42: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -1219,27 +1246,37 @@ fi
 
 $at_traceon
 
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+
       $at_traceoff
       $at_times_p && times >$at_times_file
     ) 5>&1 2>&1 | eval $at_tee_pipe
     at_status=`cat $at_status_file`
     ;;
 
-  7 ) # 7. argv.at:43: Filenames only
-    at_setup_line='argv.at:43'
+  7 ) # 7. argv.at:46: Filenames only
+    at_setup_line='argv.at:46'
     at_desc='Filenames only'
     $at_quiet $ECHO_N "  7: Filenames only                               $ECHO_C"
     at_xfail=no
     (
-      echo "7. argv.at:43: testing ..."
+      echo "7. argv.at:46: testing ..."
       $at_traceon
 
 
 cp $testdir/simple-1.2.expout expout
 cp $testdir/simple.experr experr
 $at_traceoff
-echo "argv.at:47: blame \$testdir/simple,v"
-echo argv.at:47 >$at_check_line_file
+echo "argv.at:50: blame \$testdir/simple,v"
+echo argv.at:50 >$at_check_line_file
 ( $at_traceon; blame $testdir/simple,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -1251,7 +1288,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "argv.at:47: exit code was $at_status, expected 0"
+   *) echo "argv.at:50: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -1265,8 +1302,8 @@ $at_traceon
 rm -f experr
 cat $testdir/simple.experr | sed "s,simple,$testdir/simple,g" > experr
 $at_traceoff
-echo "argv.at:50: blame \$testdir/simple"
-echo argv.at:50 >$at_check_line_file
+echo "argv.at:53: blame \$testdir/simple"
+echo argv.at:53 >$at_check_line_file
 ( $at_traceon; blame $testdir/simple ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -1278,7 +1315,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "argv.at:50: exit code was $at_status, expected 0"
+   *) echo "argv.at:53: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -1617,7 +1654,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -1714,6 +1755,49 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
+  17 ) # 17. rcs.at:24: Binary data
+    at_setup_line='rcs.at:24'
+    at_desc='Binary data'
+    $at_quiet $ECHO_N " 17: Binary data                                  $ECHO_C"
+    at_xfail=no
+    (
+      echo "17. rcs.at:24: testing ..."
+      $at_traceon
+
+
+cp $testdir/binary-1.2.expout expout
+cp $testdir/binary.experr experr
+$at_traceoff
+echo "rcs.at:28: blame -r1.2 \$testdir/binary,v"
+echo rcs.at:28 >$at_check_line_file
+( $at_traceon; blame -r1.2 $testdir/binary,v ) >$at_stdout 2>$at_stder1
+at_status=$?
+grep '^ *+' $at_stder1 >&2
+grep -v '^ *+' $at_stder1 >$at_stderr
+at_failed=false
+$at_diff experr $at_stderr || at_failed=:
+$at_diff expout $at_stdout || at_failed=:
+case $at_status in
+   77) echo 77 > $at_status_file
+            exit 77;;
+   0) ;;
+   *) echo "rcs.at:28: exit code was $at_status, expected 0"
+      at_failed=:;;
+esac
+if $at_failed; then
+
+  echo 1 > $at_status_file
+  exit 1
+fi
+
+$at_traceon
+
+      $at_traceoff
+      $at_times_p && times >$at_times_file
+    ) 5>&1 2>&1 | eval $at_tee_pipe
+    at_status=`cat $at_status_file`
+    ;;
+
 
   banner-4 ) # Banner 4. rev.at:1
     cat <<\_ATEOF
@@ -1723,13 +1807,13 @@ $at_traceon
 _ATEOF
     ;;
 
-  17 ) # 17. rev.at:3: No revision
+  18 ) # 18. rev.at:3: No revision
     at_setup_line='rev.at:3'
     at_desc='No revision'
-    $at_quiet $ECHO_N " 17: No revision                                  $ECHO_C"
+    $at_quiet $ECHO_N " 18: No revision                                  $ECHO_C"
     at_xfail=no
     (
-      echo "17. rev.at:3: testing ..."
+      echo "18. rev.at:3: testing ..."
       $at_traceon
 
 
@@ -1791,13 +1875,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  18 ) # 18. rev.at:11: Multiple revisions
+  19 ) # 19. rev.at:11: Multiple revisions
     at_setup_line='rev.at:11'
     at_desc='Multiple revisions'
-    $at_quiet $ECHO_N " 18: Multiple revisions                           $ECHO_C"
+    $at_quiet $ECHO_N " 19: Multiple revisions                           $ECHO_C"
     at_xfail=no
     (
-      echo "18. rev.at:11: testing ..."
+      echo "19. rev.at:11: testing ..."
       $at_traceon
 
 
@@ -1828,7 +1912,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -1839,13 +1927,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  19 ) # 19. rev.at:18: Single dot
+  20 ) # 20. rev.at:18: Single dot
     at_setup_line='rev.at:18'
     at_desc='Single dot'
-    $at_quiet $ECHO_N " 19: Single dot                                   $ECHO_C"
+    $at_quiet $ECHO_N " 20: Single dot                                   $ECHO_C"
     at_xfail=no
     (
-      echo "19. rev.at:18: testing ..."
+      echo "20. rev.at:18: testing ..."
       $at_traceon
 
 
@@ -1907,13 +1995,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  20 ) # 20. rev.at:26: Valid trunk branch
+  21 ) # 21. rev.at:26: Valid trunk branch
     at_setup_line='rev.at:26'
     at_desc='Valid trunk branch'
-    $at_quiet $ECHO_N " 20: Valid trunk branch                           $ECHO_C"
+    $at_quiet $ECHO_N " 21: Valid trunk branch                           $ECHO_C"
     at_xfail=no
     (
-      echo "20. rev.at:26: testing ..."
+      echo "21. rev.at:26: testing ..."
       $at_traceon
 
 
@@ -1950,13 +2038,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  21 ) # 21. rev.at:33: Invalid trunk branch
+  22 ) # 22. rev.at:33: Invalid trunk branch
     at_setup_line='rev.at:33'
     at_desc='Invalid trunk branch'
-    $at_quiet $ECHO_N " 21: Invalid trunk branch                         $ECHO_C"
+    $at_quiet $ECHO_N " 22: Invalid trunk branch                         $ECHO_C"
     at_xfail=no
     (
-      echo "21. rev.at:33: testing ..."
+      echo "22. rev.at:33: testing ..."
       $at_traceon
 
 
@@ -1987,7 +2075,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -1998,13 +2090,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  22 ) # 22. rev.at:40: Valid trunk branch and dot
+  23 ) # 23. rev.at:40: Valid trunk branch and dot
     at_setup_line='rev.at:40'
     at_desc='Valid trunk branch and dot'
-    $at_quiet $ECHO_N " 22: Valid trunk branch and dot                   $ECHO_C"
+    $at_quiet $ECHO_N " 23: Valid trunk branch and dot                   $ECHO_C"
     at_xfail=no
     (
-      echo "22. rev.at:40: testing ..."
+      echo "23. rev.at:40: testing ..."
       $at_traceon
 
 
@@ -2041,13 +2133,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  23 ) # 23. rev.at:47: Invalid trunk branch and dot
+  24 ) # 24. rev.at:47: Invalid trunk branch and dot
     at_setup_line='rev.at:47'
     at_desc='Invalid trunk branch and dot'
-    $at_quiet $ECHO_N " 23: Invalid trunk branch and dot                 $ECHO_C"
+    $at_quiet $ECHO_N " 24: Invalid trunk branch and dot                 $ECHO_C"
     at_xfail=no
     (
-      echo "23. rev.at:47: testing ..."
+      echo "24. rev.at:47: testing ..."
       $at_traceon
 
 
@@ -2078,7 +2170,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2089,13 +2185,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  24 ) # 24. rev.at:54: Dot and revision
+  25 ) # 25. rev.at:54: Dot and revision
     at_setup_line='rev.at:54'
     at_desc='Dot and revision'
-    $at_quiet $ECHO_N " 24: Dot and revision                             $ECHO_C"
+    $at_quiet $ECHO_N " 25: Dot and revision                             $ECHO_C"
     at_xfail=no
     (
-      echo "24. rev.at:54: testing ..."
+      echo "25. rev.at:54: testing ..."
       $at_traceon
 
 
@@ -2132,13 +2228,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  25 ) # 25. rev.at:61: Dot and late revision
+  26 ) # 26. rev.at:61: Dot and late revision
     at_setup_line='rev.at:61'
     at_desc='Dot and late revision'
-    $at_quiet $ECHO_N " 25: Dot and late revision                        $ECHO_C"
+    $at_quiet $ECHO_N " 26: Dot and late revision                        $ECHO_C"
     at_xfail=no
     (
-      echo "25. rev.at:61: testing ..."
+      echo "26. rev.at:61: testing ..."
       $at_traceon
 
 
@@ -2175,13 +2271,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  26 ) # 26. rev.at:68: Dot and early revision
+  27 ) # 27. rev.at:68: Dot and early revision
     at_setup_line='rev.at:68'
     at_desc='Dot and early revision'
-    $at_quiet $ECHO_N " 26: Dot and early revision                       $ECHO_C"
+    $at_quiet $ECHO_N " 27: Dot and early revision                       $ECHO_C"
     at_xfail=no
     (
-      echo "26. rev.at:68: testing ..."
+      echo "27. rev.at:68: testing ..."
       $at_traceon
 
 
@@ -2212,7 +2308,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2223,13 +2323,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  27 ) # 27. rev.at:75: Symbolic trunk branch
+  28 ) # 28. rev.at:75: Symbolic trunk branch
     at_setup_line='rev.at:75'
     at_desc='Symbolic trunk branch'
-    $at_quiet $ECHO_N " 27: Symbolic trunk branch                        $ECHO_C"
+    $at_quiet $ECHO_N " 28: Symbolic trunk branch                        $ECHO_C"
     at_xfail=no
     (
-      echo "27. rev.at:75: testing ..."
+      echo "28. rev.at:75: testing ..."
       $at_traceon
 
 
@@ -2267,13 +2367,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  28 ) # 28. rev.at:83: Symbolic trunk branch and dot
+  29 ) # 29. rev.at:83: Symbolic trunk branch and dot
     at_setup_line='rev.at:83'
     at_desc='Symbolic trunk branch and dot'
-    $at_quiet $ECHO_N " 28: Symbolic trunk branch and dot                $ECHO_C"
+    $at_quiet $ECHO_N " 29: Symbolic trunk branch and dot                $ECHO_C"
     at_xfail=no
     (
-      echo "28. rev.at:83: testing ..."
+      echo "29. rev.at:83: testing ..."
       $at_traceon
 
 
@@ -2311,13 +2411,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  29 ) # 29. rev.at:91: Symbolic trunk branch and revision
+  30 ) # 30. rev.at:91: Symbolic trunk branch and revision
     at_setup_line='rev.at:91'
     at_desc='Symbolic trunk branch and revision'
-    $at_quiet $ECHO_N " 29: Symbolic trunk branch and revision           $ECHO_C"
+    $at_quiet $ECHO_N " 30: Symbolic trunk branch and revision           $ECHO_C"
     at_xfail=no
     (
-      echo "29. rev.at:91: testing ..."
+      echo "30. rev.at:91: testing ..."
       $at_traceon
 
 
@@ -2355,13 +2455,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  30 ) # 30. rev.at:99: Symbolic trunk branch and late revision
+  31 ) # 31. rev.at:99: Symbolic trunk branch and late revision
     at_setup_line='rev.at:99'
     at_desc='Symbolic trunk branch and late revision'
-    $at_quiet $ECHO_N " 30: Symbolic trunk branch and late revision      $ECHO_C"
+    $at_quiet $ECHO_N " 31: Symbolic trunk branch and late revision      $ECHO_C"
     at_xfail=no
     (
-      echo "30. rev.at:99: testing ..."
+      echo "31. rev.at:99: testing ..."
       $at_traceon
 
 
@@ -2399,13 +2499,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  31 ) # 31. rev.at:107: Symbolic trunk branch and early revision
+  32 ) # 32. rev.at:107: Symbolic trunk branch and early revision
     at_setup_line='rev.at:107'
     at_desc='Symbolic trunk branch and early revision'
-    $at_quiet $ECHO_N " 31: Symbolic trunk branch and early revision     $ECHO_C"
+    $at_quiet $ECHO_N " 32: Symbolic trunk branch and early revision     $ECHO_C"
     at_xfail=no
     (
-      echo "31. rev.at:107: testing ..."
+      echo "32. rev.at:107: testing ..."
       $at_traceon
 
 
@@ -2437,7 +2537,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2448,13 +2552,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  32 ) # 32. rev.at:115: Symbolic revision
+  33 ) # 33. rev.at:115: Symbolic revision
     at_setup_line='rev.at:115'
     at_desc='Symbolic revision'
-    $at_quiet $ECHO_N " 32: Symbolic revision                            $ECHO_C"
+    $at_quiet $ECHO_N " 33: Symbolic revision                            $ECHO_C"
     at_xfail=no
     (
-      echo "32. rev.at:115: testing ..."
+      echo "33. rev.at:115: testing ..."
       $at_traceon
 
 
@@ -2492,13 +2596,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  33 ) # 33. rev.at:123: Dot and symbolic revision
+  34 ) # 34. rev.at:123: Dot and symbolic revision
     at_setup_line='rev.at:123'
     at_desc='Dot and symbolic revision'
-    $at_quiet $ECHO_N " 33: Dot and symbolic revision                    $ECHO_C"
+    $at_quiet $ECHO_N " 34: Dot and symbolic revision                    $ECHO_C"
     at_xfail=no
     (
-      echo "33. rev.at:123: testing ..."
+      echo "34. rev.at:123: testing ..."
       $at_traceon
 
 
@@ -2536,13 +2640,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  34 ) # 34. rev.at:131: Symbolic trunk branch and symbolic revision
+  35 ) # 35. rev.at:131: Symbolic trunk branch and symbolic revision
     at_setup_line='rev.at:131'
     at_desc='Symbolic trunk branch and symbolic revision'
-    $at_quiet $ECHO_N " 34: Symbolic trunk branch and symbolic revision  $ECHO_C"
+    $at_quiet $ECHO_N " 35: Symbolic trunk branch and symbolic revision  $ECHO_C"
     at_xfail=no
     (
-      echo "34. rev.at:131: testing ..."
+      echo "35. rev.at:131: testing ..."
       $at_traceon
 
 
@@ -2580,13 +2684,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  35 ) # 35. rev.at:139: Invalid symbol
+  36 ) # 36. rev.at:139: Invalid symbol
     at_setup_line='rev.at:139'
     at_desc='Invalid symbol'
-    $at_quiet $ECHO_N " 35: Invalid symbol                               $ECHO_C"
+    $at_quiet $ECHO_N " 36: Invalid symbol                               $ECHO_C"
     at_xfail=no
     (
-      echo "35. rev.at:139: testing ..."
+      echo "36. rev.at:139: testing ..."
       $at_traceon
 
 
@@ -2618,7 +2722,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2649,7 +2757,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2680,7 +2792,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2711,7 +2827,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2731,13 +2851,13 @@ Resolving revisions on branches.
 _ATEOF
     ;;
 
-  36 ) # 36. branch.at:3: Revision on branch
+  37 ) # 37. branch.at:3: Revision on branch
     at_setup_line='branch.at:3'
     at_desc='Revision on branch'
-    $at_quiet $ECHO_N " 36: Revision on branch                           $ECHO_C"
+    $at_quiet $ECHO_N " 37: Revision on branch                           $ECHO_C"
     at_xfail=no
     (
-      echo "36. branch.at:3: testing ..."
+      echo "37. branch.at:3: testing ..."
       $at_traceon
 
 
@@ -2775,13 +2895,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  37 ) # 37. branch.at:11: Revision on deep branch
+  38 ) # 38. branch.at:11: Revision on deep branch
     at_setup_line='branch.at:11'
     at_desc='Revision on deep branch'
-    $at_quiet $ECHO_N " 37: Revision on deep branch                      $ECHO_C"
+    $at_quiet $ECHO_N " 38: Revision on deep branch                      $ECHO_C"
     at_xfail=no
     (
-      echo "37. branch.at:11: testing ..."
+      echo "38. branch.at:11: testing ..."
       $at_traceon
 
 
@@ -2819,13 +2939,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  38 ) # 38. branch.at:19: Valid branch
+  39 ) # 39. branch.at:19: Valid branch
     at_setup_line='branch.at:19'
     at_desc='Valid branch'
-    $at_quiet $ECHO_N " 38: Valid branch                                 $ECHO_C"
+    $at_quiet $ECHO_N " 39: Valid branch                                 $ECHO_C"
     at_xfail=no
     (
-      echo "38. branch.at:19: testing ..."
+      echo "39. branch.at:19: testing ..."
       $at_traceon
 
 
@@ -2862,13 +2982,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  39 ) # 39. branch.at:26: Invalid branch
+  40 ) # 40. branch.at:26: Invalid branch
     at_setup_line='branch.at:26'
     at_desc='Invalid branch'
-    $at_quiet $ECHO_N " 39: Invalid branch                               $ECHO_C"
+    $at_quiet $ECHO_N " 40: Invalid branch                               $ECHO_C"
     at_xfail=no
     (
-      echo "39. branch.at:26: testing ..."
+      echo "40. branch.at:26: testing ..."
       $at_traceon
 
 
@@ -2900,7 +3020,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -2911,13 +3035,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  40 ) # 40. branch.at:34: Valid branch and dot
+  41 ) # 41. branch.at:34: Valid branch and dot
     at_setup_line='branch.at:34'
     at_desc='Valid branch and dot'
-    $at_quiet $ECHO_N " 40: Valid branch and dot                         $ECHO_C"
+    $at_quiet $ECHO_N " 41: Valid branch and dot                         $ECHO_C"
     at_xfail=no
     (
-      echo "40. branch.at:34: testing ..."
+      echo "41. branch.at:34: testing ..."
       $at_traceon
 
 
@@ -2954,13 +3078,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  41 ) # 41. branch.at:41: Invalid branch and dot
+  42 ) # 42. branch.at:41: Invalid branch and dot
     at_setup_line='branch.at:41'
     at_desc='Invalid branch and dot'
-    $at_quiet $ECHO_N " 41: Invalid branch and dot                       $ECHO_C"
+    $at_quiet $ECHO_N " 42: Invalid branch and dot                       $ECHO_C"
     at_xfail=no
     (
-      echo "41. branch.at:41: testing ..."
+      echo "42. branch.at:41: testing ..."
       $at_traceon
 
 
@@ -2992,7 +3116,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -3003,13 +3131,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  42 ) # 42. branch.at:49: Dot and revision on branch
+  43 ) # 43. branch.at:49: Dot and revision on branch
     at_setup_line='branch.at:49'
     at_desc='Dot and revision on branch'
-    $at_quiet $ECHO_N " 42: Dot and revision on branch                   $ECHO_C"
+    $at_quiet $ECHO_N " 43: Dot and revision on branch                   $ECHO_C"
     at_xfail=no
     (
-      echo "42. branch.at:49: testing ..."
+      echo "43. branch.at:49: testing ..."
       $at_traceon
 
 
@@ -3047,13 +3175,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  43 ) # 43. branch.at:57: Dot and late revision on branch
+  44 ) # 44. branch.at:57: Dot and late revision on branch
     at_setup_line='branch.at:57'
     at_desc='Dot and late revision on branch'
-    $at_quiet $ECHO_N " 43: Dot and late revision on branch              $ECHO_C"
+    $at_quiet $ECHO_N " 44: Dot and late revision on branch              $ECHO_C"
     at_xfail=no
     (
-      echo "43. branch.at:57: testing ..."
+      echo "44. branch.at:57: testing ..."
       $at_traceon
 
 
@@ -3091,13 +3219,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  44 ) # 44. branch.at:65: Dot and early revision on branch
+  45 ) # 45. branch.at:65: Dot and early revision on branch
     at_setup_line='branch.at:65'
     at_desc='Dot and early revision on branch'
-    $at_quiet $ECHO_N " 44: Dot and early revision on branch             $ECHO_C"
+    $at_quiet $ECHO_N " 45: Dot and early revision on branch             $ECHO_C"
     at_xfail=no
     (
-      echo "44. branch.at:65: testing ..."
+      echo "45. branch.at:65: testing ..."
       $at_traceon
 
 
@@ -3129,7 +3257,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -3140,13 +3272,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  45 ) # 45. branch.at:73: Dot and branch
+  46 ) # 46. branch.at:73: Dot and branch
     at_setup_line='branch.at:73'
     at_desc='Dot and branch'
-    $at_quiet $ECHO_N " 45: Dot and branch                               $ECHO_C"
+    $at_quiet $ECHO_N " 46: Dot and branch                               $ECHO_C"
     at_xfail=no
     (
-      echo "45. branch.at:73: testing ..."
+      echo "46. branch.at:73: testing ..."
       $at_traceon
 
 
@@ -3184,13 +3316,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  46 ) # 46. branch.at:81: Dot, branch and dot
+  47 ) # 47. branch.at:81: Dot, branch and dot
     at_setup_line='branch.at:81'
     at_desc='Dot, branch and dot'
-    $at_quiet $ECHO_N " 46: Dot, branch and dot                          $ECHO_C"
+    $at_quiet $ECHO_N " 47: Dot, branch and dot                          $ECHO_C"
     at_xfail=no
     (
-      echo "46. branch.at:81: testing ..."
+      echo "47. branch.at:81: testing ..."
       $at_traceon
 
 
@@ -3228,13 +3360,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  47 ) # 47. branch.at:89: Symbolic branch
+  48 ) # 48. branch.at:89: Symbolic branch
     at_setup_line='branch.at:89'
     at_desc='Symbolic branch'
-    $at_quiet $ECHO_N " 47: Symbolic branch                              $ECHO_C"
+    $at_quiet $ECHO_N " 48: Symbolic branch                              $ECHO_C"
     at_xfail=no
     (
-      echo "47. branch.at:89: testing ..."
+      echo "48. branch.at:89: testing ..."
       $at_traceon
 
 
@@ -3273,13 +3405,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  48 ) # 48. branch.at:98: Symbolic branch and dot
+  49 ) # 49. branch.at:98: Symbolic branch and dot
     at_setup_line='branch.at:98'
     at_desc='Symbolic branch and dot'
-    $at_quiet $ECHO_N " 48: Symbolic branch and dot                      $ECHO_C"
+    $at_quiet $ECHO_N " 49: Symbolic branch and dot                      $ECHO_C"
     at_xfail=no
     (
-      echo "48. branch.at:98: testing ..."
+      echo "49. branch.at:98: testing ..."
       $at_traceon
 
 
@@ -3318,13 +3450,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  49 ) # 49. branch.at:107: Symbolic branch and revision
+  50 ) # 50. branch.at:107: Symbolic branch and revision
     at_setup_line='branch.at:107'
     at_desc='Symbolic branch and revision'
-    $at_quiet $ECHO_N " 49: Symbolic branch and revision                 $ECHO_C"
+    $at_quiet $ECHO_N " 50: Symbolic branch and revision                 $ECHO_C"
     at_xfail=no
     (
-      echo "49. branch.at:107: testing ..."
+      echo "50. branch.at:107: testing ..."
       $at_traceon
 
 
@@ -3363,13 +3495,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  50 ) # 50. branch.at:116: Symbolic branch and late revision
+  51 ) # 51. branch.at:116: Symbolic branch and late revision
     at_setup_line='branch.at:116'
     at_desc='Symbolic branch and late revision'
-    $at_quiet $ECHO_N " 50: Symbolic branch and late revision            $ECHO_C"
+    $at_quiet $ECHO_N " 51: Symbolic branch and late revision            $ECHO_C"
     at_xfail=no
     (
-      echo "50. branch.at:116: testing ..."
+      echo "51. branch.at:116: testing ..."
       $at_traceon
 
 
@@ -3408,13 +3540,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  51 ) # 51. branch.at:125: Symbolic branch and early revision
+  52 ) # 52. branch.at:125: Symbolic branch and early revision
     at_setup_line='branch.at:125'
     at_desc='Symbolic branch and early revision'
-    $at_quiet $ECHO_N " 51: Symbolic branch and early revision           $ECHO_C"
+    $at_quiet $ECHO_N " 52: Symbolic branch and early revision           $ECHO_C"
     at_xfail=no
     (
-      echo "51. branch.at:125: testing ..."
+      echo "52. branch.at:125: testing ..."
       $at_traceon
 
 
@@ -3447,7 +3579,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -3458,13 +3594,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  52 ) # 52. branch.at:134: Symbolic revision on branch
+  53 ) # 53. branch.at:134: Symbolic revision on branch
     at_setup_line='branch.at:134'
     at_desc='Symbolic revision on branch'
-    $at_quiet $ECHO_N " 52: Symbolic revision on branch                  $ECHO_C"
+    $at_quiet $ECHO_N " 53: Symbolic revision on branch                  $ECHO_C"
     at_xfail=no
     (
-      echo "52. branch.at:134: testing ..."
+      echo "53. branch.at:134: testing ..."
       $at_traceon
 
 
@@ -3503,13 +3639,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  53 ) # 53. branch.at:143: Dot and symbolic revision on branch
+  54 ) # 54. branch.at:143: Dot and symbolic revision on branch
     at_setup_line='branch.at:143'
     at_desc='Dot and symbolic revision on branch'
-    $at_quiet $ECHO_N " 53: Dot and symbolic revision on branch          $ECHO_C"
+    $at_quiet $ECHO_N " 54: Dot and symbolic revision on branch          $ECHO_C"
     at_xfail=no
     (
-      echo "53. branch.at:143: testing ..."
+      echo "54. branch.at:143: testing ..."
       $at_traceon
 
 
@@ -3548,13 +3684,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  54 ) # 54. branch.at:152: Dot and syumbolic branch
+  55 ) # 55. branch.at:152: Dot and symbolic branch
     at_setup_line='branch.at:152'
-    at_desc='Dot and syumbolic branch'
-    $at_quiet $ECHO_N " 54: Dot and syumbolic branch                     $ECHO_C"
+    at_desc='Dot and symbolic branch'
+    $at_quiet $ECHO_N " 55: Dot and symbolic branch                      $ECHO_C"
     at_xfail=no
     (
-      echo "54. branch.at:152: testing ..."
+      echo "55. branch.at:152: testing ..."
       $at_traceon
 
 
@@ -3592,13 +3728,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  55 ) # 55. branch.at:160: Dot, symbolic branch and dot
+  56 ) # 56. branch.at:160: Dot, symbolic branch and dot
     at_setup_line='branch.at:160'
     at_desc='Dot, symbolic branch and dot'
-    $at_quiet $ECHO_N " 55: Dot, symbolic branch and dot                 $ECHO_C"
+    $at_quiet $ECHO_N " 56: Dot, symbolic branch and dot                 $ECHO_C"
     at_xfail=no
     (
-      echo "55. branch.at:160: testing ..."
+      echo "56. branch.at:160: testing ..."
       $at_traceon
 
 
@@ -3636,13 +3772,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  56 ) # 56. branch.at:168: Symbolic branch and symbolic revision
+  57 ) # 57. branch.at:168: Symbolic branch and symbolic revision
     at_setup_line='branch.at:168'
     at_desc='Symbolic branch and symbolic revision'
-    $at_quiet $ECHO_N " 56: Symbolic branch and symbolic revision        $ECHO_C"
+    $at_quiet $ECHO_N " 57: Symbolic branch and symbolic revision        $ECHO_C"
     at_xfail=no
     (
-      echo "56. branch.at:168: testing ..."
+      echo "57. branch.at:168: testing ..."
       $at_traceon
 
 
@@ -3681,13 +3817,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  57 ) # 57. branch.at:177: Number, symbol and symbol
+  58 ) # 58. branch.at:177: Number, symbol and symbol
     at_setup_line='branch.at:177'
     at_desc='Number, symbol and symbol'
-    $at_quiet $ECHO_N " 57: Number, symbol and symbol                    $ECHO_C"
+    $at_quiet $ECHO_N " 58: Number, symbol and symbol                    $ECHO_C"
     at_xfail=no
     (
-      echo "57. branch.at:177: testing ..."
+      echo "58. branch.at:177: testing ..."
       $at_traceon
 
 
@@ -3726,13 +3862,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  58 ) # 58. branch.at:186: Symbol, number and symbol
+  59 ) # 59. branch.at:186: Symbol, number and symbol
     at_setup_line='branch.at:186'
     at_desc='Symbol, number and symbol'
-    $at_quiet $ECHO_N " 58: Symbol, number and symbol                    $ECHO_C"
+    $at_quiet $ECHO_N " 59: Symbol, number and symbol                    $ECHO_C"
     at_xfail=no
     (
-      echo "58. branch.at:186: testing ..."
+      echo "59. branch.at:186: testing ..."
       $at_traceon
 
 
@@ -3771,13 +3907,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  59 ) # 59. branch.at:195: Symbol, symbol and number
+  60 ) # 60. branch.at:195: Symbol, symbol and number
     at_setup_line='branch.at:195'
     at_desc='Symbol, symbol and number'
-    $at_quiet $ECHO_N " 59: Symbol, symbol and number                    $ECHO_C"
+    $at_quiet $ECHO_N " 60: Symbol, symbol and number                    $ECHO_C"
     at_xfail=no
     (
-      echo "59. branch.at:195: testing ..."
+      echo "60. branch.at:195: testing ..."
       $at_traceon
 
 
@@ -3816,13 +3952,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  60 ) # 60. branch.at:204: Number, symbol and number
+  61 ) # 61. branch.at:204: Number, symbol and number
     at_setup_line='branch.at:204'
     at_desc='Number, symbol and number'
-    $at_quiet $ECHO_N " 60: Number, symbol and number                    $ECHO_C"
+    $at_quiet $ECHO_N " 61: Number, symbol and number                    $ECHO_C"
     at_xfail=no
     (
-      echo "60. branch.at:204: testing ..."
+      echo "61. branch.at:204: testing ..."
       $at_traceon
 
 
@@ -3870,13 +4006,13 @@ Handling RCS tags in working files.
 _ATEOF
     ;;
 
-  61 ) # 61. working.at:3: Valid revision
+  62 ) # 62. working.at:3: Valid revision
     at_setup_line='working.at:3'
     at_desc='Valid revision'
-    $at_quiet $ECHO_N " 61: Valid revision                               $ECHO_C"
+    $at_quiet $ECHO_N " 62: Valid revision                               $ECHO_C"
     at_xfail=no
     (
-      echo "61. working.at:3: testing ..."
+      echo "62. working.at:3: testing ..."
       $at_traceon
 
 
@@ -3972,13 +4108,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  62 ) # 62. working.at:21: Early revision
+  63 ) # 63. working.at:21: Early revision
     at_setup_line='working.at:21'
     at_desc='Early revision'
-    $at_quiet $ECHO_N " 62: Early revision                               $ECHO_C"
+    $at_quiet $ECHO_N " 63: Early revision                               $ECHO_C"
     at_xfail=no
     (
-      echo "62. working.at:21: testing ..."
+      echo "63. working.at:21: testing ..."
       $at_traceon
 
 
@@ -4012,12 +4148,22 @@ fi
 
 $at_traceon
 
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+
 cat <<EOF > keywords
 \$Id: keywords,v 1.0 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:32: blame -r'\$' \$testdir/keywords,v"
-echo working.at:32 >$at_check_line_file
+echo "working.at:33: blame -r'\$' \$testdir/keywords,v"
+echo working.at:33 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4029,7 +4175,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "working.at:32: exit code was $at_status, expected 1"
+   *) echo "working.at:33: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4039,13 +4185,23 @@ if $at_failed; then
 fi
 
 $at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
 
 cat <<EOF > keywords
 \$Header: $testdir/keywords,v 1.0 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:36: blame -r'\$' \$testdir/keywords,v"
-echo working.at:36 >$at_check_line_file
+echo "working.at:38: blame -r'\$' \$testdir/keywords,v"
+echo working.at:38 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4057,7 +4213,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "working.at:36: exit code was $at_status, expected 1"
+   *) echo "working.at:38: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4067,6 +4223,16 @@ if $at_failed; then
 fi
 
 $at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
 
       $at_traceoff
       $at_times_p && times >$at_times_file
@@ -4074,13 +4240,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  63 ) # 63. working.at:39: Late revision
-    at_setup_line='working.at:39'
+  64 ) # 64. working.at:42: Late revision
+    at_setup_line='working.at:42'
     at_desc='Late revision'
-    $at_quiet $ECHO_N " 63: Late revision                                $ECHO_C"
+    $at_quiet $ECHO_N " 64: Late revision                                $ECHO_C"
     at_xfail=no
     (
-      echo "63. working.at:39: testing ..."
+      echo "64. working.at:42: testing ..."
       $at_traceon
 
 
@@ -4090,8 +4256,8 @@ cat <<EOF > keywords
 \$Revision: 1.2 \$
 EOF
 $at_traceoff
-echo "working.at:46: blame -r'\$' \$testdir/keywords,v"
-echo working.at:46 >$at_check_line_file
+echo "working.at:49: blame -r'\$' \$testdir/keywords,v"
+echo working.at:49 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4103,7 +4269,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "working.at:46: exit code was $at_status, expected 0"
+   *) echo "working.at:49: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4118,8 +4284,8 @@ cat <<EOF > keywords
 \$Id: keywords,v 1.2 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:50: blame -r'\$' \$testdir/keywords,v"
-echo working.at:50 >$at_check_line_file
+echo "working.at:53: blame -r'\$' \$testdir/keywords,v"
+echo working.at:53 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4131,7 +4297,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "working.at:50: exit code was $at_status, expected 0"
+   *) echo "working.at:53: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4146,8 +4312,8 @@ cat <<EOF > keywords
 \$Header: $testdir/keywords,v 1.2 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:54: blame -r'\$' \$testdir/keywords,v"
-echo working.at:54 >$at_check_line_file
+echo "working.at:57: blame -r'\$' \$testdir/keywords,v"
+echo working.at:57 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4159,7 +4325,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "working.at:54: exit code was $at_status, expected 0"
+   *) echo "working.at:57: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4176,13 +4342,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  64 ) # 64. working.at:57: Branch
-    at_setup_line='working.at:57'
+  65 ) # 65. working.at:60: Branch
+    at_setup_line='working.at:60'
     at_desc='Branch'
-    $at_quiet $ECHO_N " 64: Branch                                       $ECHO_C"
+    $at_quiet $ECHO_N " 65: Branch                                       $ECHO_C"
     at_xfail=no
     (
-      echo "64. working.at:57: testing ..."
+      echo "65. working.at:60: testing ..."
       $at_traceon
 
 
@@ -4192,8 +4358,8 @@ cat <<EOF > keywords
 \$Revision: 1 \$
 EOF
 $at_traceoff
-echo "working.at:64: blame -r'\$' \$testdir/keywords,v"
-echo working.at:64 >$at_check_line_file
+echo "working.at:67: blame -r'\$' \$testdir/keywords,v"
+echo working.at:67 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4205,7 +4371,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "working.at:64: exit code was $at_status, expected 1"
+   *) echo "working.at:67: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4215,37 +4381,19 @@ if $at_failed; then
 fi
 
 $at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
 
 cat <<EOF > keywords
 \$Id: keywords,v 1 2001/01/01 01:01:01 username Exp \$
-EOF
-$at_traceoff
-echo "working.at:68: blame -r'\$' \$testdir/keywords,v"
-echo working.at:68 >$at_check_line_file
-( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
-at_status=$?
-grep '^ *+' $at_stder1 >&2
-grep -v '^ *+' $at_stder1 >$at_stderr
-at_failed=false
-echo stderr:; cat $at_stderr
-$at_diff $at_devnull $at_stdout || at_failed=:
-case $at_status in
-   77) echo 77 > $at_status_file
-            exit 77;;
-   1) ;;
-   *) echo "working.at:68: exit code was $at_status, expected 1"
-      at_failed=:;;
-esac
-if $at_failed; then
-
-  echo 1 > $at_status_file
-  exit 1
-fi
-
-$at_traceon
-
-cat <<EOF > keywords
-\$Header: $testdir/keywords,v 1 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
 echo "working.at:72: blame -r'\$' \$testdir/keywords,v"
@@ -4272,19 +4420,67 @@ fi
 
 $at_traceon
 
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+
+cat <<EOF > keywords
+\$Header: $testdir/keywords,v 1 2001/01/01 01:01:01 username Exp \$
+EOF
+$at_traceoff
+echo "working.at:77: blame -r'\$' \$testdir/keywords,v"
+echo working.at:77 >$at_check_line_file
+( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
+at_status=$?
+grep '^ *+' $at_stder1 >&2
+grep -v '^ *+' $at_stder1 >$at_stderr
+at_failed=false
+echo stderr:; cat $at_stderr
+$at_diff $at_devnull $at_stdout || at_failed=:
+case $at_status in
+   77) echo 77 > $at_status_file
+            exit 77;;
+   1) ;;
+   *) echo "working.at:77: exit code was $at_status, expected 1"
+      at_failed=:;;
+esac
+if $at_failed; then
+
+  echo 1 > $at_status_file
+  exit 1
+fi
+
+$at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
+
       $at_traceoff
       $at_times_p && times >$at_times_file
     ) 5>&1 2>&1 | eval $at_tee_pipe
     at_status=`cat $at_status_file`
     ;;
 
-  65 ) # 65. working.at:75: Other non-revision
-    at_setup_line='working.at:75'
+  66 ) # 66. working.at:81: Other non-revision
+    at_setup_line='working.at:81'
     at_desc='Other non-revision'
-    $at_quiet $ECHO_N " 65: Other non-revision                           $ECHO_C"
+    $at_quiet $ECHO_N " 66: Other non-revision                           $ECHO_C"
     at_xfail=no
     (
-      echo "65. working.at:75: testing ..."
+      echo "66. working.at:81: testing ..."
       $at_traceon
 
 
@@ -4294,8 +4490,8 @@ cat <<EOF > keywords
 \$Revision: bar \$
 EOF
 $at_traceoff
-echo "working.at:82: blame -r'\$' \$testdir/keywords,v"
-echo working.at:82 >$at_check_line_file
+echo "working.at:88: blame -r'\$' \$testdir/keywords,v"
+echo working.at:88 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4307,7 +4503,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "working.at:82: exit code was $at_status, expected 1"
+   *) echo "working.at:88: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4317,13 +4513,23 @@ if $at_failed; then
 fi
 
 $at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
 
 cat <<EOF > keywords
 \$Id: keywords,v bar 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:86: blame -r'\$' \$testdir/keywords,v"
-echo working.at:86 >$at_check_line_file
+echo "working.at:93: blame -r'\$' \$testdir/keywords,v"
+echo working.at:93 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4335,7 +4541,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "working.at:86: exit code was $at_status, expected 1"
+   *) echo "working.at:93: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4345,13 +4551,23 @@ if $at_failed; then
 fi
 
 $at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
 
 cat <<EOF > keywords
 \$Header: $testdir/keywords,v bar 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:90: blame -r'\$' \$testdir/keywords,v"
-echo working.at:90 >$at_check_line_file
+echo "working.at:98: blame -r'\$' \$testdir/keywords,v"
+echo working.at:98 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4363,7 +4579,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "working.at:90: exit code was $at_status, expected 1"
+   *) echo "working.at:98: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4373,6 +4589,16 @@ if $at_failed; then
 fi
 
 $at_traceon
+
+
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
+	echo 1 > $at_status_file
+	exit 1
+fi
 
       $at_traceoff
       $at_times_p && times >$at_times_file
@@ -4380,13 +4606,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  66 ) # 66. working.at:93: Parsing escape sequences
-    at_setup_line='working.at:93'
+  67 ) # 67. working.at:102: Parsing escape sequences
+    at_setup_line='working.at:102'
     at_desc='Parsing escape sequences'
-    $at_quiet $ECHO_N " 66: Parsing escape sequences                     $ECHO_C"
+    $at_quiet $ECHO_N " 67: Parsing escape sequences                     $ECHO_C"
     at_xfail=no
     (
-      echo "66. working.at:93: testing ..."
+      echo "67. working.at:102: testing ..."
       $at_traceon
 
 
@@ -4396,8 +4622,8 @@ cat <<EOF > keywords
 \$Id: file\twith\nweird\\symbols\040in\044it,v 1.1 2001/01/01 01:01:01 username Exp \$
 EOF
 $at_traceoff
-echo "working.at:100: blame -r'\$' \$testdir/keywords,v"
-echo working.at:100 >$at_check_line_file
+echo "working.at:109: blame -r'\$' \$testdir/keywords,v"
+echo working.at:109 >$at_check_line_file
 ( $at_traceon; blame -r'$' $testdir/keywords,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -4409,7 +4635,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "working.at:100: exit code was $at_status, expected 0"
+   *) echo "working.at:109: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4426,13 +4652,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  67 ) # 67. working.at:103: Producing escape sequences
-    at_setup_line='working.at:103'
+  68 ) # 68. working.at:112: Producing escape sequences
+    at_setup_line='working.at:112'
     at_desc='Producing escape sequences'
-    $at_quiet $ECHO_N " 67: Producing escape sequences                   $ECHO_C"
+    $at_quiet $ECHO_N " 68: Producing escape sequences                   $ECHO_C"
     at_xfail=no
     (
-      echo "67. working.at:103: testing ..."
+      echo "68. working.at:112: testing ..."
       $at_traceon
 
 
@@ -4442,9 +4668,9 @@ cat <<EOF > 'x$ x'
 EOF
 cat $testdir/escape.experr | sed 's,escape,x$ x,g' > experr
 $at_traceoff
-echo "working.at:110: blame 'x\$ x'"
-echo working.at:110 >$at_check_line_file
-( $at_traceon; blame 'x$ x' ) >$at_stdout 2>$at_stder1
+echo "working.at:119: blame -r1.1 'x\$ x'"
+echo working.at:119 >$at_check_line_file
+( $at_traceon; blame -r1.1 'x$ x' ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
@@ -4455,7 +4681,50 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "working.at:110: exit code was $at_status, expected 0"
+   *) echo "working.at:119: exit code was $at_status, expected 0"
+      at_failed=:;;
+esac
+if $at_failed; then
+
+  echo 1 > $at_status_file
+  exit 1
+fi
+
+$at_traceon
+
+      $at_traceoff
+      $at_times_p && times >$at_times_file
+    ) 5>&1 2>&1 | eval $at_tee_pipe
+    at_status=`cat $at_status_file`
+    ;;
+
+  69 ) # 69. working.at:122: Mixing escape characters
+    at_setup_line='working.at:122'
+    at_desc='Mixing escape characters'
+    $at_quiet $ECHO_N " 69: Mixing escape characters                     $ECHO_C"
+    at_xfail=no
+    (
+      echo "69. working.at:122: testing ..."
+      $at_traceon
+
+
+cp $testdir/escape-1.2.expout expout
+cp $testdir/escape.experr experr
+$at_traceoff
+echo "working.at:126: blame -r1.2 \$testdir/escape,v"
+echo working.at:126 >$at_check_line_file
+( $at_traceon; blame -r1.2 $testdir/escape,v ) >$at_stdout 2>$at_stder1
+at_status=$?
+grep '^ *+' $at_stder1 >&2
+grep -v '^ *+' $at_stder1 >$at_stderr
+at_failed=false
+$at_diff experr $at_stderr || at_failed=:
+$at_diff expout $at_stdout || at_failed=:
+case $at_status in
+   77) echo 77 > $at_status_file
+            exit 77;;
+   0) ;;
+   *) echo "working.at:126: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -4481,13 +4750,13 @@ $at_traceon
 _ATEOF
     ;;
 
-  68 ) # 68. date.at:3: Missing date argument
+  70 ) # 70. date.at:3: Missing date argument
     at_setup_line='date.at:3'
     at_desc='Missing date argument'
-    $at_quiet $ECHO_N " 68: Missing date argument                        $ECHO_C"
+    $at_quiet $ECHO_N " 70: Missing date argument                        $ECHO_C"
     at_xfail=no
     (
-      echo "68. date.at:3: testing ..."
+      echo "70. date.at:3: testing ..."
       $at_traceon
 
 
@@ -4518,7 +4787,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -4529,13 +4802,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  69 ) # 69. date.at:10: Date after all revisions
+  71 ) # 71. date.at:10: Date after all revisions
     at_setup_line='date.at:10'
     at_desc='Date after all revisions'
-    $at_quiet $ECHO_N " 69: Date after all revisions                     $ECHO_C"
+    $at_quiet $ECHO_N " 71: Date after all revisions                     $ECHO_C"
     at_xfail=no
     (
-      echo "69. date.at:10: testing ..."
+      echo "71. date.at:10: testing ..."
       $at_traceon
 
 
@@ -4597,13 +4870,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  70 ) # 70. date.at:18: Date just after a revision
+  72 ) # 72. date.at:18: Date just after a revision
     at_setup_line='date.at:18'
     at_desc='Date just after a revision'
-    $at_quiet $ECHO_N " 70: Date just after a revision                   $ECHO_C"
+    $at_quiet $ECHO_N " 72: Date just after a revision                   $ECHO_C"
     at_xfail=no
     (
-      echo "70. date.at:18: testing ..."
+      echo "72. date.at:18: testing ..."
       $at_traceon
 
 
@@ -4640,13 +4913,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  71 ) # 71. date.at:25: Date on a revision
+  73 ) # 73. date.at:25: Date on a revision
     at_setup_line='date.at:25'
     at_desc='Date on a revision'
-    $at_quiet $ECHO_N " 71: Date on a revision                           $ECHO_C"
+    $at_quiet $ECHO_N " 73: Date on a revision                           $ECHO_C"
     at_xfail=no
     (
-      echo "71. date.at:25: testing ..."
+      echo "73. date.at:25: testing ..."
       $at_traceon
 
 
@@ -4683,13 +4956,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  72 ) # 72. date.at:32: Date just before a revision
+  74 ) # 74. date.at:32: Date just before a revision
     at_setup_line='date.at:32'
     at_desc='Date just before a revision'
-    $at_quiet $ECHO_N " 72: Date just before a revision                  $ECHO_C"
+    $at_quiet $ECHO_N " 74: Date just before a revision                  $ECHO_C"
     at_xfail=no
     (
-      echo "72. date.at:32: testing ..."
+      echo "74. date.at:32: testing ..."
       $at_traceon
 
 
@@ -4726,13 +4999,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  73 ) # 73. date.at:39: Date between revisions
+  75 ) # 75. date.at:39: Date between revisions
     at_setup_line='date.at:39'
     at_desc='Date between revisions'
-    $at_quiet $ECHO_N " 73: Date between revisions                       $ECHO_C"
+    $at_quiet $ECHO_N " 75: Date between revisions                       $ECHO_C"
     at_xfail=no
     (
-      echo "73. date.at:39: testing ..."
+      echo "75. date.at:39: testing ..."
       $at_traceon
 
 
@@ -4769,13 +5042,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  74 ) # 74. date.at:46: Date before all revisions
+  76 ) # 76. date.at:46: Date before all revisions
     at_setup_line='date.at:46'
     at_desc='Date before all revisions'
-    $at_quiet $ECHO_N " 74: Date before all revisions                    $ECHO_C"
+    $at_quiet $ECHO_N " 76: Date before all revisions                    $ECHO_C"
     at_xfail=no
     (
-      echo "74. date.at:46: testing ..."
+      echo "76. date.at:46: testing ..."
       $at_traceon
 
 
@@ -4806,7 +5079,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -4817,13 +5094,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  75 ) # 75. date.at:53: Unparseable date
+  77 ) # 77. date.at:53: Unparseable date
     at_setup_line='date.at:53'
     at_desc='Unparseable date'
-    $at_quiet $ECHO_N " 75: Unparseable date                             $ECHO_C"
+    $at_quiet $ECHO_N " 77: Unparseable date                             $ECHO_C"
     at_xfail=no
     (
-      echo "75. date.at:53: testing ..."
+      echo "77. date.at:53: testing ..."
       $at_traceon
 
 
@@ -4854,7 +5131,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -4865,13 +5146,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  76 ) # 76. date.at:60: Unknown timezone
+  78 ) # 78. date.at:60: Unknown timezone
     at_setup_line='date.at:60'
     at_desc='Unknown timezone'
-    $at_quiet $ECHO_N " 76: Unknown timezone                             $ECHO_C"
+    $at_quiet $ECHO_N " 78: Unknown timezone                             $ECHO_C"
     at_xfail=no
     (
-      echo "76. date.at:60: testing ..."
+      echo "78. date.at:60: testing ..."
       $at_traceon
 
 
@@ -4903,7 +5184,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -4914,13 +5199,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  77 ) # 77. date.at:68: No timezone
+  79 ) # 79. date.at:68: No timezone
     at_setup_line='date.at:68'
     at_desc='No timezone'
-    $at_quiet $ECHO_N " 77: No timezone                                  $ECHO_C"
+    $at_quiet $ECHO_N " 79: No timezone                                  $ECHO_C"
     at_xfail=no
     (
-      echo "77. date.at:68: testing ..."
+      echo "79. date.at:68: testing ..."
       $at_traceon
 
 
@@ -5010,13 +5295,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  78 ) # 78. date.at:80: dd-Mon-yyyy hh:mm:ss
+  80 ) # 80. date.at:80: dd-Mon-yyyy hh:mm:ss
     at_setup_line='date.at:80'
     at_desc='dd-Mon-yyyy hh:mm:ss'
-    $at_quiet $ECHO_N " 78: dd-Mon-yyyy hh:mm:ss                         $ECHO_C"
+    $at_quiet $ECHO_N " 80: dd-Mon-yyyy hh:mm:ss                         $ECHO_C"
     at_xfail=no
     (
-      echo "78. date.at:80: testing ..."
+      echo "80. date.at:80: testing ..."
       $at_traceon
 
 
@@ -5105,13 +5390,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  79 ) # 79. date.at:91: h:mm:ss AM yyyymmdd
+  81 ) # 81. date.at:91: h:mm:ss AM yyyymmdd
     at_setup_line='date.at:91'
     at_desc='h:mm:ss AM yyyymmdd'
-    $at_quiet $ECHO_N " 79: h:mm:ss AM yyyymmdd                          $ECHO_C"
+    $at_quiet $ECHO_N " 81: h:mm:ss AM yyyymmdd                          $ECHO_C"
     at_xfail=no
     (
-      echo "79. date.at:91: testing ..."
+      echo "81. date.at:91: testing ..."
       $at_traceon
 
 
@@ -5200,13 +5485,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  80 ) # 80. date.at:102: Unusual timezone
+  82 ) # 82. date.at:102: Unusual timezone
     at_setup_line='date.at:102'
     at_desc='Unusual timezone'
-    $at_quiet $ECHO_N " 80: Unusual timezone                             $ECHO_C"
+    $at_quiet $ECHO_N " 82: Unusual timezone                             $ECHO_C"
     at_xfail=no
     (
-      echo "80. date.at:102: testing ..."
+      echo "82. date.at:102: testing ..."
       $at_traceon
 
 
@@ -5321,13 +5606,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  81 ) # 81. date.at:115: With -z or --zone option
+  83 ) # 83. date.at:115: With -z or --zone option
     at_setup_line='date.at:115'
     at_desc='With -z or --zone option'
-    $at_quiet $ECHO_N " 81: With -z or --zone option                     $ECHO_C"
+    $at_quiet $ECHO_N " 83: With -z or --zone option                     $ECHO_C"
     at_xfail=no
     (
-      echo "81. date.at:115: testing ..."
+      echo "83. date.at:115: testing ..."
       $at_traceon
 
 
@@ -5442,13 +5727,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  82 ) # 82. date.at:128: Multiple dates
+  84 ) # 84. date.at:128: Multiple dates
     at_setup_line='date.at:128'
     at_desc='Multiple dates'
-    $at_quiet $ECHO_N " 82: Multiple dates                               $ECHO_C"
+    $at_quiet $ECHO_N " 84: Multiple dates                               $ECHO_C"
     at_xfail=no
     (
-      echo "82. date.at:128: testing ..."
+      echo "84. date.at:128: testing ..."
       $at_traceon
 
 
@@ -5479,7 +5764,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -5499,13 +5788,13 @@ fi
 _ATEOF
     ;;
 
-  83 ) # 83. state.at:3: Missing state argument
+  85 ) # 85. state.at:3: Missing state argument
     at_setup_line='state.at:3'
     at_desc='Missing state argument'
-    $at_quiet $ECHO_N " 83: Missing state argument                       $ECHO_C"
+    $at_quiet $ECHO_N " 85: Missing state argument                       $ECHO_C"
     at_xfail=no
     (
-      echo "83. state.at:3: testing ..."
+      echo "85. state.at:3: testing ..."
       $at_traceon
 
 
@@ -5536,7 +5825,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -5547,13 +5840,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  84 ) # 84. state.at:10: Known state
+  86 ) # 86. state.at:10: Known state
     at_setup_line='state.at:10'
     at_desc='Known state'
-    $at_quiet $ECHO_N " 84: Known state                                  $ECHO_C"
+    $at_quiet $ECHO_N " 86: Known state                                  $ECHO_C"
     at_xfail=no
     (
-      echo "84. state.at:10: testing ..."
+      echo "86. state.at:10: testing ..."
       $at_traceon
 
 
@@ -5667,13 +5960,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  85 ) # 85. state.at:22: Unknown state
+  87 ) # 87. state.at:22: Unknown state
     at_setup_line='state.at:22'
     at_desc='Unknown state'
-    $at_quiet $ECHO_N " 85: Unknown state                                $ECHO_C"
+    $at_quiet $ECHO_N " 87: Unknown state                                $ECHO_C"
     at_xfail=no
     (
-      echo "85. state.at:22: testing ..."
+      echo "87. state.at:22: testing ..."
       $at_traceon
 
 
@@ -5704,7 +5997,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -5715,13 +6012,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  86 ) # 86. state.at:29: Multiple states
+  88 ) # 88. state.at:29: Multiple states
     at_setup_line='state.at:29'
     at_desc='Multiple states'
-    $at_quiet $ECHO_N " 86: Multiple states                              $ECHO_C"
+    $at_quiet $ECHO_N " 88: Multiple states                              $ECHO_C"
     at_xfail=no
     (
-      echo "86. state.at:29: testing ..."
+      echo "88. state.at:29: testing ..."
       $at_traceon
 
 
@@ -5752,7 +6049,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -5772,27 +6073,26 @@ fi
 _ATEOF
     ;;
 
-  87 ) # 87. author.at:3: No author
+  89 ) # 89. author.at:3: No author
     at_setup_line='author.at:3'
     at_desc='No author'
-    $at_quiet $ECHO_N " 87: No author                                    $ECHO_C"
+    $at_quiet $ECHO_N " 89: No author                                    $ECHO_C"
     at_xfail=no
       test -z "$username" && at_xfail=yes
       test "$username" = username && at_xfail=yes
       test "$username" = somebody && at_xfail=yes
     (
-      echo "87. author.at:3: testing ..."
+      echo "89. author.at:3: testing ..."
       $at_traceon
 
 
 
 
 
-replace="$username        "
-replace="${replace:0:8}"
+replace="`echo $username | sed 's/$/        /;s/^\(.\{8\}\).*/\1/'`"
 $at_traceoff
-echo "author.at:10: blame -w -- \$testdir/simple,v"
-echo author.at:10 >$at_check_line_file
+echo "author.at:9: blame -w -- \$testdir/simple,v"
+echo author.at:9 >$at_check_line_file
 ( $at_traceon; blame -w -- $testdir/simple,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -5804,7 +6104,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "author.at:10: exit code was $at_status, expected 1"
+   *) echo "author.at:9: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -5816,17 +6116,21 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
 
-cat $testdir/simple,v | sed "s/somebody/$replace/g" > input,v
+cat $testdir/simple,v | sed "s/somebody/$username/g" > input,v
 cat $testdir/simple-1.2.expout | sed "s/somebody/$replace/g" > expout
 cat $testdir/simple.experr | sed "s/simple/input/g" > experr
 $at_traceoff
-echo "author.at:15: blame -w -- input,v"
-echo author.at:15 >$at_check_line_file
+echo "author.at:14: blame -w -- input,v"
+echo author.at:14 >$at_check_line_file
 ( $at_traceon; blame -w -- input,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -5838,7 +6142,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "author.at:15: exit code was $at_status, expected 0"
+   *) echo "author.at:14: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -5855,21 +6159,21 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  88 ) # 88. author.at:18: Known author
-    at_setup_line='author.at:18'
+  90 ) # 90. author.at:17: Known author
+    at_setup_line='author.at:17'
     at_desc='Known author'
-    $at_quiet $ECHO_N " 88: Known author                                 $ECHO_C"
+    $at_quiet $ECHO_N " 90: Known author                                 $ECHO_C"
     at_xfail=no
     (
-      echo "88. author.at:18: testing ..."
+      echo "90. author.at:17: testing ..."
       $at_traceon
 
 
 cp $testdir/simple.experr experr
 cp $testdir/simple-1.2.expout expout
 $at_traceoff
-echo "author.at:22: blame -wsomebody \$testdir/simple,v"
-echo author.at:22 >$at_check_line_file
+echo "author.at:21: blame -wsomebody \$testdir/simple,v"
+echo author.at:21 >$at_check_line_file
 ( $at_traceon; blame -wsomebody $testdir/simple,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -5881,7 +6185,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    0) ;;
-   *) echo "author.at:22: exit code was $at_status, expected 0"
+   *) echo "author.at:21: exit code was $at_status, expected 0"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -5895,9 +6199,34 @@ $at_traceon
 rm -f expout
 cp $testdir/simple-1.1.expout expout
 $at_traceoff
-echo "author.at:25: blame -wusername \$testdir/simple,v"
-echo author.at:25 >$at_check_line_file
+echo "author.at:24: blame -wusername \$testdir/simple,v"
+echo author.at:24 >$at_check_line_file
 ( $at_traceon; blame -wusername $testdir/simple,v ) >$at_stdout 2>$at_stder1
+at_status=$?
+grep '^ *+' $at_stder1 >&2
+grep -v '^ *+' $at_stder1 >$at_stderr
+at_failed=false
+$at_diff experr $at_stderr || at_failed=:
+$at_diff expout $at_stdout || at_failed=:
+case $at_status in
+   77) echo 77 > $at_status_file
+            exit 77;;
+   0) ;;
+   *) echo "author.at:24: exit code was $at_status, expected 0"
+      at_failed=:;;
+esac
+if $at_failed; then
+
+  echo 1 > $at_status_file
+  exit 1
+fi
+
+$at_traceon
+
+$at_traceoff
+echo "author.at:25: blame --author=username \$testdir/simple,v"
+echo author.at:25 >$at_check_line_file
+( $at_traceon; blame --author=username $testdir/simple,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
@@ -5919,51 +6248,26 @@ fi
 
 $at_traceon
 
-$at_traceoff
-echo "author.at:26: blame --author=username \$testdir/simple,v"
-echo author.at:26 >$at_check_line_file
-( $at_traceon; blame --author=username $testdir/simple,v ) >$at_stdout 2>$at_stder1
-at_status=$?
-grep '^ *+' $at_stder1 >&2
-grep -v '^ *+' $at_stder1 >$at_stderr
-at_failed=false
-$at_diff experr $at_stderr || at_failed=:
-$at_diff expout $at_stdout || at_failed=:
-case $at_status in
-   77) echo 77 > $at_status_file
-            exit 77;;
-   0) ;;
-   *) echo "author.at:26: exit code was $at_status, expected 0"
-      at_failed=:;;
-esac
-if $at_failed; then
-
-  echo 1 > $at_status_file
-  exit 1
-fi
-
-$at_traceon
-
       $at_traceoff
       $at_times_p && times >$at_times_file
     ) 5>&1 2>&1 | eval $at_tee_pipe
     at_status=`cat $at_status_file`
     ;;
 
-  89 ) # 89. author.at:29: Unknown author
-    at_setup_line='author.at:29'
+  91 ) # 91. author.at:28: Unknown author
+    at_setup_line='author.at:28'
     at_desc='Unknown author'
-    $at_quiet $ECHO_N " 89: Unknown author                               $ECHO_C"
+    $at_quiet $ECHO_N " 91: Unknown author                               $ECHO_C"
     at_xfail=no
     (
-      echo "89. author.at:29: testing ..."
+      echo "91. author.at:28: testing ..."
       $at_traceon
 
 
 
 $at_traceoff
-echo "author.at:32: blame -wfloopy \$testdir/simple,v"
-echo author.at:32 >$at_check_line_file
+echo "author.at:31: blame -wfloopy \$testdir/simple,v"
+echo author.at:31 >$at_check_line_file
 ( $at_traceon; blame -wfloopy $testdir/simple,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -5975,7 +6279,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "author.at:32: exit code was $at_status, expected 1"
+   *) echo "author.at:31: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -5987,7 +6291,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -5998,20 +6306,20 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  90 ) # 90. author.at:36: Multiple authors
-    at_setup_line='author.at:36'
+  92 ) # 92. author.at:35: Multiple authors
+    at_setup_line='author.at:35'
     at_desc='Multiple authors'
-    $at_quiet $ECHO_N " 90: Multiple authors                             $ECHO_C"
+    $at_quiet $ECHO_N " 92: Multiple authors                             $ECHO_C"
     at_xfail=no
     (
-      echo "90. author.at:36: testing ..."
+      echo "92. author.at:35: testing ..."
       $at_traceon
 
 
 
 $at_traceoff
-echo "author.at:39: blame -wusername -wsomebody \$testdir/simple,v"
-echo author.at:39 >$at_check_line_file
+echo "author.at:38: blame -wusername -wsomebody \$testdir/simple,v"
+echo author.at:38 >$at_check_line_file
 ( $at_traceon; blame -wusername -wsomebody $testdir/simple,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
@@ -6023,7 +6331,7 @@ case $at_status in
    77) echo 77 > $at_status_file
             exit 77;;
    1) ;;
-   *) echo "author.at:39: exit code was $at_status, expected 1"
+   *) echo "author.at:38: exit code was $at_status, expected 1"
       at_failed=:;;
 esac
 if $at_failed; then
@@ -6035,7 +6343,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -6055,13 +6367,13 @@ fi
 _ATEOF
     ;;
 
-  91 ) # 91. expand.at:3: Default substitutions
+  93 ) # 93. expand.at:3: Default substitutions
     at_setup_line='expand.at:3'
     at_desc='Default substitutions'
-    $at_quiet $ECHO_N " 91: Default substitutions                        $ECHO_C"
+    $at_quiet $ECHO_N " 93: Default substitutions                        $ECHO_C"
     at_xfail=no
     (
-      echo "91. expand.at:3: testing ..."
+      echo "93. expand.at:3: testing ..."
       $at_traceon
 
 
@@ -6114,13 +6426,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  92 ) # 92. expand.at:26: Default substitutions, with timezone
+  94 ) # 94. expand.at:26: Default substitutions, with timezone
     at_setup_line='expand.at:26'
     at_desc='Default substitutions, with timezone'
-    $at_quiet $ECHO_N " 92: Default substitutions, with timezone         $ECHO_C"
+    $at_quiet $ECHO_N " 94: Default substitutions, with timezone         $ECHO_C"
     at_xfail=no
     (
-      echo "92. expand.at:26: testing ..."
+      echo "94. expand.at:26: testing ..."
       $at_traceon
 
 
@@ -6173,13 +6485,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  93 ) # 93. expand.at:49: Missing keyword substitution argument
+  95 ) # 95. expand.at:49: Missing keyword substitution argument
     at_setup_line='expand.at:49'
     at_desc='Missing keyword substitution argument'
-    $at_quiet $ECHO_N " 93: Missing keyword substitution argument        $ECHO_C"
+    $at_quiet $ECHO_N " 95: Missing keyword substitution argument        $ECHO_C"
     at_xfail=no
     (
-      echo "93. expand.at:49: testing ..."
+      echo "95. expand.at:49: testing ..."
       $at_traceon
 
 
@@ -6210,7 +6522,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -6221,13 +6537,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  94 ) # 94. expand.at:56: Keys and values (-kkv)
+  96 ) # 96. expand.at:56: Keys and values (-kkv)
     at_setup_line='expand.at:56'
     at_desc='Keys and values (-kkv)'
-    $at_quiet $ECHO_N " 94: Keys and values (-kkv)                       $ECHO_C"
+    $at_quiet $ECHO_N " 96: Keys and values (-kkv)                       $ECHO_C"
     at_xfail=no
     (
-      echo "94. expand.at:56: testing ..."
+      echo "96. expand.at:56: testing ..."
       $at_traceon
 
 
@@ -6330,13 +6646,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  95 ) # 95. expand.at:81: Keys, values and locker (-kkvl)
+  97 ) # 97. expand.at:81: Keys, values and locker (-kkvl)
     at_setup_line='expand.at:81'
     at_desc='Keys, values and locker (-kkvl)'
-    $at_quiet $ECHO_N " 95: Keys, values and locker (-kkvl)              $ECHO_C"
+    $at_quiet $ECHO_N " 97: Keys, values and locker (-kkvl)              $ECHO_C"
     at_xfail=no
     (
-      echo "95. expand.at:81: testing ..."
+      echo "97. expand.at:81: testing ..."
       $at_traceon
 
 
@@ -6389,13 +6705,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  96 ) # 96. expand.at:104: Keys only (-kk)
+  98 ) # 98. expand.at:104: Keys only (-kk)
     at_setup_line='expand.at:104'
     at_desc='Keys only (-kk)'
-    $at_quiet $ECHO_N " 96: Keys only (-kk)                              $ECHO_C"
+    $at_quiet $ECHO_N " 98: Keys only (-kk)                              $ECHO_C"
     at_xfail=no
     (
-      echo "96. expand.at:104: testing ..."
+      echo "98. expand.at:104: testing ..."
       $at_traceon
 
 
@@ -6448,13 +6764,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  97 ) # 97. expand.at:127: Old keywords strings (-ko)
+  99 ) # 99. expand.at:127: Old keywords strings (-ko)
     at_setup_line='expand.at:127'
     at_desc='Old keywords strings (-ko)'
-    $at_quiet $ECHO_N " 97: Old keywords strings (-ko)                   $ECHO_C"
+    $at_quiet $ECHO_N " 99: Old keywords strings (-ko)                   $ECHO_C"
     at_xfail=no
     (
-      echo "97. expand.at:127: testing ..."
+      echo "99. expand.at:127: testing ..."
       $at_traceon
 
 
@@ -6504,13 +6820,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  98 ) # 98. expand.at:147: Binary image of old keywords strings (-kb)
+  100 ) # 100. expand.at:147: Binary image of old keywords strings (-kb)
     at_setup_line='expand.at:147'
     at_desc='Binary image of old keywords strings (-kb)'
-    $at_quiet $ECHO_N " 98: Binary image of old keywords strings (-kb)   $ECHO_C"
+    $at_quiet $ECHO_N "100: Binary image of old keywords strings (-kb)   $ECHO_C"
     at_xfail=no
     (
-      echo "98. expand.at:147: testing ..."
+      echo "100. expand.at:147: testing ..."
       $at_traceon
 
 
@@ -6560,13 +6876,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  99 ) # 99. expand.at:167: Values only (-kv)
+  101 ) # 101. expand.at:167: Values only (-kv)
     at_setup_line='expand.at:167'
     at_desc='Values only (-kv)'
-    $at_quiet $ECHO_N " 99: Values only (-kv)                            $ECHO_C"
+    $at_quiet $ECHO_N "101: Values only (-kv)                            $ECHO_C"
     at_xfail=no
     (
-      echo "99. expand.at:167: testing ..."
+      echo "101. expand.at:167: testing ..."
       $at_traceon
 
 
@@ -6619,13 +6935,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  100 ) # 100. expand.at:190: Multiple substitution types
+  102 ) # 102. expand.at:190: Multiple substitution types
     at_setup_line='expand.at:190'
     at_desc='Multiple substitution types'
-    $at_quiet $ECHO_N "100: Multiple substitution types                  $ECHO_C"
+    $at_quiet $ECHO_N "102: Multiple substitution types                  $ECHO_C"
     at_xfail=no
     (
-      echo "100. expand.at:190: testing ..."
+      echo "102. expand.at:190: testing ..."
       $at_traceon
 
 
@@ -6656,7 +6972,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -6676,13 +6996,13 @@ fi
 _ATEOF
     ;;
 
-  101 ) # 101. version.at:3: Invalid version argument
+  103 ) # 103. version.at:3: Invalid version argument
     at_setup_line='version.at:3'
     at_desc='Invalid version argument'
-    $at_quiet $ECHO_N "101: Invalid version argument                     $ECHO_C"
+    $at_quiet $ECHO_N "103: Invalid version argument                     $ECHO_C"
     at_xfail=no
     (
-      echo "101. version.at:3: testing ..."
+      echo "103. version.at:3: testing ..."
       $at_traceon
 
 
@@ -6713,7 +7033,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -6744,7 +7068,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -6755,13 +7083,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  102 ) # 102. version.at:12: Emulating RCS version 3
+  104 ) # 104. version.at:12: Emulating RCS version 3
     at_setup_line='version.at:12'
     at_desc='Emulating RCS version 3'
-    $at_quiet $ECHO_N "102: Emulating RCS version 3                      $ECHO_C"
+    $at_quiet $ECHO_N "104: Emulating RCS version 3                      $ECHO_C"
     at_xfail=no
     (
-      echo "102. version.at:12: testing ..."
+      echo "104. version.at:12: testing ..."
       $at_traceon
 
 
@@ -6839,13 +7167,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  103 ) # 103. version.at:36: Emulating RCS version 4
+  105 ) # 105. version.at:36: Emulating RCS version 4
     at_setup_line='version.at:36'
     at_desc='Emulating RCS version 4'
-    $at_quiet $ECHO_N "103: Emulating RCS version 4                      $ECHO_C"
+    $at_quiet $ECHO_N "105: Emulating RCS version 4                      $ECHO_C"
     at_xfail=no
     (
-      echo "103. version.at:36: testing ..."
+      echo "105. version.at:36: testing ..."
       $at_traceon
 
 
@@ -6923,13 +7251,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  104 ) # 104. version.at:60: Emulating RCS version 5
+  106 ) # 106. version.at:60: Emulating RCS version 5
     at_setup_line='version.at:60'
     at_desc='Emulating RCS version 5'
-    $at_quiet $ECHO_N "104: Emulating RCS version 5                      $ECHO_C"
+    $at_quiet $ECHO_N "106: Emulating RCS version 5                      $ECHO_C"
     at_xfail=no
     (
-      echo "104. version.at:60: testing ..."
+      echo "106. version.at:60: testing ..."
       $at_traceon
 
 
@@ -7016,13 +7344,13 @@ $at_traceon
 _ATEOF
     ;;
 
-  105 ) # 105. suffixes.at:3: Default suffixes
+  107 ) # 107. suffixes.at:3: Default suffixes
     at_setup_line='suffixes.at:3'
     at_desc='Default suffixes'
-    $at_quiet $ECHO_N "105: Default suffixes                             $ECHO_C"
+    $at_quiet $ECHO_N "107: Default suffixes                             $ECHO_C"
     at_xfail=no
     (
-      echo "105. suffixes.at:3: testing ..."
+      echo "107. suffixes.at:3: testing ..."
       $at_traceon
 
 
@@ -7058,13 +7386,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  106 ) # 106. suffixes.at:9: Nonstandard suffixes
+  108 ) # 108. suffixes.at:9: Nonstandard suffixes
     at_setup_line='suffixes.at:9'
     at_desc='Nonstandard suffixes'
-    $at_quiet $ECHO_N "106: Nonstandard suffixes                         $ECHO_C"
+    $at_quiet $ECHO_N "108: Nonstandard suffixes                         $ECHO_C"
     at_xfail=no
     (
-      echo "106. suffixes.at:9: testing ..."
+      echo "108. suffixes.at:9: testing ..."
       $at_traceon
 
 
@@ -7150,13 +7478,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  107 ) # 107. suffixes.at:17: Multiple suffixes specifications
+  109 ) # 109. suffixes.at:17: Multiple suffixes specifications
     at_setup_line='suffixes.at:17'
     at_desc='Multiple suffixes specifications'
-    $at_quiet $ECHO_N "107: Multiple suffixes specifications             $ECHO_C"
+    $at_quiet $ECHO_N "109: Multiple suffixes specifications             $ECHO_C"
     at_xfail=no
     (
-      echo "107. suffixes.at:17: testing ..."
+      echo "109. suffixes.at:17: testing ..."
       $at_traceon
 
 
@@ -7187,7 +7515,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7207,13 +7539,13 @@ Mixing -r, -d, -s and -w options.
 _ATEOF
     ;;
 
-  108 ) # 108. mixed.at:3: Valid -r and -d combo
+  110 ) # 110. mixed.at:3: Valid -r and -d combo
     at_setup_line='mixed.at:3'
     at_desc='Valid -r and -d combo'
-    $at_quiet $ECHO_N "108: Valid -r and -d combo                        $ECHO_C"
+    $at_quiet $ECHO_N "110: Valid -r and -d combo                        $ECHO_C"
     at_xfail=no
     (
-      echo "108. mixed.at:3: testing ..."
+      echo "110. mixed.at:3: testing ..."
       $at_traceon
 
 
@@ -7277,13 +7609,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  109 ) # 109. mixed.at:13: Invalid -r and -d combo
+  111 ) # 111. mixed.at:13: Invalid -r and -d combo
     at_setup_line='mixed.at:13'
     at_desc='Invalid -r and -d combo'
-    $at_quiet $ECHO_N "109: Invalid -r and -d combo                      $ECHO_C"
+    $at_quiet $ECHO_N "111: Invalid -r and -d combo                      $ECHO_C"
     at_xfail=no
     (
-      echo "109. mixed.at:13: testing ..."
+      echo "111. mixed.at:13: testing ..."
       $at_traceon
 
 
@@ -7316,7 +7648,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7327,13 +7663,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  110 ) # 110. mixed.at:22: Valid -r and -s combo
+  112 ) # 112. mixed.at:22: Valid -r and -s combo
     at_setup_line='mixed.at:22'
     at_desc='Valid -r and -s combo'
-    $at_quiet $ECHO_N "110: Valid -r and -s combo                        $ECHO_C"
+    $at_quiet $ECHO_N "112: Valid -r and -s combo                        $ECHO_C"
     at_xfail=no
     (
-      echo "110. mixed.at:22: testing ..."
+      echo "112. mixed.at:22: testing ..."
       $at_traceon
 
 
@@ -7372,13 +7708,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  111 ) # 111. mixed.at:31: Invalid -r and -s combo
+  113 ) # 113. mixed.at:31: Invalid -r and -s combo
     at_setup_line='mixed.at:31'
     at_desc='Invalid -r and -s combo'
-    $at_quiet $ECHO_N "111: Invalid -r and -s combo                      $ECHO_C"
+    $at_quiet $ECHO_N "113: Invalid -r and -s combo                      $ECHO_C"
     at_xfail=no
     (
-      echo "111. mixed.at:31: testing ..."
+      echo "113. mixed.at:31: testing ..."
       $at_traceon
 
 
@@ -7411,7 +7747,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7422,13 +7762,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  112 ) # 112. mixed.at:40: Valid -r and -w combo
+  114 ) # 114. mixed.at:40: Valid -r and -w combo
     at_setup_line='mixed.at:40'
     at_desc='Valid -r and -w combo'
-    $at_quiet $ECHO_N "112: Valid -r and -w combo                        $ECHO_C"
+    $at_quiet $ECHO_N "114: Valid -r and -w combo                        $ECHO_C"
     at_xfail=no
     (
-      echo "112. mixed.at:40: testing ..."
+      echo "114. mixed.at:40: testing ..."
       $at_traceon
 
 
@@ -7467,13 +7807,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  113 ) # 113. mixed.at:49: Invalid -r and -w combo
+  115 ) # 115. mixed.at:49: Invalid -r and -w combo
     at_setup_line='mixed.at:49'
     at_desc='Invalid -r and -w combo'
-    $at_quiet $ECHO_N "113: Invalid -r and -w combo                      $ECHO_C"
+    $at_quiet $ECHO_N "115: Invalid -r and -w combo                      $ECHO_C"
     at_xfail=no
     (
-      echo "113. mixed.at:49: testing ..."
+      echo "115. mixed.at:49: testing ..."
       $at_traceon
 
 
@@ -7506,7 +7846,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7517,13 +7861,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  114 ) # 114. mixed.at:58: Valid -d and -s combo
+  116 ) # 116. mixed.at:58: Valid -d and -s combo
     at_setup_line='mixed.at:58'
     at_desc='Valid -d and -s combo'
-    $at_quiet $ECHO_N "114: Valid -d and -s combo                        $ECHO_C"
+    $at_quiet $ECHO_N "116: Valid -d and -s combo                        $ECHO_C"
     at_xfail=no
     (
-      echo "114. mixed.at:58: testing ..."
+      echo "116. mixed.at:58: testing ..."
       $at_traceon
 
 
@@ -7587,13 +7931,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  115 ) # 115. mixed.at:68: Invalid -d and -s combo
+  117 ) # 117. mixed.at:68: Invalid -d and -s combo
     at_setup_line='mixed.at:68'
     at_desc='Invalid -d and -s combo'
-    $at_quiet $ECHO_N "115: Invalid -d and -s combo                      $ECHO_C"
+    $at_quiet $ECHO_N "117: Invalid -d and -s combo                      $ECHO_C"
     at_xfail=no
     (
-      echo "115. mixed.at:68: testing ..."
+      echo "117. mixed.at:68: testing ..."
       $at_traceon
 
 
@@ -7626,7 +7970,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7637,13 +7985,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  116 ) # 116. mixed.at:77: Valid -d and -w combo
+  118 ) # 118. mixed.at:77: Valid -d and -w combo
     at_setup_line='mixed.at:77'
     at_desc='Valid -d and -w combo'
-    $at_quiet $ECHO_N "116: Valid -d and -w combo                        $ECHO_C"
+    $at_quiet $ECHO_N "118: Valid -d and -w combo                        $ECHO_C"
     at_xfail=no
     (
-      echo "116. mixed.at:77: testing ..."
+      echo "118. mixed.at:77: testing ..."
       $at_traceon
 
 
@@ -7707,13 +8055,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  117 ) # 117. mixed.at:87: Invalid -d and -w combo
+  119 ) # 119. mixed.at:87: Invalid -d and -w combo
     at_setup_line='mixed.at:87'
     at_desc='Invalid -d and -w combo'
-    $at_quiet $ECHO_N "117: Invalid -d and -w combo                      $ECHO_C"
+    $at_quiet $ECHO_N "119: Invalid -d and -w combo                      $ECHO_C"
     at_xfail=no
     (
-      echo "117. mixed.at:87: testing ..."
+      echo "119. mixed.at:87: testing ..."
       $at_traceon
 
 
@@ -7746,7 +8094,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7757,13 +8109,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  118 ) # 118. mixed.at:96: Valid -s and -w combo
+  120 ) # 120. mixed.at:96: Valid -s and -w combo
     at_setup_line='mixed.at:96'
     at_desc='Valid -s and -w combo'
-    $at_quiet $ECHO_N "118: Valid -s and -w combo                        $ECHO_C"
+    $at_quiet $ECHO_N "120: Valid -s and -w combo                        $ECHO_C"
     at_xfail=no
     (
-      echo "118. mixed.at:96: testing ..."
+      echo "120. mixed.at:96: testing ..."
       $at_traceon
 
 
@@ -7802,13 +8154,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  119 ) # 119. mixed.at:105: Invalid -s and -w combo
+  121 ) # 121. mixed.at:105: Invalid -s and -w combo
     at_setup_line='mixed.at:105'
     at_desc='Invalid -s and -w combo'
-    $at_quiet $ECHO_N "119: Invalid -s and -w combo                      $ECHO_C"
+    $at_quiet $ECHO_N "121: Invalid -s and -w combo                      $ECHO_C"
     at_xfail=no
     (
-      echo "119. mixed.at:105: testing ..."
+      echo "121. mixed.at:105: testing ..."
       $at_traceon
 
 
@@ -7841,7 +8193,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7852,13 +8208,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  120 ) # 120. mixed.at:114: Valid -r, -d and -s combo
+  122 ) # 122. mixed.at:114: Valid -r, -d and -s combo
     at_setup_line='mixed.at:114'
     at_desc='Valid -r, -d and -s combo'
-    $at_quiet $ECHO_N "120: Valid -r, -d and -s combo                    $ECHO_C"
+    $at_quiet $ECHO_N "122: Valid -r, -d and -s combo                    $ECHO_C"
     at_xfail=no
     (
-      echo "120. mixed.at:114: testing ..."
+      echo "122. mixed.at:114: testing ..."
       $at_traceon
 
 
@@ -7898,13 +8254,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  121 ) # 121. mixed.at:124: Invalid -r, -d and -s combo
+  123 ) # 123. mixed.at:124: Invalid -r, -d and -s combo
     at_setup_line='mixed.at:124'
     at_desc='Invalid -r, -d and -s combo'
-    $at_quiet $ECHO_N "121: Invalid -r, -d and -s combo                  $ECHO_C"
+    $at_quiet $ECHO_N "123: Invalid -r, -d and -s combo                  $ECHO_C"
     at_xfail=no
     (
-      echo "121. mixed.at:124: testing ..."
+      echo "123. mixed.at:124: testing ..."
       $at_traceon
 
 
@@ -7938,7 +8294,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -7969,7 +8329,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8000,7 +8364,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8011,13 +8379,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  122 ) # 122. mixed.at:138: Valid -r, -d and -w combo
+  124 ) # 124. mixed.at:138: Valid -r, -d and -w combo
     at_setup_line='mixed.at:138'
     at_desc='Valid -r, -d and -w combo'
-    $at_quiet $ECHO_N "122: Valid -r, -d and -w combo                    $ECHO_C"
+    $at_quiet $ECHO_N "124: Valid -r, -d and -w combo                    $ECHO_C"
     at_xfail=no
     (
-      echo "122. mixed.at:138: testing ..."
+      echo "124. mixed.at:138: testing ..."
       $at_traceon
 
 
@@ -8057,13 +8425,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  123 ) # 123. mixed.at:148: Invalid -r, -d and -w combo
+  125 ) # 125. mixed.at:148: Invalid -r, -d and -w combo
     at_setup_line='mixed.at:148'
     at_desc='Invalid -r, -d and -w combo'
-    $at_quiet $ECHO_N "123: Invalid -r, -d and -w combo                  $ECHO_C"
+    $at_quiet $ECHO_N "125: Invalid -r, -d and -w combo                  $ECHO_C"
     at_xfail=no
     (
-      echo "123. mixed.at:148: testing ..."
+      echo "125. mixed.at:148: testing ..."
       $at_traceon
 
 
@@ -8097,7 +8465,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8128,7 +8500,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8159,7 +8535,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8170,13 +8550,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  124 ) # 124. mixed.at:162: Valid -r, -s and -w combo
+  126 ) # 126. mixed.at:162: Valid -r, -s and -w combo
     at_setup_line='mixed.at:162'
     at_desc='Valid -r, -s and -w combo'
-    $at_quiet $ECHO_N "124: Valid -r, -s and -w combo                    $ECHO_C"
+    $at_quiet $ECHO_N "126: Valid -r, -s and -w combo                    $ECHO_C"
     at_xfail=no
     (
-      echo "124. mixed.at:162: testing ..."
+      echo "126. mixed.at:162: testing ..."
       $at_traceon
 
 
@@ -8216,13 +8596,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  125 ) # 125. mixed.at:172: Invalid -r, -s and -w combo
+  127 ) # 127. mixed.at:172: Invalid -r, -s and -w combo
     at_setup_line='mixed.at:172'
     at_desc='Invalid -r, -s and -w combo'
-    $at_quiet $ECHO_N "125: Invalid -r, -s and -w combo                  $ECHO_C"
+    $at_quiet $ECHO_N "127: Invalid -r, -s and -w combo                  $ECHO_C"
     at_xfail=no
     (
-      echo "125. mixed.at:172: testing ..."
+      echo "127. mixed.at:172: testing ..."
       $at_traceon
 
 
@@ -8256,7 +8636,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8287,7 +8671,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8318,7 +8706,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8329,13 +8721,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  126 ) # 126. mixed.at:186: Valid -d, -s and -w combo
+  128 ) # 128. mixed.at:186: Valid -d, -s and -w combo
     at_setup_line='mixed.at:186'
     at_desc='Valid -d, -s and -w combo'
-    $at_quiet $ECHO_N "126: Valid -d, -s and -w combo                    $ECHO_C"
+    $at_quiet $ECHO_N "128: Valid -d, -s and -w combo                    $ECHO_C"
     at_xfail=no
     (
-      echo "126. mixed.at:186: testing ..."
+      echo "128. mixed.at:186: testing ..."
       $at_traceon
 
 
@@ -8375,13 +8767,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  127 ) # 127. mixed.at:196: Invalid -d, -s and -w combo
+  129 ) # 129. mixed.at:196: Invalid -d, -s and -w combo
     at_setup_line='mixed.at:196'
     at_desc='Invalid -d, -s and -w combo'
-    $at_quiet $ECHO_N "127: Invalid -d, -s and -w combo                  $ECHO_C"
+    $at_quiet $ECHO_N "129: Invalid -d, -s and -w combo                  $ECHO_C"
     at_xfail=no
     (
-      echo "127. mixed.at:196: testing ..."
+      echo "129. mixed.at:196: testing ..."
       $at_traceon
 
 
@@ -8415,7 +8807,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8446,7 +8842,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8477,7 +8877,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8488,13 +8892,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  128 ) # 128. mixed.at:210: Valid -r, -d, -s and -w combo
+  130 ) # 130. mixed.at:210: Valid -r, -d, -s and -w combo
     at_setup_line='mixed.at:210'
     at_desc='Valid -r, -d, -s and -w combo'
-    $at_quiet $ECHO_N "128: Valid -r, -d, -s and -w combo                $ECHO_C"
+    $at_quiet $ECHO_N "130: Valid -r, -d, -s and -w combo                $ECHO_C"
     at_xfail=no
     (
-      echo "128. mixed.at:210: testing ..."
+      echo "130. mixed.at:210: testing ..."
       $at_traceon
 
 
@@ -8535,13 +8939,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  129 ) # 129. mixed.at:221: Invalid -r, -d, -s and -w combo
+  131 ) # 131. mixed.at:221: Invalid -r, -d, -s and -w combo
     at_setup_line='mixed.at:221'
     at_desc='Invalid -r, -d, -s and -w combo'
-    $at_quiet $ECHO_N "129: Invalid -r, -d, -s and -w combo              $ECHO_C"
+    $at_quiet $ECHO_N "131: Invalid -r, -d, -s and -w combo              $ECHO_C"
     at_xfail=no
     (
-      echo "129. mixed.at:221: testing ..."
+      echo "131. mixed.at:221: testing ..."
       $at_traceon
 
 
@@ -8576,7 +8980,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8607,7 +9015,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8638,7 +9050,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8669,7 +9085,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8689,23 +9109,23 @@ Expanding Log keywords.
 _ATEOF
     ;;
 
-  130 ) # 130. log.at:3: Old Log expansion format
+  132 ) # 132. log.at:3: Old log expansion format
     at_setup_line='log.at:3'
-    at_desc='Old Log expansion format'
-    $at_quiet $ECHO_N "130: Old Log expansion format                     $ECHO_C"
+    at_desc='Old log expansion format'
+    $at_quiet $ECHO_N "132: Old log expansion format                     $ECHO_C"
     at_xfail=no
     (
-      echo "130. log.at:3: testing ..."
+      echo "132. log.at:3: testing ..."
       $at_traceon
 
 
 
-cp $testdir/log-v3.expout expout
+cp $testdir/log-v3-1.1.expout expout
 cp $testdir/log.experr experr
 $at_traceoff
-echo "log.at:8: blame -V3 \$testdir/log,v"
+echo "log.at:8: blame -r1.1 -V3 \$testdir/log,v"
 echo log.at:8 >$at_check_line_file
-( $at_traceon; blame -V3 $testdir/log,v ) >$at_stdout 2>$at_stder1
+( $at_traceon; blame -r1.1 -V3 $testdir/log,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
@@ -8733,22 +9153,22 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  131 ) # 131. log.at:11: New Log expansion format
+  133 ) # 133. log.at:11: New log expansion format
     at_setup_line='log.at:11'
-    at_desc='New Log expansion format'
-    $at_quiet $ECHO_N "131: New Log expansion format                     $ECHO_C"
+    at_desc='New log expansion format'
+    $at_quiet $ECHO_N "133: New log expansion format                     $ECHO_C"
     at_xfail=no
     (
-      echo "131. log.at:11: testing ..."
+      echo "133. log.at:11: testing ..."
       $at_traceon
 
 
-cp $testdir/log-v5.expout expout
+cp $testdir/log-v5-1.1.expout expout
 cp $testdir/log.experr experr
 $at_traceoff
-echo "log.at:15: blame \$testdir/log,v"
+echo "log.at:15: blame -r1.1 \$testdir/log,v"
 echo log.at:15 >$at_check_line_file
-( $at_traceon; blame $testdir/log,v ) >$at_stdout 2>$at_stder1
+( $at_traceon; blame -r1.1 $testdir/log,v ) >$at_stdout 2>$at_stder1
 at_status=$?
 grep '^ *+' $at_stder1 >&2
 grep -v '^ *+' $at_stder1 >$at_stderr
@@ -8776,6 +9196,49 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
+  134 ) # 134. log.at:18: Logs for multiple revisions
+    at_setup_line='log.at:18'
+    at_desc='Logs for multiple revisions'
+    $at_quiet $ECHO_N "134: Logs for multiple revisions                  $ECHO_C"
+    at_xfail=no
+    (
+      echo "134. log.at:18: testing ..."
+      $at_traceon
+
+
+cp $testdir/log-1.2.expout expout
+cp $testdir/log.experr experr
+$at_traceoff
+echo "log.at:22: blame -r1.2 \$testdir/log,v"
+echo log.at:22 >$at_check_line_file
+( $at_traceon; blame -r1.2 $testdir/log,v ) >$at_stdout 2>$at_stder1
+at_status=$?
+grep '^ *+' $at_stder1 >&2
+grep -v '^ *+' $at_stder1 >$at_stderr
+at_failed=false
+$at_diff experr $at_stderr || at_failed=:
+$at_diff expout $at_stdout || at_failed=:
+case $at_status in
+   77) echo 77 > $at_status_file
+            exit 77;;
+   0) ;;
+   *) echo "log.at:22: exit code was $at_status, expected 0"
+      at_failed=:;;
+esac
+if $at_failed; then
+
+  echo 1 > $at_status_file
+  exit 1
+fi
+
+$at_traceon
+
+      $at_traceoff
+      $at_times_p && times >$at_times_file
+    ) 5>&1 2>&1 | eval $at_tee_pipe
+    at_status=`cat $at_status_file`
+    ;;
+
 
   banner-15 ) # Banner 15. rcsinit.at:1
     cat <<\_ATEOF
@@ -8785,13 +9248,13 @@ RCSINIT environment variable support.
 _ATEOF
     ;;
 
-  132 ) # 132. rcsinit.at:3: Empty RCSINIT
+  135 ) # 135. rcsinit.at:3: Empty RCSINIT
     at_setup_line='rcsinit.at:3'
     at_desc='Empty RCSINIT'
-    $at_quiet $ECHO_N "132: Empty RCSINIT                                $ECHO_C"
+    $at_quiet $ECHO_N "135: Empty RCSINIT                                $ECHO_C"
     at_xfail=no
     (
-      echo "132. rcsinit.at:3: testing ..."
+      echo "135. rcsinit.at:3: testing ..."
       $at_traceon
 
 
@@ -8830,13 +9293,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  133 ) # 133. rcsinit.at:12: RCSINIT with options
+  136 ) # 136. rcsinit.at:12: RCSINIT with options
     at_setup_line='rcsinit.at:12'
     at_desc='RCSINIT with options'
-    $at_quiet $ECHO_N "133: RCSINIT with options                         $ECHO_C"
+    $at_quiet $ECHO_N "136: RCSINIT with options                         $ECHO_C"
     at_xfail=no
     (
-      echo "133. rcsinit.at:12: testing ..."
+      echo "136. rcsinit.at:12: testing ..."
       $at_traceon
 
 
@@ -8875,13 +9338,13 @@ $at_traceon
     at_status=`cat $at_status_file`
     ;;
 
-  134 ) # 134. rcsinit.at:21: RCSINIT with invalid options
+  137 ) # 137. rcsinit.at:21: RCSINIT with invalid options
     at_setup_line='rcsinit.at:21'
     at_desc='RCSINIT with invalid options'
-    $at_quiet $ECHO_N "134: RCSINIT with invalid options                 $ECHO_C"
+    $at_quiet $ECHO_N "137: RCSINIT with invalid options                 $ECHO_C"
     at_xfail=no
     (
-      echo "134. rcsinit.at:21: testing ..."
+      echo "137. rcsinit.at:21: testing ..."
       $at_traceon
 
 
@@ -8912,7 +9375,11 @@ fi
 $at_traceon
 
 
-if $at_diff $at_devnull stderr; then
+if grep -q '^==[0-9][0-9]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi
@@ -8923,13 +9390,13 @@ fi
     at_status=`cat $at_status_file`
     ;;
 
-  135 ) # 135. rcsinit.at:28: RCSINIT with a filename
+  138 ) # 138. rcsinit.at:28: RCSINIT with a filename
     at_setup_line='rcsinit.at:28'
     at_desc='RCSINIT with a filename'
-    $at_quiet $ECHO_N "135: RCSINIT with a filename                      $ECHO_C"
+    $at_quiet $ECHO_N "138: RCSINIT with a filename                      $ECHO_C"
     at_xfail=no
     (
-      echo "135. rcsinit.at:28: testing ..."
+      echo "138. rcsinit.at:28: testing ..."
       $at_traceon
 
 
@@ -9234,7 +9701,7 @@ _ASBOX
   echo "Please send \`$as_me.log' and all information you think might help:"
   echo
   echo "   To: <foonly@users.sourceforge.net>"
-  echo "   Subject: [blame 1.1] $as_me:$at_fail_list${at_fail_list:+ failed${at_xpass_list:+,}}$at_xpass_list${at_xpass_list:+ passed unexpectedly}"
+  echo "   Subject: [blame 1.3.1] $as_me:$at_fail_list${at_fail_list:+ failed${at_xpass_list:+,}}$at_xpass_list${at_xpass_list:+ passed unexpectedly}"
   echo
   if test $at_debug_p = false; then
     echo

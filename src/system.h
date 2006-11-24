@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ extern int errno;
 #include <strndup.h>
 #include <strpbrk.h>
 #include <strstr.h>
+#include <unlocked-io.h>
 
 #if TM_IN_SYS_TIME
 # if TIME_WITH_SYS_TIME
@@ -70,19 +71,24 @@ extern int errno;
 #define MALLOC(C, T) ((T *)malloc((C) * sizeof(T)))
 #define MALLOC_VOIDP(C) ((void *)malloc(C))
 #define CALLOC(C, T) ((T *)calloc((C), sizeof(T)))
+#define REALLOC(P, C, T) ((T *)realloc((P), (C) * sizeof(T)))
 
 static inline char *
 SALLOC(size_t c) {
 	char *p;
-	
 	assert(c);
-	
-	p = MALLOC(c, char);
-	*p = *(p + c - 1) = '\0';
+	p = MALLOC(c + 1, char);
+	*p = *(p + c) = '\0';
 	return p;
 }
 
-#define REALLOC(P, C, T) ((T *)realloc((P), (C) * sizeof(T)))
+static inline char *
+SREALLOC(char *p, size_t c) {
+	assert(c);
+	p = REALLOC(p, c + 1, char);
+	*(p + c) = '\0';
+	return p;
+}
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free

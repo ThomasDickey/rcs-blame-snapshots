@@ -5,7 +5,13 @@ AT_INIT
 AT_TESTED([blame])
 
 m4_defun([MAC_CHECK_STDERR], [
-if $at_diff $at_devnull stderr; then
+dnl Catch Valgrind errors
+if grep -q '^==[[0-9]][[0-9]]*==' $at_stderr; then
+	echo 42 > $at_status_file
+	exit 42
+fi
+dnl Make sure stderr isn't empty
+if $at_diff $at_devnull $at_stderr; then
 	echo 1 > $at_status_file
 	exit 1
 fi

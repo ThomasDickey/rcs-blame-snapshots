@@ -1,8 +1,8 @@
 Summary: An RCS file annotator
 Name: @PACKAGE_TARNAME@
 Version: @PACKAGE_VERSION@
-Release: @RELEASE@
-Copyright: GPL Version 2
+Release: @RELEASE@%{?dist}
+License: GPL Version 2
 Group: Development/Tools
 Source0: %{name}-%{version}.tar.gz
 URL: http://blame.sourceforge.net/

@@ -1,9 +1,14 @@
-head	1.1;
+head	1.2;
 access;
 symbols;
 locks; strict;
-comment	@+++@;
+comment	@+@@+@;
 
+
+1.2
+date	2002.02.02.02.02.02;	author username;	state Exp;
+branches;
+next	1.1;
 
 1.1
 date	2001.01.01.01.01.01;	author username;	state Stab;
@@ -15,22 +20,65 @@ desc
 @@
 
 
+1.2
+log
+@This log line contains an @@ symbol...
+@
+text
+@Text at top. Three ats: @@@@@@
+
+=== $Log: log,v $
+=== Revision 1.1  2001/01/01 01:01:01  username
+=== Initial revision
+=== ===
+
+# $Log: log,v $
+# Revision 1.1  2001/01/01 01:01:01  username
+# Initial revision
+#
+
+/*
+ * $Log: log,v $
+ * Revision 1.1  2001/01/01 01:01:01  username
+ * Initial revision
+ *
+ */
+
+/* $Log: log,v $
+ * Revision 1.1  2001/01/01 01:01:01  username
+ * Initial revision
+ *
+ */
+
+(* $Log: log,v $
+ * Revision 1.1  2001/01/01 01:01:01  username
+ * Initial revision
+ *
+ *)
+
+Text at bottom.
+@
+
+
 1.1
 log
 @Initial revision
 @
 text
-@=== $Log$ ===
-
+@d1 1
+a1 1
+=== $Log$ ===
+d3 9
+a11 1
 # $Log$
-
-/*
+d14 4
+a17 1
  * $Log$
- */
-
+d20 4
+a23 1
 /* $Log$
- */
-
+d26 4
+a29 1
 (* $Log$
- *)
+d31 2
 @

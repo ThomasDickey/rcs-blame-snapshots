@@ -1,8 +1,8 @@
 Summary: An RCS file annotator
 Name: blame
-Version: 1.1
-Release: 1
-Copyright: GPL Version 2
+Version: 1.3.1
+Release: 1%{?dist}
+License: GPL Version 2
 Group: Development/Tools
 Source0: %{name}-%{version}.tar.gz
 URL: http://blame.sourceforge.net/
@@ -38,6 +38,16 @@ fi
 %{_mandir}/*/*
 
 %changelog
+
+* Thu Nov 23 2006 Michael Chapman <foonly@users.sourceforge.net> 1.3.1-1
+- Gnulib updates.
+- Rebuilt for fc4/fc5/fc6.
+
+* Fri Dec 02 2005 Michael Chapman <foonly@users.sourceforge.net> 1.3-1
+- Minor bugfixes.
+
+* Thu Jun 30 2005 Michael Chapman <foonly@users.sourceforge.net> 1.2-1
+- Minor bugfixes.
 
 * Thu Nov 24 2004 Michael Chapman <foonly@users.sourceforge.net> 1.1-1
 - Rebuilt.
