@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,9 +41,8 @@ typedef enum {
 } expand_t;
 
 char * keyword_extract_revision PARAMS((const char *, size_t));
-void * keyword_expand PARAMS((
-	const void *, size_t *, const delta_t *, const struct rcs *, expand_t,
-	const char *, long
+void keyword_annotate PARAMS((
+	const line_t *, const struct rcs *, expand_t, const char *, long
 ));
 
 #endif /* _KEYWORD_H */

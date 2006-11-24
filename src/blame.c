@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,6 +87,11 @@ static int failures;     /* True iff a failure occurred */
 
 static int parsing_rcsinit;
                          /* True iff argument parsing is not strict */
+
+/*
+ * Whether we should free everything at the end.
+ */
+static int cleanup;
 
 /*
  * Annotate revision <rev> of <rcs> (with working filename <filename>).
@@ -263,14 +268,7 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 	 * followed by an expanded version of the line.
 	 */
 	for (i = 0; i < lines_count(lines); i++) {
-		const line_t *line;
-		const delta_t *delta;
-		char prefix[36], *date;
-		void *buffer, *start, *newline;
-		size_t len;
-		
-		line = lines_get(lines, i);
-		delta = line->delta;
+		const line_t *line = lines_get(lines, i);
 		
 		/*
 		 * If the final line is empty, don't print anything.
@@ -278,44 +276,17 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 		if ((i + 1 == lines_count(lines)) && !line->len)
 			break;
 		
-		date = date_sprintf_prefix(delta_get_date(delta));
-		sprintf(prefix, "%-12s (%-8.8s %-9s): ",
-			delta_get_revision(delta),
-			delta_get_author(delta),
-			(date ? date : "?????????")
-		);
-		if (date) FREE(date);
-		
-		len = line->len;
-		start = buffer = keyword_expand(
-			line->text, &len, delta, rcs, rcs_expand, symbol, zone_offset
-		);
-		
-		/*
-		 * We use memchr in case there is binary data embedded in the line.
-		 */
-		while (len && (newline = memchr(start, '\n', len)) ) {
-			printf(prefix);
-			fwrite(start, 1, VOIDP_DIFF(newline, start) + 1, stdout);
-			len -= VOIDP_DIFF(newline, start) + 1;
-			start = VOIDP_OFFSET(newline, 1);
-		}
-		
-		/* 
-		 * This will almost always be empty.
-		 */
-		fwrite(start, 1, len, stdout);
-		
-		FREE(buffer);
+		keyword_annotate(line, rcs, rcs_expand, symbol, zone_offset);
 	}
 	
 	result = 0;
 	
 fail:
-	
-	lines_free(lines);
-	lines_free(spare);
-	FREE(copy);
+	if (cleanup) {
+		lines_free(lines);
+		lines_free(spare);
+		FREE(copy);
+	}
 	
 	return result;
 }
@@ -419,14 +390,15 @@ annotate(const char *working_filename, const char *rcs_filename) {
 	 */
 	result = annotate_revision(working_filename2, rcs, rev);
 	
-fail:	
-	if (rcs) rcs_free(rcs);
-	if (working_filename2) FREE(working_filename2);
-	if (rcs_filename2) FREE(rcs_filename2);
-	if (tag) FREE(tag);
-	if (rev) FREE(rev);
-	
-	OFREEALL(&blame_lines_obstack);
+fail:
+	if (cleanup) {
+		if (rcs) rcs_free(rcs);
+		if (working_filename2) FREE(working_filename2);
+		if (rcs_filename2) FREE(rcs_filename2);
+		if (tag) FREE(tag);
+		if (rev) FREE(rev);
+		OFREEALL(&blame_lines_obstack);
+	}
 	
 	return result;
 }
@@ -655,6 +627,9 @@ parse_options(int key, char *arg, struct argp_state *state) {
 								working_filename, rcs_filename
 							)
 						) {
+#if FASTEXIT
+							if (i == vector_count(filenames) - 1) cleanup = 0;
+#endif /* FASTEXIT */
 							failures |= annotate(working_filename, rcs_filename);
 							working_filename = rcs_filename = NULL;
 						} else {
@@ -672,6 +647,9 @@ parse_options(int key, char *arg, struct argp_state *state) {
 								working_filename, rcs_filename
 							)
 						) {
+#if FASTEXIT
+							if (i == vector_count(filenames) - 1) cleanup = 0;
+#endif /* FASTEXIT */
 							failures |= annotate(working_filename, rcs_filename);
 							working_filename = rcs_filename = NULL;
 						} else {
@@ -691,6 +669,9 @@ parse_options(int key, char *arg, struct argp_state *state) {
 			/*
 			 * Handle any remaining working filename or RCS filename.
 			 */
+#if FASTEXIT
+			cleanup = 0;
+#endif /* FASTEXIT */
 			if (working_filename) failures |= annotate(working_filename, NULL);
 			if (rcs_filename)     failures |= annotate(NULL, rcs_filename);
 		}
@@ -762,6 +743,7 @@ main(int argc, char **argv) {
 	expand = EXPAND_UNDEFINED;
 	suffixes = zone = NULL;
 	date = (time_t)(-1);
+	cleanup = 1;
 	
 	/*
 	 * Parse RCSINIT environment variable first, if it exists.
@@ -823,13 +805,15 @@ main(int argc, char **argv) {
 	 */
 	failures |= argp_parse(&parser, argc, argv, ARGP_NO_HELP, NULL, NULL);
 	
-	vector_free(filenames);
-	if (suffixes) FREE(suffixes);
-	if (zone) FREE(zone);
-	if (tag_arg) FREE(tag_arg);
-	if (date_arg) FREE(date_arg);
-	if (author_arg) FREE(author_arg);
-	if (state_arg) FREE(state_arg);
+	if (cleanup) {
+		vector_free(filenames);
+		if (suffixes) FREE(suffixes);
+		if (zone) FREE(zone);
+		if (tag_arg) FREE(tag_arg);
+		if (date_arg) FREE(date_arg);
+		if (author_arg) FREE(author_arg);
+		if (state_arg) FREE(state_arg);
+	}
 	
 	return (failures ? EXIT_FAILURE : EXIT_SUCCESS);
 }

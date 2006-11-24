@@ -1,16 +1,23 @@
 AT_BANNER([[Expanding Log keywords.]])
 
-AT_SETUP([Old Log expansion format])
+AT_SETUP([Old log expansion format])
 AT_KEYWORDS([log])
 AT_KEYWORDS([version])
-cp $testdir/log-v3.expout expout
+cp $testdir/log-v3-1.1.expout expout
 cp $testdir/log.experr experr
-AT_CHECK([[blame -V3 $testdir/log,v]], 0, expout, experr)
+AT_CHECK([[blame -r1.1 -V3 $testdir/log,v]], 0, expout, experr)
 AT_CLEANUP
 
-AT_SETUP([New Log expansion format])
+AT_SETUP([New log expansion format])
 AT_KEYWORDS([log])
-cp $testdir/log-v5.expout expout
+cp $testdir/log-v5-1.1.expout expout
 cp $testdir/log.experr experr
-AT_CHECK([[blame $testdir/log,v]], 0, expout, experr)
+AT_CHECK([[blame -r1.1 $testdir/log,v]], 0, expout, experr)
+AT_CLEANUP
+
+AT_SETUP([Logs for multiple revisions])
+AT_KEYWORDS([log])
+cp $testdir/log-1.2.expout expout
+cp $testdir/log.experr experr
+AT_CHECK([[blame -r1.2 $testdir/log,v]], 0, expout, experr)
 AT_CLEANUP

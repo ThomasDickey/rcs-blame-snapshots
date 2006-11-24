@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([blame], [1.1], [foonly@users.sourceforge.net])
+AC_INIT([blame], [1.3.1], [foonly@users.sourceforge.net])
 AC_CONFIG_SRCDIR([src/blame.c])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([-Wall ansi2knr std-options])
@@ -10,17 +10,12 @@ AC_CONFIG_MACRO_DIR(m4)
 AC_CONFIG_LIBOBJ_DIR(lib)
 AC_CONFIG_TESTDIR(tests, tests:src)
 
-gl_EARLY
-gl_MODULES([alloca argp calloc canonicalize dirname error exit free getcwd getline lstat malloc memchr memcmp memcpy memmove memset mktime obstack progname realloc setenv stat strchrnul strdup strftime strndup strpbrk strstr strtoul tzset unlocked-io xalloc xalloc-die xreadlink])
-gl_SOURCE_BASE([lib])
-gl_M4_BASE([m4])
-gl_LIB([libmisc])
-
-# setlocale strchr strrchr
+AC_GNU_SOURCE
 
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
+gl_EARLY
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_RANLIB
@@ -51,6 +46,11 @@ AH_BOTTOM([
 #  define PARAMS(protos) ()
 # endif /* ! PROTOTYPES */
 #endif
+])
+
+AH_BOTTOM([
+/* Avoid memory leak in argp */
+#define GNULIB_ARGP_DISABLE_DIRNAME 1
 ])
 
 # Checks for library functions.
@@ -99,6 +99,19 @@ no|"")
 	LDFLAGS="$LDFLAGS -pg -fprofile-arcs -ftest-coverage"
 	;;
 esac
+
+AC_ARG_ENABLE(fastexit,
+	AS_HELP_STRING(--disable-fastexit, [free all memory when exiting]))
+case "$enable_fastexit" in
+yes|"")
+	AC_DEFINE(FASTEXIT, 1, [Define to 1 to exit quickly without freeing all memory])
+	FASTEXIT=1
+	;;
+*)
+	FASTEXIT=0
+	;;
+esac
+AC_SUBST([FASTEXIT])
 
 AM_CONDITIONAL(GCC, test "$GCC" = yes)
 CFLAGS=`echo $CFLAGS | sed -e s,-O2,-O3,`

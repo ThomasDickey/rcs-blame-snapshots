@@ -26,14 +26,17 @@ cat <<EOF > keywords
 \$Revision: 1.0 \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 cat <<EOF > keywords
 \$Id: keywords,v 1.0 2001/01/01 01:01:01 username Exp \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 cat <<EOF > keywords
 \$Header: $testdir/keywords,v 1.0 2001/01/01 01:01:01 username Exp \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 AT_CLEANUP
 
 AT_SETUP([Late revision])
@@ -62,14 +65,17 @@ cat <<EOF > keywords
 \$Revision: 1 \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 cat <<EOF > keywords
 \$Id: keywords,v 1 2001/01/01 01:01:01 username Exp \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 cat <<EOF > keywords
 \$Header: $testdir/keywords,v 1 2001/01/01 01:01:01 username Exp \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 AT_CLEANUP
 
 AT_SETUP([Other non-revision])
@@ -80,14 +86,17 @@ cat <<EOF > keywords
 \$Revision: bar \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 cat <<EOF > keywords
 \$Id: keywords,v bar 2001/01/01 01:01:01 username Exp \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 cat <<EOF > keywords
 \$Header: $testdir/keywords,v bar 2001/01/01 01:01:01 username Exp \$
 EOF
 AT_CHECK([[blame -r'$' $testdir/keywords,v]], 1, , ignore)
+MAC_CHECK_STDERR
 AT_CLEANUP
 
 AT_SETUP([Parsing escape sequences])
@@ -107,5 +116,12 @@ cat <<EOF > 'x$ x'
 \$Id: x\044\040x,v 1.1 2001/01/01 01:01:01 username Exp \$
 EOF
 cat $testdir/escape.experr | sed 's,escape,x$ x,g' > experr
-AT_CHECK([[blame 'x$ x']], 0, ignore, experr)
+AT_CHECK([[blame -r1.1 'x$ x']], 0, ignore, experr)
+AT_CLEANUP
+
+AT_SETUP([Mixing escape characters])
+AT_KEYWORDS([working])
+cp $testdir/escape-1.2.expout expout
+cp $testdir/escape.experr experr
+AT_CHECK([[blame -r1.2 $testdir/escape,v]], 0, expout, experr)
 AT_CLEANUP

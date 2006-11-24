@@ -1,3 +1,95 @@
+2006-11-23 Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Makefile.am: Use mock, not mockbuild
+
+	* Released 1.3.1
+
+2006-11-20 Michael Chapman  <foonly@users.sourceforge.net>
+
+	* author.at: Fix test when current username is longer than 8 characters.
+
+	* Makefile.am: New mockbuild targets -- build against fc4/fc5/fc6.
+
+2006-11-19 Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.spec.in: Add disttag.
+
+	* date.c (undefine, date_parse): Fix warnings.
+
+	* system.h (SALLOC): Take the string length without the null-terminator.
+	* keyword.c (_keyword_unescape, _keyword_escape): Fix calls to SALLOC.
+
+	* system.h (SREALLOC): New macro.
+	* rcs.c (_rcs_find_rev): Use it.
+
+	* config.sub: Added.
+
+	* Resync with gnulib. base_name now returns a newly malloced string.
+	* configure.ac: Define GNULIB_ARGP_DISABLE_DIRNAME, because argp leaks
+	  memory with the new base_name.
+	* util.c (does_working_filename_match_rcs_filename,
+	  find_matching_rcs_filename, find_matching_working_filename): Various
+	  base_name memory leak cleanups.
+
+	* atlocal.in: Use special error code for valgrind errors.
+	* testsuite.at (MAC_CHECK_STDERR): Catch valgrind errors.
+	* argv.at, working.at: Remember to check stderr on every failure.
+
+2005-12-02  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* Released 1.3
+
+2005-11-18  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* keyword.c (_keyword_shrink_output, keyword_annotate): Don't
+	  explicitly use unlocked IO calls since this is handled by gnulib.
+	* keyword.c (keyword_annotate): Use fputs where possible.
+	* keyword.c (keyword_annotate): Fix handling of @ symbols within
+	  $-delimited text ranges.
+	* working.at: New test.
+	* More testdata for new test.
+
+	* Resync with gnulib.
+	* configure.ac: Remove gl_* calls that are handled by gnulib
+	  internally).
+
+2005-06-30  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* keyword.c (_keyword_shrink_output, keyword_annotate): Use unlocked
+	  IO.
+	
+	* system.h: Include unlocked-io.h.
+	
+	* branch.at: Spelling fix.
+	
+	* Released 1.2.
+
+2005-06-29  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* blame.c (annotate_revision, annotate, parse_options, main),
+	  configure.ac, atlocal.in: Add fastexit support.
+	* blame.c (annotate_revision), date.c (date_sprintf_prefix),
+	  keyword.c (keyword_annotate): Malloc less often by outputting
+	  on the fly.
+
+2005-06-28  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* src/Makefile.am (AM_LFLAGS): Add -8.
+	* rcs.at: New test.
+	
+	* blame.c (annotate_revision): Rework last-line handling.
+	* Fix last-line handling testdata.
+	
+	* Resync with gnulib.
+	* configure.ac (gl_MODULES): Update list.
+
+2005-06-17  Michael Chapman  <foonly@users.sourceforge.net>
+
+	* author.at: Don't use substring expansion.
+	
+	* Resync with gnulib.
+	* configure.ac (gl_MODULES): Update list.
+
 2004-11-25  Michael Chapman  <foonly@users.sourceforge.net>
 
 	* Released 1.1.
@@ -142,7 +234,7 @@
 	  lexer.
 	* delta.c, delta.h: Point to locations in mmapped file rather than
 	  using duplicates.
-	* delta.h (for_each_branch_base): A delta may not have a branch hash.	
+	* delta.h (for_each_branch_base): A delta may not have a branch hash.
 	* lines.c, lines.h: Almost a complete rewrite. Shrink amount to memcpy
 	  as much as possible, by reading and writing different line buffers.
 	  Text is pointers into mmapped file.

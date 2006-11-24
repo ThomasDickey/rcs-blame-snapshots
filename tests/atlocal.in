@@ -11,6 +11,10 @@ package_string="@PACKAGE_STRING@"
 PRELOAD=
 BLAME=$abs_top_builddir/src/blame
 if test "$VALGRIND" = 1; then
-	PRELOAD="valgrind -q --tool=memcheck --leak-check=yes"
+	if test "@FASTEXIT@" = 1; then
+		PRELOAD="valgrind -q --tool=memcheck --error-exitcode=42"
+	else
+		PRELOAD="valgrind -q --tool=memcheck --error-exitcode=42 --leak-check=yes"
+	fi
 fi
 export PRELOAD BLAME

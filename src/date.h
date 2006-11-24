@@ -1,6 +1,6 @@
 /*
  * Blame - An RCS file annotator
- * Copyright (C) 2004  Michael Chapman
+ * Copyright (C) 2004, 2005  Michael Chapman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,6 @@ time_t date_parse_rev PARAMS((const char *));
 
 char * date_format PARAMS((time_t));
 char * date_sprintf PARAMS((time_t, long));
-char * date_sprintf_prefix PARAMS((time_t));
+size_t date_sprintf_prefix PARAMS((time_t, char *, size_t));
 
 #endif /* _DATE_H */

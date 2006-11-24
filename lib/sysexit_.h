@@ -1,5 +1,5 @@
 /* exit() exit codes for some BSD system programs.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,12 +13,14 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 /* Written by Simon Josefsson based on sysexits(3) man page */
 
 #ifndef _SYSEXITS_H
 #define _SYSEXITS_H
+
+#define EX_OK 0 /* same value as EXIT_SUCCESS */
 
 #define EX_USAGE 64
 #define EX_DATAERR 65
