@@ -1,3 +1,7 @@
+2020-01-25 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* update config.guess, config.sub
+
 2006-11-23 Michael Chapman  <foonly@users.sourceforge.net>
 
 	* Makefile.am: Use mock, not mockbuild
