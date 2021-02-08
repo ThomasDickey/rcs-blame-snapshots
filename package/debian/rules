@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+export DEB_CFLAGS_MAINT_APPEND = -fcommon
+
+# +format causes a build failure, emailed upstream
+export DEB_BUILD_MAINT_OPTIONS=hardening=-format
+
+%:
+	dh $@ --with autotools-dev

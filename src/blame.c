@@ -38,7 +38,7 @@
 /*
  * Program name for errors.
  */
-const char *program_name;
+extern const char *program_name;
 
 /*
  * Package name/bug address for argp
@@ -427,6 +427,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 					rcs_emulation = *arg - '0';
 					break;
 				}
+				/* FALLTHRU */
 			default:
 				argp_failure(
 					state, EXIT_FAILURE, 0,

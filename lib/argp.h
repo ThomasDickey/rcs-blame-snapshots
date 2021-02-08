@@ -520,8 +520,8 @@ extern void __argp_state_help (const struct argp_state *__restrict __state,
 			       unsigned int __flags);
 
 /* Possibly output the standard usage message for ARGP to stderr and exit.  */
-extern void argp_usage (const struct argp_state *__state);
-extern void __argp_usage (const struct argp_state *__state);
+/* extern void argp_usage (const struct argp_state *__state); */
+/* extern void __argp_usage (const struct argp_state *__state); */
 
 /* If appropriate, print the printf string FMT and following args, preceded
    by the program name and `:', to stderr, and followed by a `Try ... --help'
@@ -551,13 +551,13 @@ extern void __argp_failure (const struct argp_state *__restrict __state,
      __attribute__ ((__format__ (__printf__, 4, 5)));
 
 /* Returns true if the option OPT is a valid short option.  */
-extern int _option_is_short (const struct argp_option *__opt) __THROW;
-extern int __option_is_short (const struct argp_option *__opt) __THROW;
+/* extern int _option_is_short (const struct argp_option *__opt) __THROW; */
+/* extern int __option_is_short (const struct argp_option *__opt) __THROW; */
 
 /* Returns true if the option OPT is in fact the last (unused) entry in an
    options array.  */
-extern int _option_is_end (const struct argp_option *__opt) __THROW;
-extern int __option_is_end (const struct argp_option *__opt) __THROW;
+/* extern int _option_is_end (const struct argp_option *__opt) __THROW; */
+/* extern int __option_is_end (const struct argp_option *__opt) __THROW; */
 
 /* Return the input field for ARGP in the parser corresponding to STATE; used
    by the help routines.  */
@@ -578,7 +578,7 @@ extern void *__argp_input (const struct argp *__restrict __argp,
 # endif
 
 # ifndef ARGP_EI
-#  define ARGP_EI extern __inline__
+#  define ARGP_EI static __inline__
 # endif
 
 ARGP_EI void
@@ -588,7 +588,7 @@ __argp_usage (const struct argp_state *__state)
 }
 
 ARGP_EI int
-__NTH (__option_is_short (const struct argp_option *__opt))
+(__option_is_short (const struct argp_option *__opt))
 {
   if (__opt->flags & OPTION_DOC)
     return 0;
@@ -600,7 +600,7 @@ __NTH (__option_is_short (const struct argp_option *__opt))
 }
 
 ARGP_EI int
-__NTH (__option_is_end (const struct argp_option *__opt))
+(__option_is_end (const struct argp_option *__opt))
 {
   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
 }

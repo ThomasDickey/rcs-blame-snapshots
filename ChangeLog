@@ -1,3 +1,25 @@
+2021-02-07 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure: comment-out the change of CFLAGS to use -O3, to reduce
+	  breakage in gcc-10's support for inlining.
+
+	* src/blame.c src/lexer.c: linkage-fixes.
+
+	* src/system.h: build-fix for standard C
+
+	* lib/argp-parse.c src/util.c: build-fixes for stricter compiling
+
+	* m4/mktime.m4, configure: shorten the timeout, which was excessive
+
+	* blame.spec: remove unused file
+
+	* lib/argp.h src/blame.c src/date.c: compiler warnings
+
+	* lib/argp-fmtstream.h, lib/argp.h: apply patch from Debian #778101,
+	  Debian #868970
+
+	* adapt Debian package-scripts for test-builds.
+
 2020-01-25 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* update config.guess, config.sub

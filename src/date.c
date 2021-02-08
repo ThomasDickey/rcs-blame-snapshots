@@ -1066,9 +1066,12 @@ date_format(time_t date) {
 	
 	tm = gmtime(&date); /* if RCS version < 5 then localtime ? */
 	result = MALLOC(20, char);
-	sprintf(result, "%04d.%02d.%02d.%02d.%02d.%02d",
-		tm->tm_year + 1900, tm->tm_mon + 1,
-		tm->tm_mday, tm->tm_hour, tm->tm_min,
+	sprintf(result, "%04u.%02u.%02u.%02u.%02u.%02u",
+		(tm->tm_year + 1900) % 10000,
+		(tm->tm_mon % 12) + 1,
+		(tm->tm_mday % 31),
+		(tm->tm_hour % 24),
+		(tm->tm_min % 60),
 		(tm->tm_sec > 60 ? 60 : tm->tm_sec)
 	);
 	return result;

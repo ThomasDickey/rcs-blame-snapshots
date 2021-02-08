@@ -3430,8 +3430,8 @@ typedef struct { unsigned int line; off_t off; off_t next; } loc_t;
 
 #include <parser.h>
 
-YYSTYPE yylval;
-YYLTYPE yylloc;
+extern YYSTYPE yylval;
+extern YYLTYPE yylloc;
 
 #define YY_NEVER_INTERACTIVE 1
 /*

@@ -1,81 +1,54 @@
-Summary: An RCS file annotator
-Name: blame
-Version: 1.3.1
-Release: 1%{?dist}
-License: GPL Version 2
-Group: Development/Tools
-Source0: %{name}-%{version}.tar.gz
-URL: http://blame.sourceforge.net/
-Vendor: Michael Chapman
-Packager: Michael Chapman <foonly@users.sourceforge.net>
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Prefix: %{_prefix}
+%define AppProgram blame
+%define AppVersion 1.3.1
+%define AppRelease 20210207
+Name:  %{AppProgram}
+Version:  %{AppVersion}
+Release:  %{AppRelease}
+Summary:  annotate RCS files
+License:  GPLv2
+Group:  Applications/Development
+URL:  ftp://ftp.invisible-island.net/%{AppProgram}
+Source0:  %{AppProgram}-%{AppVersion}-%{AppRelease}.tgz
+Packager:  Thomas E. Dickey <dickey@invisible-island.net>
 
 %description
-Blame displays the last modification for each line in an RCS file.
-It is the RCS equivalent of CVS's "annotate" command.
+blame outputs an annotated revision from each RCS file.  An annotated
+RCS file describes the revision and date in which each line was added
+to the file, and the author of each line.
 
 %prep
-%setup
+
+%define debug_package %{nil}
+
+%setup -q -n %{AppProgram}-%{AppVersion}-%{AppRelease}
 
 %build
-%{configure}
-%{__make}
-%{__make} check
+./configure \
+ --prefix=%{_prefix} \
+ --exec-prefix=%{_exec_prefix} \
+ --mandir=%{_mandir}
+make CFLAGS="-fcommon"
+
+%check
+make check
 
 %install
-%{makeinstall}
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+make install DESTDIR="$RPM_BUILD_ROOT"
+# prefix=#{buildroot}#{_prefix} mandir=#{buildroot}#{_mandir}
 
 %clean
-if test "$RPM_BUILD_ROOT" != "/"; then
-	%{__rm} -rf $RPM_BUILD_ROOT
-fi
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog INSTALL NEWS README
-%{_bindir}/*
-%{_mandir}/*/*
+%license COPYING
+%doc AUTHORS ChangeLog NEWS README
+%{_bindir}/%{name}
+%{_mandir}/man1/%{name}.1*
 
 %changelog
+# each patch should add its ChangeLog entries here
 
-* Thu Nov 23 2006 Michael Chapman <foonly@users.sourceforge.net> 1.3.1-1
-- Gnulib updates.
-- Rebuilt for fc4/fc5/fc6.
-
-* Fri Dec 02 2005 Michael Chapman <foonly@users.sourceforge.net> 1.3-1
-- Minor bugfixes.
-
-* Thu Jun 30 2005 Michael Chapman <foonly@users.sourceforge.net> 1.2-1
-- Minor bugfixes.
-
-* Thu Nov 24 2004 Michael Chapman <foonly@users.sourceforge.net> 1.1-1
-- Rebuilt.
-
-* Thu Nov 24 2004 Michael Chapman <foonly@users.sourceforge.net> 1.0-3
-- Said gcc 3.4 bugs weren't actually bugs.
-
-* Thu Nov 23 2004 Michael Chapman <foonly@users.sourceforge.net> 1.0-2
-- Rebuild RPM with -mtune=i386 to work around gcc 3.4 bugs.
-
-* Thu Nov 23 2004 Michael Chapman <foonly@users.sourceforge.net> 1.0-1
-- Stable release.
-
-* Thu Nov 20 2004 Michael Chapman <foonly@users.sourceforge.net> 0.3-2
-- Fixed bug involving delta texts without empty last lines.
-- Fixed --help output.
-
-* Thu Nov 11 2004 Michael Chapman <foonly@users.sourceforge.net> 0.3-1
-- Support for $RCSINIT environment variable.
-- Support for -V and --version to emulate old RCS versions.
-- Minor bugfixes.
-- Added manpage.
-
-* Thu Oct 21 2004 Michael Chapman <foonly@users.sourceforge.net> 0.2-1
-- Major speed improvements.
-
-* Tue Sep 28 2004 Michael Chapman <foonly@users.sourceforge.net> 0.1-2
-- Fixed build for old Red Hat.
-
-* Mon Sep 27 2004 Michael Chapman <foonly@users.sourceforge.net> 0.1-1
-- Initial RPM release.
+* Sun Feb 07 2021 Thomas Dickey
+- initial version

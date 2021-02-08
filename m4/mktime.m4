@@ -174,9 +174,9 @@ main ()
   int i, j;
 
   /* This test makes some buggy mktime implementations loop.
-     Give up after 60 seconds; a mktime slower than that
+     Give up after a few seconds; a mktime slower than that
      isn't worth using anyway.  */
-  alarm (60);
+  alarm (3);
 
   for (time_t_max = 1; 0 < time_t_max; time_t_max *= 2)
     continue;

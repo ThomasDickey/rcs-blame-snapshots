@@ -1,0 +1,22 @@
+This package was debianized by Andrew Pollock <apollock@debian.org> on
+Thu, 15 Oct 2009 23:25:35 -0700.
+
+It was downloaded from <http://blame.sourceforge.net/>
+
+Upstream Author:
+
+    Michael Chapman <foonly@users.sourceforge.net>
+
+Copyright:
+
+    Copyright (C) 2004  Michael Chapman
+
+License:
+
+    GPL-2
+
+The Debian packaging is (C) 2009, Andrew Pollock <apollock@debian.org> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+date.c:
+    Copyright 1993, 1994, 1995 Paul Eggert
