@@ -1,0 +1,17 @@
+Source: rcs-blame
+Section: devel
+Priority: optional
+Maintainer: Thomas E. Dickey <dickey@invisible-island.net>
+Build-Depends: debhelper (>= 9), autotools-dev, flex, bison
+Standards-Version: 3.9.5
+Homepage: http://blame.sourceforge.net/
+
+Package: rcs-blame
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Enhances: rcs
+Description: display the last modification for each line in an RCS file
+ Blame is the equivalent for CVS's annotate command.
+ .
+ An annotated RCS file describes the revision and date in which each line was
+ added to the file, and the author of each line.

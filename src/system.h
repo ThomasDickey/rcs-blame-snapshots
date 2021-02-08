@@ -37,6 +37,7 @@ extern int errno;
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 #include <alloca.h>
 #include <obstack.h>

@@ -154,7 +154,7 @@ find_matching_rcs_filename(const char *working_filename) {
 	
 	assert(first);
 	assert(first_error);
-	error(0, first_error, first);
+	error(0, first_error, "%s", first);
 	FREE(first);
 	
 	return NULL;
