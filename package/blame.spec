@@ -1,13 +1,13 @@
 %define AppProgram blame
 %define AppVersion 1.3.1
-%define AppRelease 20210207
+%define AppRelease 20220129
 Name:  %{AppProgram}
 Version:  %{AppVersion}
 Release:  %{AppRelease}
 Summary:  annotate RCS files
 License:  GPLv2
 Group:  Applications/Development
-URL:  ftp://ftp.invisible-island.net/%{AppProgram}
+URL:  https://invisible-island.net/%{AppProgram}
 Source0:  %{AppProgram}-%{AppVersion}-%{AppRelease}.tgz
 Packager:  Thomas E. Dickey <dickey@invisible-island.net>
 

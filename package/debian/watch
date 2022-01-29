@@ -1,10 +1,8 @@
-# Example watch control file for uscan
-# Rename this file to "watch" and then you can run the "uscan" command
-# to check for upstream updates and more.
-# See uscan(1) for format
+version=4
 
-# Compulsory line, this is a version 3 file
-version=3
+# Patch-dates are always in yyyymmdd format.
 
-# Uncomment to find new files on sourceforge, for devscripts >= 2.9
-http://sf.net/blame/blame-(.*)\.tar\.gz
+opts=pgpmode=auto,\
+dversionmangle=s/-/./,\
+oversionmangle=s/^(\d+\.\d+\.\d+).(\d+)/$1-$2/ \
+ https://invisible-mirror.net/archives/rcs-blame/blame-(\d+\.\d+\.\d+-\d+)\.tgz
