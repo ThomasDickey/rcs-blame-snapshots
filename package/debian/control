@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Thomas E. Dickey <dickey@invisible-island.net>
 Build-Depends: debhelper (>= 9), autotools-dev, flex, bison
 Standards-Version: 3.9.5
-Homepage: http://blame.sourceforge.net/
+Homepage: https://invisible-island.net/rcs-blame/rcs-blame.html
 
 Package: rcs-blame
 Architecture: any

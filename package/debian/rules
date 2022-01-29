@@ -6,4 +6,8 @@ export DEB_CFLAGS_MAINT_APPEND = -fcommon
 export DEB_BUILD_MAINT_OPTIONS=hardening=-format
 
 %:
-	dh $@ --with autotools-dev
+	dh $@
+
+# dh_autoreconf interferes with portability -- skip it
+override_dh_autoreconf:
+	echo "skip: dh_autoreconf autoreconf-dickey -- -f -i"
