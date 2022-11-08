@@ -1,6 +1,6 @@
 %define AppProgram blame
 %define AppVersion 1.3.1
-%define AppRelease 20220129
+%define AppRelease 20221108
 Name:  %{AppProgram}
 Version:  %{AppVersion}
 Release:  %{AppRelease}

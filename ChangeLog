@@ -1,3 +1,19 @@
+2022-11-08 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* README: update contact address
+
+	* VERSION: add, to put version information in scriptable form.
+
+	* doc/blame.1: minor cleanup
+
+	* install-sh: update to 2020-11-14.01
+
+	* config.guess: update to 2022-08-01
+
+	* config.sub: update to 2022-08-01
+
+	* config.rpath: delete/obsolete
+
 2022-01-29 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* .../Makefile.in: rewrite to eliminate automake

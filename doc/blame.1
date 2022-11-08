@@ -2,7 +2,7 @@
 .ds Rv \\$3
 .ds Dt \\$4
 ..
-.Id $Id: blame.1,v 1.3 2005/06/30 10:58:42 foonly Exp $
+.Id $Id: blame.1,v 1.3 2022/11/08 08:49:00 tom Exp $
 .ds b \fBblame\fP
 .ds i \&\s-1ISO\s0
 .ds r \&\s-1RCS\s0
@@ -201,8 +201,9 @@ The default time zone is normally \*u, but this can be overridden by the
 .B \-z
 option.
 The other defaults are determined in the order year, month, day,
-hour, minute, and second (most to least significant).  At least one of these
-fields must be provided.  For omitted fields that are of higher significance
+hour, minute, and second (most to least significant).
+At least one of these fields must be provided.
+For omitted fields that are of higher significance
 than the highest provided field, the time zone's current values are assumed.
 For all other omitted fields,
 the lowest possible values are assumed.
@@ -230,7 +231,8 @@ omitted, the caller's login is assumed.
 .TP
 .BR \-V ", " \-\^\-version "[=\fIver\fP]"
 If no argument is supplied, print \*b's version number, and the version of
-\*r it emulates by default. Otherwise emulate the specified version.
+\*r it emulates by default.
+Otherwise emulate the specified version.
 See
 .BR co (1)
 for details.
@@ -306,7 +308,7 @@ for details.
 The working pathname and a separator line is written to the diagnostic output.
 The exit status is zero if and only if all operations were successful.
 .SH EXAMPLES
-One day, there will be a whole bunch of useful examples here.  
+One day, there will be a whole bunch of useful examples here.
 .SH SEE ALSO
 .BR rcsintro (1),
 .BR ci (1),
