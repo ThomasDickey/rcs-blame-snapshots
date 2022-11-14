@@ -79,5 +79,5 @@ AC_DEFUN([gl_GETOPT], [gl_GETOPT_IFELSE([gl_GETOPT_SUBSTITUTE])])
 # Prerequisites of lib/getopt*.
 AC_DEFUN([gl_PREREQ_GETOPT],
 [
-  AC_CHECK_DECLS_ONCE([getenv])
+  AC_CHECK_DECLS([getenv])
 ])

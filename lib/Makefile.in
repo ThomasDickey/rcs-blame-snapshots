@@ -10,18 +10,17 @@ srcdir	= @srcdir@
 top_srcdir = @top_srcdir@
 top_builddir = ..
 
-INSTALL = @INSTALL@
-transform = $(program_transform_name)
+INSTALL			= @INSTALL@
+transform		= $(program_transform_name)
 
-AR	= ar
-ARFLAGS	= cru
+AR			= ar
+ARFLAGS			= cru
 
-CC	= @CC@
-CPPFLAGS = @CPPFLAGS@
-DEFS	= @DEFS@
-CFLAGS	= @CFLAGS@
-DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+CC			= @CC@
+CPP			= @CPP@
+CPPFLAGS		= @DEFS@ @CPPFLAGS@ -I. -I$(srcdir) -I$(top_builddir)
+CFLAGS			= @CFLAGS@
+COMPILE			= $(CC) $(CPPFLAGS) $(CFLAGS)
 
 CYGPATH_W               = @CYGPATH_W@
 OBJEXT                  = @OBJEXT@
@@ -29,40 +28,13 @@ RANLIB                  = @RANLIB@
 INSTALL_DATA            = @INSTALL_DATA@
 INSTALL_PROGRAM         = @INSTALL_PROGRAM@
 
-ABSOLUTE_STDINT_H	= @ABSOLUTE_STDINT_H@
-ABSOLUTE_SYS_STAT_H     = @ABSOLUTE_SYS_STAT_H@
-ALLOCA                  = @ALLOCA@
-ALLOCA_H                = @ALLOCA_H@
-BITSIZEOF_PTRDIFF_T     = @BITSIZEOF_PTRDIFF_T@
-BITSIZEOF_SIG_ATOMIC_T  = @BITSIZEOF_SIG_ATOMIC_T@
-BITSIZEOF_SIZE_T        = @BITSIZEOF_SIZE_T@
-BITSIZEOF_WCHAR_T       = @BITSIZEOF_WCHAR_T@
-BITSIZEOF_WINT_T        = @BITSIZEOF_WINT_T@
-GETOPT_H                = @GETOPT_H@
-HAVE_INTTYPES_H         = @HAVE_INTTYPES_H@
-HAVE_LONG_LONG_INT      = @HAVE_LONG_LONG_INT@
-HAVE_SIGNED_SIG_ATOMIC_T = @HAVE_SIGNED_SIG_ATOMIC_T@
-HAVE_SIGNED_WCHAR_T     = @HAVE_SIGNED_WCHAR_T@
-HAVE_SIGNED_WINT_T      = @HAVE_SIGNED_WINT_T@
-HAVE_STDINT_H           = @HAVE_STDINT_H@
-HAVE_SYS_BITYPES_H      = @HAVE_SYS_BITYPES_H@
-HAVE_SYS_INTTYPES_H     = @HAVE_SYS_INTTYPES_H@
-HAVE_SYS_TYPES_H        = @HAVE_SYS_TYPES_H@
-HAVE_UNSIGNED_LONG_LONG_INT = @HAVE_UNSIGNED_LONG_LONG_INT@
-HAVE_WCHAR_H            = @HAVE_WCHAR_H@
-HAVE__BOOL              = @HAVE__BOOL@
-PTRDIFF_T_SUFFIX        = @PTRDIFF_T_SUFFIX@
-SIG_ATOMIC_T_SUFFIX     = @SIG_ATOMIC_T_SUFFIX@
-SIZE_T_SUFFIX           = @SIZE_T_SUFFIX@
-STDBOOL_H               = @STDBOOL_H@
-STDINT_H                = @STDINT_H@
-SYSEXITS_H              = @SYSEXITS_H@
-SYS_STAT_H              = @SYS_STAT_H@
-UNISTD_H                = @UNISTD_H@
-WCHAR_T_SUFFIX          = @WCHAR_T_SUFFIX@
-WINT_T_SUFFIX           = @WINT_T_SUFFIX@
+LIBOBJS			= @LIBOBJS@ \
+	basename.o \
+	exitfail.o \
+	strcasecmp.o \
+	strndup.o \
+	strstr.o
 
-LIBOBJS	= @gl_LIBOBJS@
 prefix	= @prefix@
 
 SOURCES = \
@@ -82,23 +54,29 @@ SOURCES = \
 	xstrndup.c
 
 OBJECTS = $(SOURCES:.c=.$(OBJEXT))
-EXTRA_OBJECTS = $(LIBOBJS) @ALLOCA@
+EXTRA_OBJECTS = $(LIBOBJS)
 
-BUILT_SOURCES = $(ALLOCA_H) $(GETOPT_H) $(STDBOOL_H) $(STDINT_H) \
-	$(SYS_STAT_H) $(SYSEXITS_H) $(UNISTD_H)
+ALLOCA_H	= @ALLOCA_H@
+GETOPT_H	= @GETOPT_H@
+SYSEXITS_H	= @SYSEXITS_H@
+
+BUILT_SOURCES = $(ALLOCA_H) $(GETOPT_H) $(SYSEXITS_H)
 
 all: $(BUILT_SOURCES) libmisc.a
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .c .i .o .obj
 
-libmisc.a: $(OBJECTS) $(EXTRA_OBJECTS) 
+libmisc.a: $(OBJECTS) $(EXTRA_OBJECTS)
 	-rm -f $@
 	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(EXTRA_OBJECTS)
 	$(RANLIB) $@
 
 .c.o:
 	$(COMPILE) -c $<
+
+.c.i:
+	$(CPP) $(CPPFLAGS) -C $< >$@
 
 .c.obj:
 	$(COMPILE) -c `$(CYGPATH_W) '$<'`
@@ -108,7 +86,7 @@ install: all
 uninstall:
 
 clean:
-	-rm -f *.$(OBJEXT)
+	-rm -f *.$(OBJEXT) *.i
 	-rm -f libmisc.a
 
 distclean: clean
@@ -133,57 +111,6 @@ getopt.h: getopt_.h
 	} > $@-t
 	mv -f $@-t $@
 
-# We need the following in order to create <stdbool.h> when the system
-# doesn't have one that works.
-stdbool.h: stdbool_.h
-	rm -f $@-t $@
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' < $(srcdir)/stdbool_.h; \
-	} > $@-t
-	mv $@-t $@
-
-# We need the following in order to create <stdint.h> when the system
-# doesn't have one that works with the given compiler.
-stdint.h: stdint_.h
-	rm -f $@-t $@
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's/@''HAVE_WCHAR_H''@/$(HAVE_WCHAR_H)/g' \
-	      -e 's/@''HAVE_STDINT_H''@/$(HAVE_STDINT_H)/g' \
-	      -e 's|@''ABSOLUTE_STDINT_H''@|$(ABSOLUTE_STDINT_H)|g' \
-	      -e 's/@''HAVE_SYS_TYPES_H''@/$(HAVE_SYS_TYPES_H)/g' \
-	      -e 's/@''HAVE_INTTYPES_H''@/$(HAVE_INTTYPES_H)/g' \
-	      -e 's/@''HAVE_SYS_INTTYPES_H''@/$(HAVE_SYS_INTTYPES_H)/g' \
-	      -e 's/@''HAVE_SYS_BITYPES_H''@/$(HAVE_SYS_BITYPES_H)/g' \
-	      -e 's/@''HAVE_LONG_LONG_INT''@/$(HAVE_LONG_LONG_INT)/g' \
-	      -e 's/@''HAVE_UNSIGNED_LONG_LONG_INT''@/$(HAVE_UNSIGNED_LONG_LONG_INT)/g' \
-	      -e 's/@''BITSIZEOF_PTRDIFF_T''@/$(BITSIZEOF_PTRDIFF_T)/g' \
-	      -e 's/@''PTRDIFF_T_SUFFIX''@/$(PTRDIFF_T_SUFFIX)/g' \
-	      -e 's/@''BITSIZEOF_SIG_ATOMIC_T''@/$(BITSIZEOF_SIG_ATOMIC_T)/g' \
-	      -e 's/@''HAVE_SIGNED_SIG_ATOMIC_T''@/$(HAVE_SIGNED_SIG_ATOMIC_T)/g' \
-	      -e 's/@''SIG_ATOMIC_T_SUFFIX''@/$(SIG_ATOMIC_T_SUFFIX)/g' \
-	      -e 's/@''BITSIZEOF_SIZE_T''@/$(BITSIZEOF_SIZE_T)/g' \
-	      -e 's/@''SIZE_T_SUFFIX''@/$(SIZE_T_SUFFIX)/g' \
-	      -e 's/@''BITSIZEOF_WCHAR_T''@/$(BITSIZEOF_WCHAR_T)/g' \
-	      -e 's/@''HAVE_SIGNED_WCHAR_T''@/$(HAVE_SIGNED_WCHAR_T)/g' \
-	      -e 's/@''WCHAR_T_SUFFIX''@/$(WCHAR_T_SUFFIX)/g' \
-	      -e 's/@''BITSIZEOF_WINT_T''@/$(BITSIZEOF_WINT_T)/g' \
-	      -e 's/@''HAVE_SIGNED_WINT_T''@/$(HAVE_SIGNED_WINT_T)/g' \
-	      -e 's/@''WINT_T_SUFFIX''@/$(WINT_T_SUFFIX)/g' \
-	      < $(srcdir)/stdint_.h; \
-	} > $@-t
-	mv $@-t $@
-
-# We need the following in order to create <sys/stat.h> when the system
-# has one that is incomplete.
-sys/stat.h: stat_.h
-	test -d sys || mkdir sys
-	rm -f $@-t $@
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's|@''ABSOLUTE_SYS_STAT_H''@|$(ABSOLUTE_SYS_STAT_H)|g' \
-	      < $(srcdir)/stat_.h; \
-	} > $@-t
-	mv $@-t $@
-
 # We need the following in order to create <sysexits.h> when the system
 # doesn't have one that works with the given compiler.
 sysexits.h: sysexit_.h
@@ -191,10 +118,3 @@ sysexits.h: sysexit_.h
 	  cat $(srcdir)/sysexit_.h; \
 	} > $@-t
 	mv -f $@-t $@
-
-# We need the following in order to create an empty placeholder for
-# <unistd.h> when the system doesn't have one.
-unistd.h:
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  echo '/* Empty placeholder for $@.  */'; \
-	} > $@

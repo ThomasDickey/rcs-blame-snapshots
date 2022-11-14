@@ -11,9 +11,9 @@ AC_DEFUN([AC_FUNC_CANONICALIZE_FILE_NAME],
   [
     AC_LIBOBJ([canonicalize])
 
-    AC_CHECK_HEADERS_ONCE([sys/param.h])
-    AC_CHECK_DECLS_ONCE([canonicalize_file_name])
-    AC_CHECK_FUNCS_ONCE([canonicalize_file_name resolvepath])
+    AC_CHECK_HEADERS([sys/param.h])
+    AC_CHECK_DECLS([canonicalize_file_name])
+    AC_CHECK_FUNCS([canonicalize_file_name resolvepath])
     AC_DEFINE([PROVIDE_CANONICALIZE_FILENAME_MODE], 1,
       [Define to 1 to provide canonicalize_filename_mode.])
   ])

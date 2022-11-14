@@ -1,42 +1,61 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([blame], [1.3.1], [foonly@users.sourceforge.net])
+AC_INIT([blame], [1.3.1], [dickey@invisible-island.net])
 AC_CONFIG_SRCDIR([src/blame.c])
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([-Wall ansi2knr std-options])
 AC_SUBST(RELEASE, 1)
 
-AC_CONFIG_MACRO_DIR(m4)
-AC_CONFIG_LIBOBJ_DIR(lib)
-AC_CONFIG_TESTDIR(tests, tests:src)
+AC_DEFINE_UNQUOTED(PACKAGE_STRING,"$PACKAGE_STRING")
+AC_DEFINE_UNQUOTED(PACKAGE_BUGREPORT,"$PACKAGE_BUGREPORT")
 
-AC_GNU_SOURCE
+AC_AIX
+AC_MINIX
+gl_USE_SYSTEM_EXTENSIONS
+
+dnl AC_CONFIG_MACRO_DIR(m4)
+dnl AC_CONFIG_LIBOBJ_DIR(lib)
+dnl AC_CONFIG_TESTDIR(tests, tests:src)
+
+dnl AC_GNU_SOURCE
+
+CF_CYGPATH_W
 
 # Checks for programs.
 AC_PROG_CC
-AM_PROG_CC_C_O
-gl_EARLY
-AM_PROG_LEX
+AC_PROG_LEX
 AC_PROG_YACC
 AC_PROG_RANLIB
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
 
 # Checks for libraries.
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS_ONCE([libintl.h])
+AC_CHECK_HEADERS([libintl.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
-AM_C_PROTOTYPES
+AC_C_PROTOTYPES
+gl_INLINE
 AC_C_STRINGIZE
 AC_C_VOLATILE
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
+AC_FUNC_MKTIME
+
+gl_FUNC_ALLOCA
+gl_GETOPT
+gl_ARGP
+gl_TM_GMTOFF
+gl_SYSEXITS
+
+gt_TYPE_WCHAR_T
+gl_AC_TYPE_LONG_LONG
+gt_TYPE_LONGDOUBLE
 
 # canonicalize gnulib module needs this
-gl_AC_TYPE_UINTMAX_T
 
 AH_BOTTOM([
 #ifndef PARAMS
@@ -54,7 +73,6 @@ AH_BOTTOM([
 ])
 
 # Checks for library functions.
-gl_INIT
 mac_HAVE_NL_LANGINFO
 
 AC_FUNC_MMAP
@@ -77,7 +95,7 @@ AH_BOTTOM([
 ])
 
 AC_ARG_ENABLE(debug,
-	AS_HELP_STRING(--enable-debug, [include debug code (e.g. assertions)]))
+	AC_HELP_STRING(--enable-debug, [include debug code (e.g. assertions)]))
 case "$enable_debug" in
 no|"")
 	AC_DEFINE(NDEBUG, 1, [Define to 1 to disable assertions])
@@ -87,7 +105,7 @@ no|"")
 esac
 
 AC_ARG_ENABLE(debug,
-	AS_HELP_STRING(--enable-profile, [enable profiling]))
+	AC_HELP_STRING(--enable-profile, [enable profiling]))
 case "$enable_profile" in
 no|"")
 	;;
@@ -101,7 +119,7 @@ no|"")
 esac
 
 AC_ARG_ENABLE(fastexit,
-	AS_HELP_STRING(--disable-fastexit, [free all memory when exiting]))
+	AC_HELP_STRING(--disable-fastexit, [free all memory when exiting]))
 case "$enable_fastexit" in
 yes|"")
 	AC_DEFINE(FASTEXIT, 1, [Define to 1 to exit quickly without freeing all memory])
@@ -113,7 +131,6 @@ yes|"")
 esac
 AC_SUBST([FASTEXIT])
 
-AM_CONDITIONAL(GCC, test "$GCC" = yes)
 CFLAGS=`echo $CFLAGS | sed -e s,-O2,-O3,`
 
 NEWS=NEWS
@@ -128,4 +145,23 @@ AC_CONFIG_FILES([
 	tests/atlocal
 	blame.spec
 ])
+
+echo "creating tests/atconfig"
+cat >tests/atconfig <<ATEOF
+#!/bin/sh
+at_testdir='tests'
+abs_builddir='`pwd`'
+at_srcdir='$srcdir'
+abs_srcdir='`cd $srcdir && pwd`'
+at_top_srcdir='$srcdir'
+abs_top_srcdir='`cd $srcdir && pwd`'
+at_top_builddir='.'
+abs_top_builddir='`pwd`'
+
+AUTOTEST_PATH='tests:src'
+
+SHELL=\${CONFIG_SHELL-'$SHELL'}
+ATEOF
+chmod +x tests/atconfig
+
 AC_OUTPUT

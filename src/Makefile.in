@@ -43,24 +43,23 @@ OBJECTS = \
 	vector.$(OBJEXT) \
 	working.$(OBJEXT)
 
-CC = @CC@
-CFLAGS = @CFLAGS@
-CPPFLAGS = @CPPFLAGS@
+CC	= @CC@
+CPP	= @CPP@
+CFLAGS	= @CFLAGS@
+CPPFLAGS = @DEFS@ @CPPFLAGS@ -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/lib
 CYGPATH_W = @CYGPATH_W@
-DEFS = @DEFS@
-LDFLAGS = @LDFLAGS@
-LIBS = @LIBS@
+LDFLAGS	= @LDFLAGS@
+LIBS	= @LIBS@
 
-DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/lib
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-LINK = $(CC) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+COMPILE	= $(CC) $(CPPFLAGS) $(CFLAGS)
+LINK	= $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
-LEX = @LEX@
-LEXLIB = @LEXLIB@
+LEX	= @LEX@
+LEXLIB	= @LEXLIB@
 LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
 LEXCOMPILE = $(LEX) $(LFLAGS)
 
-YACC = @YACC@
+YACC	= @YACC@
 YACCCOMPILE = $(YACC) $(YFLAGS)
 
 SOURCES = \
@@ -86,7 +85,7 @@ BUILT_SOURCES = parser.h
 all: $(BUILT_SOURCES) $(PROGRAMS)
 
 .SUFFIXES:
-.SUFFIXES: .c .l .o .obj .y
+.SUFFIXES: .c .i .l .o .obj .y
 
 $(DESTDIR)$(bindir):
 	mkdir -p $@
@@ -109,6 +108,9 @@ $(THIS)$(EXEEXT): $(OBJECTS) $(MY_LIBS)
 
 .c.o:
 	$(COMPILE) -c $<
+
+.c.i:
+	$(CPP) $(CPPFLAGS) -C $< >$@
 
 .c.obj:
 	$(COMPILE) -c `$(CYGPATH_W) '$<'`
@@ -143,7 +145,7 @@ check:
 
 clean:
 	-rm -f *.tab.c
-	-rm -f *.$(OBJEXT)
+	-rm -f *.$(OBJEXT) *.i
 	-rm -f $(THIS)$(EXEEXT)
 
 distclean: clean

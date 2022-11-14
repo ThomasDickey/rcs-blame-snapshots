@@ -54,7 +54,7 @@ AC_DEFUN([gt_CHECK_VAR_DECL],
 AC_DEFUN([gl_PREREQ_SETENV],
 [
   AC_REQUIRE([AC_FUNC_ALLOCA])
-  AC_CHECK_HEADERS_ONCE(unistd.h)
+  AC_CHECK_HEADERS(unistd.h)
   AC_CHECK_HEADERS(search.h)
   AC_CHECK_FUNCS(tsearch)
   gt_CHECK_VAR_DECL([#include <unistd.h>], environ)
@@ -63,6 +63,6 @@ AC_DEFUN([gl_PREREQ_SETENV],
 # Prerequisites of lib/unsetenv.c.
 AC_DEFUN([gl_PREREQ_UNSETENV],
 [
-  AC_CHECK_HEADERS_ONCE(unistd.h)
+  AC_CHECK_HEADERS(unistd.h)
   gt_CHECK_VAR_DECL([#include <unistd.h>], environ)
 ])

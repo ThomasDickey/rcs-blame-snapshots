@@ -15,7 +15,7 @@ AC_DEFUN([gl_FUNC_GETDELIM],
   AC_REQUIRE([AC_GNU_SOURCE])
 
   AC_REPLACE_FUNCS(getdelim)
-  AC_CHECK_DECLS_ONCE(getdelim)
+  AC_CHECK_DECLS(getdelim)
 
   if test $ac_cv_func_getdelim = no; then
     gl_PREREQ_GETDELIM

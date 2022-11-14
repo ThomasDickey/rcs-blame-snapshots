@@ -1,3 +1,11 @@
+2022-11-13 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure configure.ac aclocal.m4 m4/* lib/*: begin conversion to
+	  autoconf-252, addressing problems both in updating the configure
+	  script as well as portability of the configure script.
+
+	* lib/Makefile.in src/Makefile.in: add .c.i rule
+
 2022-11-08 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* README: update contact address

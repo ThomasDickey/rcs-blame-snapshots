@@ -1,4 +1,4 @@
-testdir=`(cd "${abs_srcdir}/testdata"; exec pwd)`
+testdir=`(cd "./testdata"; exec pwd)`
 username=`whoami 2>/dev/null`
 space=" "
 if test "@FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR@" = 1; then

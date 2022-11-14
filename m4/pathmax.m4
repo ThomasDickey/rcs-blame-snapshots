@@ -7,5 +7,5 @@ dnl with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_PATHMAX],
 [
   dnl Prerequisites of lib/pathmax.h.
-  AC_CHECK_HEADERS_ONCE(sys/param.h)
+  AC_CHECK_HEADERS(sys/param.h)
 ])

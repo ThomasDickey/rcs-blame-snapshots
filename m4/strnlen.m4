@@ -23,5 +23,5 @@ AC_DEFUN([gl_FUNC_STRNLEN],
 
 # Prerequisites of lib/strnlen.c.
 AC_DEFUN([gl_PREREQ_STRNLEN], [
-  AC_CHECK_DECLS_ONCE(strnlen)
+  AC_CHECK_DECLS(strnlen)
 ])

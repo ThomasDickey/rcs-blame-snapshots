@@ -15,7 +15,7 @@
 
 AC_DEFUN([gl_FUNC_GETCWD_PATH_MAX],
 [
-  AC_CHECK_DECLS_ONCE(getcwd)
+  AC_CHECK_DECLS(getcwd)
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_CACHE_CHECK([whether getcwd handles long file names properly],
     gl_cv_func_getcwd_path_max,

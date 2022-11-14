@@ -64,10 +64,7 @@ $(TESTSUITE): package.m4 $(TESTSUITE_AT)
 	$(AUTOTEST) -I $(srcdir) testsuite.at -o $@.tmp
 	mv $@.tmp $@
 
-atconfig: $(top_builddir)/config.status
-	cd $(top_builddir) && $(SHELL) ./config.status tests/$@
-
-check: atconfig atlocal $(TESTSUITE) $(top_builddir)/src/blame$(EXEEXT)
+check: atconfig atlocal $(top_builddir)/src/blame$(EXEEXT)
 	$(SHELL) $(TESTSUITE)
 
 .PHONY: all check clean distclean install uninstall

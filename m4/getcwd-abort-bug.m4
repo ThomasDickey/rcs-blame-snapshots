@@ -13,7 +13,7 @@
 # gl_FUNC_GETCWD_ABORT_BUG([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 AC_DEFUN([gl_FUNC_GETCWD_ABORT_BUG],
 [
-  AC_CHECK_DECLS_ONCE(getcwd)
+  AC_CHECK_DECLS(getcwd)
   AC_CHECK_FUNCS(getpagesize)
   AC_CACHE_CHECK([whether getcwd aborts when 4k < cwd_length < 16k],
     gl_cv_func_getcwd_abort_bug,

@@ -9,5 +9,5 @@ AC_DEFUN([gl_FILE_NAME_CONCAT],
   AC_LIBOBJ([filenamecat])
 
   dnl Prerequisites of lib/filenamecat.c.
-  AC_CHECK_FUNCS_ONCE(mempcpy)
+  AC_CHECK_FUNCS(mempcpy)
 ])

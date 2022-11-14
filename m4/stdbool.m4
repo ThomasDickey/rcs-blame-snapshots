@@ -5,32 +5,6 @@ dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
-# Prepare for substituting <stdbool.h> if it is not supported.
-
-AC_DEFUN([AM_STDBOOL_H],
-[
-  AC_REQUIRE([AC_HEADER_STDBOOL])
-
-  # Define two additional variables used in the Makefile substitution.
-
-  if test "$ac_cv_header_stdbool_h" = yes; then
-    STDBOOL_H=''
-  else
-    STDBOOL_H='stdbool.h'
-  fi
-  AC_SUBST([STDBOOL_H])
-
-  if test "$ac_cv_type__Bool" = yes; then
-    HAVE__BOOL=1
-  else
-    HAVE__BOOL=0
-  fi
-  AC_SUBST([HAVE__BOOL])
-])
-
-# AM_STDBOOL_H will be renamed to gl_STDBOOL_H in the future.
-AC_DEFUN([gl_STDBOOL_H], [AM_STDBOOL_H])
-
 # This macro is only needed in autoconf <= 2.59.  Newer versions of autoconf
 # have this macro built-in.
 

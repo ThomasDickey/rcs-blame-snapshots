@@ -9,7 +9,7 @@ AC_DEFUN([gl_FUNC_STRNDUP],
   dnl Persuade glibc <string.h> to declare strndup().
   AC_REQUIRE([AC_GNU_SOURCE])
 
-  AC_CHECK_DECLS_ONCE([strndup])
+  AC_CHECK_DECLS([strndup])
 
   # AIX 4.3.3, AIX 5.1 have a function that fails to add the terminating '\0'.
   AC_CACHE_CHECK([for working strndup], gl_cv_func_strndup,

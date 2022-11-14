@@ -7,7 +7,7 @@ dnl with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_FUNC_STRDUP],
 [
   AC_REPLACE_FUNCS(strdup)
-  AC_CHECK_DECLS_ONCE(strdup)
+  AC_CHECK_DECLS(strdup)
   gl_PREREQ_STRDUP
 ])
 

@@ -36,7 +36,6 @@ AC_DEFUN([gl_INIT],
   m4_pushdef([AC_LIBOBJ], m4_defn([gl_LIBOBJ]))
   m4_pushdef([AC_REPLACE_FUNCS], m4_defn([gl_REPLACE_FUNCS]))
   m4_pushdef([AC_LIBSOURCES], m4_defn([gl_LIBSOURCES]))
-  AM_CONDITIONAL([GL_COND_LIBTOOL], [false])
   gl_cond_libtool=false
   gl_libdeps=
   gl_ltlibdeps=
@@ -80,7 +79,6 @@ AC_DEFUN([gl_INIT],
   gt_FUNC_SETENV
   gl_SIZE_MAX
   gt_TYPE_SSIZE_T
-  AM_STDBOOL_H
   gl_STDINT_H
   gl_STRCASE
   gl_FUNC_STRCHRNUL
@@ -270,7 +268,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xsize.h
   lib/xstrndup.c
   lib/xstrndup.h
-  m4/absolute-header.m4
   m4/alloca.m4
   m4/allocsa.m4
   m4/argp.m4
@@ -313,7 +310,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/memset.m4
   m4/minmax.m4
   m4/mktime.m4
-  m4/onceonly_2_57.m4
   m4/pathmax.m4
   m4/readlink.m4
   m4/setenv.m4
