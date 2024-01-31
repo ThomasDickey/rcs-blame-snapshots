@@ -1,4 +1,5 @@
 # getopt.m4 serial 13
+dnl Copyright 2024 Thomas E. Dickey
 dnl Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -7,23 +8,6 @@ dnl with or without modifications, as long as this notice is preserved.
 # The getopt module assume you want GNU getopt, with getopt_long etc,
 # rather than vanilla POSIX getopt.  This means your code should
 # always include <getopt.h> for the getopt prototypes.
-
-AC_DEFUN([gl_GETOPT_SUBSTITUTE],
-[
-  AC_LIBOBJ([getopt])
-  AC_LIBOBJ([getopt1])
-  gl_GETOPT_SUBSTITUTE_HEADER
-  gl_PREREQ_GETOPT
-])
-
-AC_DEFUN([gl_GETOPT_SUBSTITUTE_HEADER],
-[
-  GETOPT_H=getopt.h
-  AC_DEFINE([__GETOPT_PREFIX], [[rpl_]],
-    [Define to rpl_ if the getopt replacement functions and variables
-     should be used.])
-  AC_SUBST([GETOPT_H])
-])
 
 AC_DEFUN([gl_GETOPT_CHECK_HEADERS],
 [
@@ -68,16 +52,19 @@ AC_DEFUN([gl_GETOPT_CHECK_HEADERS],
   fi
 ])
 
-AC_DEFUN([gl_GETOPT_IFELSE],
-[
+AC_DEFUN([gl_GETOPT], [
   AC_REQUIRE([gl_GETOPT_CHECK_HEADERS])
-  AS_IF([test -n "$GETOPT_H"], [$1], [$2])
-])
-
-AC_DEFUN([gl_GETOPT], [gl_GETOPT_IFELSE([gl_GETOPT_SUBSTITUTE])])
-
-# Prerequisites of lib/getopt*.
-AC_DEFUN([gl_PREREQ_GETOPT],
-[
+  AC_LIBOBJ([getopt])
+  AC_LIBOBJ([getopt1])
+  if test -n "$GETOPT_H"
+  then
+    :
+  else
+    GETOPT_H=getopt.h
+    AC_DEFINE([__GETOPT_PREFIX], [[rpl_]],
+      [Define to rpl_ if the getopt replacement functions and variables
+       should be used.])
+    AC_SUBST([GETOPT_H])
+  fi
   AC_CHECK_DECLS([getenv])
 ])

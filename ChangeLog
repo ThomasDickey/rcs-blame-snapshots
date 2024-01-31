@@ -1,3 +1,13 @@
+2024-01-30 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* build-fixes to work with c11, c23
+
+	* convert m4/getopt.m4 to autoconf-252
+
+	* config.guess: update to 2023-12-02
+
+	* config.sub: update to 2023-12-27
+
 2022-11-13 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* configure configure.ac aclocal.m4 m4/* lib/*: begin conversion to
