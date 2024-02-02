@@ -42,7 +42,7 @@ typedef struct {
 	line_t **lines; /* The line pointers in the buffer.     */
 } lines_t;
 
-lines_t * lines_new PARAMS(());
+lines_t * lines_new PARAMS((void));
 lines_t * lines_new_with_capacity PARAMS((unsigned int));
 lines_t * lines_dup PARAMS((const lines_t *, unsigned int));
 void lines_free PARAMS((lines_t *));

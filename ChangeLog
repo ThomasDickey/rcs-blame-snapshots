@@ -1,3 +1,7 @@
+2024-02-01 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* fixes to build/work with MacOS and Solaris 10.
+
 2024-01-30 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* build-fixes to work with c11, c23

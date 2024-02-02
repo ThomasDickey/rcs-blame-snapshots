@@ -15,14 +15,6 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#if HAVE_STRCHRNUL
-
-/* Get strchrnul() declaration.  */
-#include <string.h>
-
-#else
-
 /* Find the first occurrence of C in S or the final NUL byte.  */
+#define strchrnul(s,n) replaced_strchrnul(s,n)
 extern char *strchrnul (const char *s, int c_in);
-
-#endif

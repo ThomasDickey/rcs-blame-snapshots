@@ -56,11 +56,14 @@ SOURCES = \
 OBJECTS = $(SOURCES:.c=.$(OBJEXT))
 EXTRA_OBJECTS = $(LIBOBJS)
 
+HAVE__BOOL	= @HAVE__BOOL@
+
 ALLOCA_H	= @ALLOCA_H@
 GETOPT_H	= @GETOPT_H@
+STDBOOL_H	= @STDBOOL_H@
 SYSEXITS_H	= @SYSEXITS_H@
 
-BUILT_SOURCES = $(ALLOCA_H) $(GETOPT_H) $(SYSEXITS_H)
+BUILT_SOURCES = $(ALLOCA_H) $(GETOPT_H) $(STDBOOL_H) $(SYSEXITS_H)
 
 all: $(BUILT_SOURCES) libmisc.a
 
@@ -108,6 +111,15 @@ alloca.h: alloca_.h
 getopt.h: getopt_.h
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  cat $(srcdir)/getopt_.h; \
+	} > $@-t
+	mv -f $@-t $@
+
+# We need the following in order to create <stdbool.h> when the system
+# doesn't have one that works with the given compiler.
+stdbool.h: stdbool_.h
+	rm -f $@-t $@
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' < $(srcdir)/stdbool_.h; \
 	} > $@-t
 	mv -f $@-t $@
 

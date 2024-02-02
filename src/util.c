@@ -118,10 +118,10 @@ find_matching_rcs_filename(const char *working_filename) {
 		length = strlen(working_filename) + (to - from) + 4;
 		
 		buffer = SALLOC(length);
-		strncat(buffer, working_filename, (a - working_filename));
+		strncat(buffer, working_filename, (size_t) (a - working_filename));
 		strcat(buffer, "RCS" SSLASH);
 		strncat(buffer, a, base_len(a));
-		strncat(buffer, from, to - from);
+		strncat(buffer, from, (size_t) (to - from));
 		
 		if (!access(buffer, F_OK)) {
 			if (first) FREE(first);
@@ -135,9 +135,9 @@ find_matching_rcs_filename(const char *working_filename) {
 		
 		if (from != to) {
 			memset(buffer, '\0', length);
-			strncpy(buffer, working_filename, (a - working_filename));
+			strncpy(buffer, working_filename, (size_t) (a - working_filename));
 			strncat(buffer, a, base_len(a));
-			strncat(buffer, from, to - from);
+			strncat(buffer, from, (size_t) (to - from));
 
 			if (!access(buffer, F_OK)) {
 				if (first) FREE(first);
@@ -178,7 +178,7 @@ find_matching_working_filename(const char *rcs_filename) {
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
-		if (!strncmp(from, a + al - (to - from), to - from)) {
+		if (!strncmp(from, a + al - (to - from), (size_t) (to - from))) {
 			char *result = strndup(a, al - (to - from));
 			FREE(a);
 			return result;

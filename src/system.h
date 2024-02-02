@@ -113,8 +113,10 @@ _OALLOC(obstack_t *o, size_t s) {
 
 #define OFREEALL(O) obstack_free((O), NULL)
 
-#define VOIDP_DIFF(P, Q) ((ptrdiff_t)((char *)(P) - (char *)(Q)))
-#define VOIDP_OFFSET(P, O) ((void *)((char *)(P) + (ptrdiff_t)(O)))
+#define VOIDP_DIFF(P, Q) ((ptrdiff_t)((const char *)(P) - (const char *)(Q)))
+#define VOIDP_OFFSET(P, O) ((const void *)((const char *)(P) + (ptrdiff_t)(O)))
+
+#define CHARP_OFFSET(P, O) ((char *)((char *)(P) + (ptrdiff_t)(O)))
 
 /* No, we don't handle EOF. */
 #define ISALNUM(C) isalnum((unsigned char)(C))

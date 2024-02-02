@@ -205,7 +205,7 @@ _keyword_shrink_output(const void *data, size_t len) {
 		char *at = memchr(data, '@', len);
 		if (!at) break;
 		fwrite(data, VOIDP_DIFF(at, data) + 1, 1, stdout);
-		if (*(char *)VOIDP_OFFSET(at, 1) == '@') {
+		if (*(const char *)VOIDP_OFFSET(at, 1) == '@') {
 			len -= VOIDP_DIFF(at, data) + 2;
 			data = VOIDP_OFFSET(at, 2);
 		} else {
@@ -267,10 +267,10 @@ keyword_annotate(
 			: "$@\n"
 		));
 		delim = VOIDP_OFFSET(current, chunk_len);
-		switch (*(char *)delim) {
+		switch (*(const char *)delim) {
 		case '$':
 			fwrite(current, chunk_len, 1, stdout);
-			delim2 = memchr(VOIDP_OFFSET(delim, 1), '$', VOIDP_DIFF(end, delim) - 1);
+			delim2 = memchr(VOIDP_OFFSET(delim, 1), '$', (size_t) (VOIDP_DIFF(end, delim) - 1));
 			if (!delim2) {
 				putchar('$');
 				current = VOIDP_OFFSET(delim, 1);
@@ -304,7 +304,7 @@ keyword_annotate(
 					putchar('$');
 			} else if (!memcmp(delim, "$Header", 7) || !memcmp(delim, "$Id", 3)) {
 				if (expand != EXPAND_VALUE_ONLY) {
-					if (*(char *)VOIDP_OFFSET(delim, 1) == 'H')
+					if (*(const char *)VOIDP_OFFSET(delim, 1) == 'H')
 						fputs("$Header", stdout);
 					else
 						fputs("$Id", stdout);
@@ -313,7 +313,7 @@ keyword_annotate(
 					fputs(": ", stdout);
 				if (expand != EXPAND_KEY_ONLY) {
 					char *t1 = _keyword_escape(
-						(*(char *)VOIDP_OFFSET(delim, 1) == 'H') && (rcs_emulation >= 4)
+						(*(const char *)VOIDP_OFFSET(delim, 1) == 'H') && (rcs_emulation >= 4)
 						? rcs_get_full_filename(rcs)
 						: rcs_get_short_filename(rcs)
 					);
@@ -390,25 +390,25 @@ keyword_annotate(
 					const void *t2;
 					log_end = delim;
 					for (t2 = log_start; t2 < log_end; t2 = VOIDP_OFFSET(t2, 1))
-						if (!ISSPACE(*(char *)t2))
+						if (!ISSPACE(*(const char *)t2))
 							break;
 					if (
-						t2 < log_end - 2 &&
-						(*(char *)t2 == '/' || *(char *)t2 == '(') && 
-						*(char *)VOIDP_OFFSET(t2, 1) == '*'
+						(const char *)t2 < ((const char *)(log_end) - 2) &&
+						(*(const char *)t2 == '/' || *(const char *)t2 == '(') && 
+						*(const char *)VOIDP_OFFSET(t2, 1) == '*'
 					) {
 						void *t3;
 						local_log_prefix = 1;
-						t3 = MALLOC(log_end - log_start, char);
-						memcpy(t3, log_start, log_end - log_start);
-						*(char *)VOIDP_OFFSET(t3, t2 - log_start) = ' ';
-						log_end = VOIDP_OFFSET(t3, log_end - log_start);
+						t3 = MALLOC((size_t)((const char *)log_end - (const char *)log_start), char);
+						memcpy(t3, log_start, (size_t)((const char *)log_end - (const char *)log_start));
+						*CHARP_OFFSET(t3, ((const char *)t2 - (const char *)log_start)) = ' ';
+						log_end = VOIDP_OFFSET(t3, (size_t)((const char *)log_end - (const char *)log_start));
 						log_start = t3;
 					}
 				}
 
 				printf("\n%s", prefix);
-				_keyword_shrink_output(log_start, VOIDP_DIFF(log_end, log_start));
+				_keyword_shrink_output(log_start, (size_t) VOIDP_DIFF(log_end, log_start));
 				printf("Revision %s  ", delta_get_revision(line->delta));
 				t = date_sprintf(delta_get_date(line->delta), zone_offset);
 				if (rcs_emulation >= 5) {
@@ -422,12 +422,12 @@ keyword_annotate(
 				printf("  %s\n%s", delta_get_author(line->delta), prefix);
 				log = delta_get_log(line->delta);
 				while ( (n = strchr(log, '\n')) ) {
-					_keyword_shrink_output(log_start, VOIDP_DIFF(log_end, log_start));
-					_keyword_shrink_output(log, n - log + 1);
+					_keyword_shrink_output(log_start, (size_t) VOIDP_DIFF(log_end, log_start));
+					_keyword_shrink_output(log, (size_t) (n - log + 1));
 					fputs(prefix, stdout);
 					log = n + 1;
 				}
-				_keyword_shrink_output(log_start, VOIDP_DIFF(log_end, log_start));
+				_keyword_shrink_output(log_start, (size_t) VOIDP_DIFF(log_end, log_start));
 				fputs(log, stdout);
 				if (rcs_emulation >= 5) {
 					if (local_log_prefix) {
@@ -516,7 +516,7 @@ keyword_annotate(
 				return;
 			}
 			next = VOIDP_OFFSET(delim, 1);
-			fwrite(current, VOIDP_DIFF(next, current), 1, stdout);
+			fwrite(current, (size_t) VOIDP_DIFF(next, current), 1, stdout);
 			current = (*(char *)next == '@' ? VOIDP_OFFSET(next, 1) : next);
 			break;
 		case '\n':

@@ -550,14 +550,22 @@ extern void __argp_failure (const struct argp_state *__restrict __state,
 			    const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 4, 5)));
 
+# ifndef ARGP_EI
+#  define ARGP_EI static __inline__
+# endif
+
 /* Returns true if the option OPT is a valid short option.  */
-/* extern int _option_is_short (const struct argp_option *__opt) __THROW; */
-/* extern int __option_is_short (const struct argp_option *__opt) __THROW; */
+ARGP_EI int _option_is_short (const struct argp_option *__opt) __THROW;
+#if defined(__USE_EXTERN_INLINES) && !_LIBC
+ARGP_EI int __option_is_short (const struct argp_option *__opt) __THROW;
+#endif
 
 /* Returns true if the option OPT is in fact the last (unused) entry in an
    options array.  */
-/* extern int _option_is_end (const struct argp_option *__opt) __THROW; */
-/* extern int __option_is_end (const struct argp_option *__opt) __THROW; */
+ARGP_EI int _option_is_end (const struct argp_option *__opt) __THROW;
+#if defined(__USE_EXTERN_INLINES) && !_LIBC
+ARGP_EI int __option_is_end (const struct argp_option *__opt) __THROW;
+#endif
 
 /* Return the input field for ARGP in the parser corresponding to STATE; used
    by the help routines.  */
@@ -575,10 +583,6 @@ extern void *__argp_input (const struct argp *__restrict __argp,
 #  define __argp_state_help argp_state_help
 #  define __option_is_short _option_is_short
 #  define __option_is_end _option_is_end
-# endif
-
-# ifndef ARGP_EI
-#  define ARGP_EI static __inline__
 # endif
 
 ARGP_EI void

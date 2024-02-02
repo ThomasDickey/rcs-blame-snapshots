@@ -73,7 +73,7 @@ rcs_parse(const char *rcs_filename) {
 		error(0, errno, "Could not stat %s", rcs_filename);
 		return NULL;
 	}
-	rcs->length = stat_buf.st_size;
+	rcs->length = (size_t) stat_buf.st_size;
 	rcs->start = (char *)mmap(
 		NULL, rcs->length, PROT_WRITE | PROT_READ, MAP_PRIVATE, fileno(stream), 0
 	);

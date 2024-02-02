@@ -23,6 +23,7 @@
 
 #include <delta.h>
 #include <keyword.h>
+#include <working.h>
 
 /*
  * Extracts and returns a revision number out of the working file <filename>.
@@ -49,7 +50,7 @@ working_extract_revision(const char *filename) {
 	line = NULL;
 	len = 0;
 	while ( (read = getline(&line, &len, stream)) != -1)
-		if ( (rev = keyword_extract_revision(line, read)) )
+		if ( (rev = keyword_extract_revision(line, (size_t) read)) )
 			break;
 	if (line)
 		FREE(line);

@@ -35,6 +35,21 @@ AC_PROG_MAKE_SET
 AC_HEADER_STDC
 AC_CHECK_HEADERS([libintl.h])
 
+AC_HEADER_STDBOOL
+# Define two additional variables used in the Makefile substitution.
+if test "$ac_cv_header_stdbool_h" = yes; then
+  STDBOOL_H=''
+else
+  STDBOOL_H='stdbool.h'
+fi
+if test "$ac_cv_type__Bool" = yes; then
+  HAVE__BOOL=1
+else
+  HAVE__BOOL=0
+fi
+AC_SUBST(STDBOOL_H)
+AC_SUBST(HAVE__BOOL)
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
@@ -50,6 +65,7 @@ dnl FIXME: gl_INIT
 gl_FUNC_ALLOCA
 gl_GETOPT
 gl_ARGP
+gl_CHECK_TYPE_STRUCT_DIRENT_D_INO
 gl_TIME_R
 gl_TM_GMTOFF
 gl_SYSEXITS
@@ -57,6 +73,44 @@ gl_SYSEXITS
 gt_TYPE_WCHAR_T
 gl_AC_TYPE_LONG_LONG
 gt_TYPE_LONGDOUBLE
+
+gl_CYCLE_CHECK
+gl_FUNC_GETDELIM
+gl_FUNC_GETLINE
+gl_FILE_NAME_CONCAT
+gl_FUNC_STRCHRNUL
+gl_FUNC_MEMPCPY
+gl_FUNC_STRNLEN
+gl_XALLOC
+gl_XGETCWD
+gl_XREADLINK
+AC_FUNC_CANONICALIZE_FILE_NAME
+
+AC_MSG_CHECKING(for error module)
+AC_TRY_LINK([
+$ac_includes_default
+#include <error.h>],[
+error (0, 1, "testing: %d", 2);],
+	cf_have_func_error=yes,
+	cf_have_func_error=no)
+AC_MSG_RESULT($cf_have_func_error)
+if test "$cf_have_func_error" = no; then
+	AC_LIBOBJ(error)
+fi
+
+AC_MSG_CHECKING(for obstack module)
+AC_TRY_LINK([
+$ac_includes_default
+#include <obstack.h>],[
+struct obstack *data = 0;
+__obstack_free(data, 0);
+(void) data;],
+	cf_have_func_obstack=yes,
+	cf_have_func_obstack=no)
+AC_MSG_RESULT($cf_have_func_obstack)
+if test "$cf_have_func_obstack" = no; then
+	AC_LIBOBJ(obstack)
+fi
 
 # canonicalize gnulib module needs this
 

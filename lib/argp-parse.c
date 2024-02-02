@@ -739,12 +739,13 @@ parser_parse_opt (struct parser *parser, int opt, char *val)
 	    }
     }
   else
-    /* A long option.  We use shifts instead of masking for extracting
-       the user value in order to preserve the sign.  */
-    err =
-      group_parse (&parser->groups[group_key - 1], &parser->state,
-		   (opt << GROUP_BITS) >> GROUP_BITS,
-		   parser->opt_data.optarg);
+    {
+      int user_key =                                                            
+        ((opt & (1 << (USER_BITS - 1))) ? ~USER_MASK : 0) | (opt & USER_MASK);
+      err =
+        group_parse (&parser->groups[group_key - 1], &parser->state,
+                     user_key, parser->opt_data.optarg);
+    }
 
   if (err == EBADKEY)
     /* At least currently, an option not recognized is an error in the

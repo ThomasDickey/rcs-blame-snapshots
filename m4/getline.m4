@@ -7,17 +7,12 @@ dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
-AC_PREREQ(2.52)
-
 dnl See if there's a working, system-supplied version of the getline function.
 dnl We can't just do AC_REPLACE_FUNCS(getline) because some systems
 dnl have a function by that name in -linet that doesn't have anything
 dnl to do with the function we need.
 AC_DEFUN([gl_FUNC_GETLINE],
 [
-  dnl Persuade glibc <stdio.h> to declare getline().
-  AC_REQUIRE([AC_GNU_SOURCE])
-
   AC_CHECK_DECLS([getline])
 
   gl_getline_needs_run_time_check=no
@@ -68,12 +63,6 @@ AC_DEFUN([gl_FUNC_GETLINE],
       [Define to a replacement function name for getline().])
     AC_LIBOBJ(getline)
 
-    gl_PREREQ_GETLINE
+    gl_FUNC_GETDELIM
   fi
-])
-
-# Prerequisites of lib/getline.c.
-AC_DEFUN([gl_PREREQ_GETLINE],
-[
-  gl_FUNC_GETDELIM
 ])
