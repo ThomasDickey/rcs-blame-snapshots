@@ -31,10 +31,10 @@
 
 typedef unsigned int yy_size_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
-extern int yyparse PARAMS((const char *, rcs_t *));
-extern void yy_switch_to_buffer PARAMS((YY_BUFFER_STATE));
-extern void yy_delete_buffer PARAMS((YY_BUFFER_STATE));
-extern YY_BUFFER_STATE yy_scan_bytes PARAMS((char *, yy_size_t));
+extern int yyparse (const char *, rcs_t *);
+extern void yy_switch_to_buffer (YY_BUFFER_STATE);
+extern void yy_delete_buffer (YY_BUFFER_STATE);
+extern YY_BUFFER_STATE yy_scan_bytes (char *, yy_size_t);
 #define YY_CURRENT_BUFFER yy_current_buffer
 
 /*
@@ -342,11 +342,11 @@ _rcs_find_rev(
 static inline int
 _revcmp(const char *a, const char *b) {
 	long int d = 0;
-	while (a && b && !(d = strtoul(a, NULL, 0) - strtoul(b, NULL, 0)) ) {
+	while (a && b && !(d = (long) (strtoul(a, NULL, 0) - strtoul(b, NULL, 0))) ) {
 		a = strchr(a, '.'); if (a) a++;
 		b = strchr(b, '.'); if (b) b++;
 	}
-	return d;
+	return (int) d;
 }
 
 /*
@@ -379,7 +379,7 @@ _rcs_find_rev_before(const rcs_t *rcs, const char *rev) {
 		r = delta_get_revision(delta);
 		dot = strrchr(r, '.');
 		assert(dot);
-		if (strncmp(rev, r, dot - r + 1))
+		if (strncmp(rev, r, (size_t) (dot - r + 1)))
 			break;
 		
 		if (_revcmp(r, rev) <= 0)

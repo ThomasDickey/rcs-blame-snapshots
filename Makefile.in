@@ -1,4 +1,5 @@
-# Copyright 2022, Thomas E. Dickey
+# $Id: Makefile.in,v 1.5 2024/02/04 19:49:24 tom Exp $
+# Copyright 2022,2024 Thomas E. Dickey
 # makefile-template for autoconf
 
 @SET_MAKE@
@@ -14,10 +15,10 @@ clean \
 distclean \
 install \
 uninstall ::
-	cd doc && $(MAKE) $@
-	cd lib && $(MAKE) $@
-	cd src && $(MAKE) $@
-	cd tests && $(MAKE) $@
+	( cd doc && $(MAKE) $@ )
+	( cd lib && $(MAKE) $@ )
+	( cd src && $(MAKE) $@ )
+	( cd tests && $(MAKE) $@ )
 
 distclean ::
 	-rm -f blame.spec

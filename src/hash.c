@@ -37,7 +37,7 @@ hash_fn(const char *key) {
 			t = h & 0xf8000000;
 			h <<= 5;
 			h ^= t >> 27;
-			h ^= *key++;
+			h ^= (unsigned) *key++;
 		}
 	}
 	return h;

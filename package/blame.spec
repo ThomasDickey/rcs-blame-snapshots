@@ -1,6 +1,6 @@
 %define AppProgram blame
 %define AppVersion 1.3.1
-%define AppRelease 20240201
+%define AppRelease 20240204
 Name:  %{AppProgram}
 Version:  %{AppVersion}
 Release:  %{AppRelease}
@@ -8,8 +8,7 @@ Summary:  annotate RCS files
 License:  GPLv2
 Group:  Applications/Development
 URL:  https://invisible-island.net/%{AppProgram}
-Source0:  %{AppProgram}-%{AppVersion}-%{AppRelease}.tgz
-Packager:  Thomas E. Dickey <dickey@invisible-island.net>
+Source0:  https://invisible-island.net/archives/%{AppProgram}/%{AppProgram}-%{AppVersion}-%{AppRelease}.tgz
 
 %description
 blame outputs an annotated revision from each RCS file.  An annotated
@@ -23,11 +22,11 @@ to the file, and the author of each line.
 %setup -q -n %{AppProgram}-%{AppVersion}-%{AppRelease}
 
 %build
-./configure \
+%configure \
  --prefix=%{_prefix} \
  --exec-prefix=%{_exec_prefix} \
  --mandir=%{_mandir}
-make CFLAGS="-fcommon"
+make CFLAGS="-fcommon -fPIC"
 
 %check
 make check
@@ -37,9 +36,6 @@ make check
 
 make install DESTDIR="$RPM_BUILD_ROOT"
 # prefix=#{buildroot}#{_prefix} mandir=#{buildroot}#{_mandir}
-
-%clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 %files
 %license COPYING

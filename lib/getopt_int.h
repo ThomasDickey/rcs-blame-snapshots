@@ -109,7 +109,7 @@ struct _getopt_data
 
 /* The initializer is necessary to set OPTIND and OPTERR to their
    default values and to clear the initialization flag.  */
-#define _GETOPT_DATA_INITIALIZER	{ 1, 1 }
+#define _GETOPT_DATA_INITIALIZER { 1, 1, 0, NULL, 0, NULL, 0, 0, 0, 0 }
 
 extern int _getopt_internal_r (int ___argc, char **___argv,
 			       const char *__shortopts,

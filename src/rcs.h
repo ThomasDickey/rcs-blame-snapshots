@@ -53,8 +53,8 @@ typedef struct rcs {
 	unsigned int lines;
 } rcs_t;
 
-rcs_t * rcs_parse PARAMS((const char *));
-void rcs_free PARAMS((rcs_t *));
+rcs_t * rcs_parse (const char *);
+void rcs_free (rcs_t *);
 
 /*
  * Returns the filename field in <rcs>.
@@ -115,7 +115,7 @@ rcs_get_symbol(const rcs_t *rcs, const char *symbol) {
 	return (rev ? *rev : NULL);
 }
 
-const char * rcs_get_locker PARAMS((const rcs_t *, const char *));
+const char * rcs_get_locker (const rcs_t *, const char *);
 
 /*
  * Returns the comment field in <rcs>.
@@ -167,13 +167,13 @@ rcs_get_delta_template(const rcs_t *rcs, const char *rev) {
 	return delta;
 }
 
-char * rcs_resolve_tag PARAMS((
+char * rcs_resolve_tag (
 	const rcs_t *, const char *, time_t, long,
 	const char *, const char *
-));
+);
 
-int rcs_rev_is_valid PARAMS((const char *));
-int rcs_branch_is_valid PARAMS((const char *));
-char * rcs_rev_to_branch PARAMS((const char *));
+int rcs_rev_is_valid (const char *);
+int rcs_branch_is_valid (const char *);
+char * rcs_rev_to_branch (const char *);
 
 #endif /* _RCS_H */

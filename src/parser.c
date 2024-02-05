@@ -145,9 +145,9 @@
 #include <rcs.h>
 #include <vector.h>
 
-extern int yylex PARAMS((void));
-static void yyerror PARAMS((const char *, rcs_t *, char const *));
-static int _parser_count_deltalist PARAMS((const rcs_t *, const delta_t *, hash_t *));
+extern int yylex (void);
+static void yyerror (const char *, rcs_t *, char const *);
+static int _parser_count_deltalist (const rcs_t *, const delta_t *, hash_t *);
 
 typedef struct { unsigned int line; off_t off; off_t next; } loc_t;
 #define YYLTYPE loc_t
@@ -1076,7 +1076,7 @@ yytnamerr (char *yyres, const char *yystr)
   if (! yyres)
     return yystrlen (yystr);
 
-  return yystpcpy (yyres, yystr) - yyres;
+  return (YYSIZE_T) (yystpcpy (yyres, yystr) - yyres);
 }
 # endif
 
@@ -1371,12 +1371,12 @@ yyparse (filename, rcs)
   yyssp++;
 
  yysetstate:
-  *yyssp = yystate;
+  *yyssp = (yytype_int16) yystate;
 
   if (yyss + yystacksize - 1 <= yyssp)
     {
       /* Get the current used size of the three stacks, in elements.  */
-      YYSIZE_T yysize = yyssp - yyss + 1;
+      YYSIZE_T yysize = (YYSIZE_T) (yyssp - yyss + 1);
 
 #ifdef yyoverflow
       {
@@ -1590,7 +1590,7 @@ yyreduce:
 			rcs->access = (yyvsp[(4) - (14)].vector);
 			rcs->symbols = (yyvsp[(5) - (14)].hash);
 			rcs->locks = (yyvsp[(6) - (14)].hash);
-			rcs->strict = (yyvsp[(7) - (14)].i);
+			rcs->strict = (int) (yyvsp[(7) - (14)].i);
 			rcs->comment = (yyvsp[(8) - (14)].s);
 			rcs->expand = (yyvsp[(9) - (14)].expand);
 			rcs->lines = lines;
@@ -2168,8 +2168,8 @@ _parser_count_deltalist(const rcs_t *rcs, const delta_t *delta, hash_t *branches
 			dot = strrchr(rev, '.');
 			assert(dot);
 			
-			if (!prev || strncmp(prev, rev, dot - rev + 1)) {
-				char *copy = strndup(rev, dot - rev);
+			if (!prev || strncmp(prev, rev, (size_t) (dot - rev + 1))) {
+				char *copy = strndup(rev, (size_t) (dot - rev));
 				hash_insert(branches, copy, delta);
 				FREE(copy);
 				prev = rev;

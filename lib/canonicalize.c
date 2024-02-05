@@ -207,10 +207,10 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	  if (dest + (end - start) >= rname_limit)
 	    {
 	      ptrdiff_t dest_offset = dest - rname;
-	      size_t new_size = rname_limit - rname;
+	      size_t new_size = (size_t) (rname_limit - rname);
 
 	      if (end - start + 1 > PATH_MAX)
-		new_size += end - start + 1;
+		new_size += (size_t) (end - start + 1);
 	      else
 		new_size += PATH_MAX;
 	      rname = xrealloc (rname, new_size);
@@ -219,7 +219,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	      dest = rname + dest_offset;
 	    }
 
-	  dest = memcpy (dest, start, end - start);
+	  dest = memcpy (dest, start, (size_t) (end - start));
 	  dest += end - start;
 	  *dest = '\0';
 
@@ -246,7 +246,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 		    goto error;
 		}
 
-	      buf = xreadlink (rname, st.st_size);
+	      buf = xreadlink (rname, (size_t) st.st_size);
 	      if (!buf)
 		{
 		  if (can_mode == CAN_MISSING)

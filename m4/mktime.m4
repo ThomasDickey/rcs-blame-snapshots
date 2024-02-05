@@ -56,7 +56,7 @@ static char *tz_strings[] = {
 /* Return 0 if mktime fails to convert a date in the spring-forward gap.
    Based on a problem report from Andreas Jaeger.  */
 static int
-spring_forward_gap ()
+spring_forward_gap (void)
 {
   /* glibc (up to about 1998-10-07) failed this test. */
   struct tm tm;
@@ -78,16 +78,14 @@ spring_forward_gap ()
 }
 
 static int
-mktime_test1 (now)
-     time_t now;
+mktime_test1 (time_t now)
 {
   struct tm *lt;
   return ! (lt = localtime (&now)) || mktime (lt) == now;
 }
 
 static int
-mktime_test (now)
-     time_t now;
+mktime_test (time_t now)
 {
   return (mktime_test1 (now)
 	  && mktime_test1 ((time_t) (time_t_max - now))
@@ -95,7 +93,7 @@ mktime_test (now)
 }
 
 static int
-irix_6_4_bug ()
+irix_6_4_bug (void)
 {
   /* Based on code from Ariel Faigon.  */
   struct tm tm;
@@ -111,8 +109,7 @@ irix_6_4_bug ()
 }
 
 static int
-bigtime_test (j)
-     int j;
+bigtime_test (int j)
 {
   struct tm tm;
   time_t now;
@@ -138,7 +135,7 @@ bigtime_test (j)
 }
 
 static int
-year_2050_test ()
+year_2050_test (void)
 {
   /* The correct answer for 2050-02-01 00:00:00 in Pacific time,
      ignoring leap seconds.  */
@@ -168,7 +165,7 @@ year_2050_test ()
 }
 
 int
-main ()
+main (void)
 {
   time_t t, delta;
   int i, j;

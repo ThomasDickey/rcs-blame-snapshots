@@ -1,32 +1,34 @@
-# Copyright 2022, Thomas E. Dickey
+# $Id: Makefile.in,v 1.13 2024/02/04 19:42:39 tom Exp $
+# Copyright 2022,2024 Thomas E. Dickey
 # makefile-template for autoconf
 
 @SET_MAKE@
 
-VPATH	= @srcdir@
-SHELL	= @SHELL@
+VPATH			= @srcdir@
+SHELL			= @SHELL@
 
-srcdir	= @srcdir@
-top_srcdir = @top_srcdir@
-top_builddir = ..
+srcdir			= @srcdir@
+top_srcdir		= @top_srcdir@
+top_builddir		= ..
 
 INSTALL			= @INSTALL@
 transform		= $(program_transform_name)
 
-AR			= ar
-ARFLAGS			= cru
+AR			= @AR@
+ARFLAGS			= @ARFLAGS@
 
 CC			= @CC@
 CPP			= @CPP@
 CPPFLAGS		= @DEFS@ @CPPFLAGS@ -I. -I$(srcdir) -I$(top_builddir)
-CFLAGS			= @CFLAGS@
+EXTRA_CFLAGS		= @EXTRA_CFLAGS@
+CFLAGS			= @CFLAGS@ $(EXTRA_CFLAGS)
 COMPILE			= $(CC) $(CPPFLAGS) $(CFLAGS)
 
-CYGPATH_W               = @CYGPATH_W@
-OBJEXT                  = @OBJEXT@
-RANLIB                  = @RANLIB@
-INSTALL_DATA            = @INSTALL_DATA@
-INSTALL_PROGRAM         = @INSTALL_PROGRAM@
+CYGPATH_W		= @CYGPATH_W@
+OBJEXT			= @OBJEXT@
+RANLIB			= @RANLIB@
+INSTALL_DATA		= @INSTALL_DATA@
+INSTALL_PROGRAM		= @INSTALL_PROGRAM@
 
 LIBOBJS			= @LIBOBJS@ \
 	basename.o \
@@ -76,13 +78,16 @@ libmisc.a: $(OBJECTS) $(EXTRA_OBJECTS)
 	$(RANLIB) $@
 
 .c.o:
-	$(COMPILE) -c $<
+	@RULE_CC@
+	@ECHO_CC@$(COMPILE) -c $<
 
 .c.i:
-	$(CPP) $(CPPFLAGS) -C $< >$@
+	@RULE_CC@
+	@ECHO_CC@$(CPP) $(CPPFLAGS) -C $< >$@
 
 .c.obj:
-	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+	@RULE_CC@
+	@ECHO_CC@$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 check:
 install: all

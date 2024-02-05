@@ -81,8 +81,8 @@ strcasecmp (const char *s1, const char *s2)
 
       do
 	{
-	  c1 = TOLOWER (*p1);
-	  c2 = TOLOWER (*p2);
+	  c1 = (unsigned char) TOLOWER (*p1);
+	  c2 = (unsigned char) TOLOWER (*p2);
 
 	  if (c1 == '\0')
 	    break;

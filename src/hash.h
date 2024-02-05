@@ -53,11 +53,11 @@ typedef struct {
 	vector_t **data;       /* The slot array. */
 } hash_t;
 
-hash_t * hash_new PARAMS((dup_fn_t, free_fn_t));
-hash_t * hash_dup PARAMS((const hash_t *));
-void hash_expand PARAMS((hash_t *, unsigned int));
+hash_t * hash_new (dup_fn_t, free_fn_t);
+hash_t * hash_dup (const hash_t *);
+void hash_expand (hash_t *, unsigned int);
 
-void hash_insert_nocopy PARAMS((hash_t *, const char *, void *));
+void hash_insert_nocopy (hash_t *, const char *, void *);
 
 /*
  * Maps <key> to <value> in the hash table <hash>. <key> and <value> are
@@ -95,7 +95,7 @@ typedef struct {
 } hash_iter_struct_t;
 
 typedef hash_iter_struct_t *hash_iter_t;
-hash_iter_t hash_iter PARAMS((hash_t *));
+hash_iter_t hash_iter (hash_t *);
 
 /*
  * Returns the key of the hash table element pointed to by <iter>.

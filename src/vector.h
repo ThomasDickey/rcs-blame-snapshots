@@ -37,10 +37,10 @@ typedef struct {
 	void **data;           /* The slot array.              */
 } vector_t;
 
-vector_t * vector_new PARAMS((dup_fn_t, free_fn_t));
-vector_t * vector_dup PARAMS((const vector_t *));
-void vector_expand PARAMS((vector_t *, unsigned int));
-void vector_append_nocopy PARAMS((vector_t *, void *));
+vector_t * vector_new (dup_fn_t, free_fn_t);
+vector_t * vector_dup (const vector_t *);
+void vector_expand (vector_t *, unsigned int);
+void vector_append_nocopy (vector_t *, void *);
 
 /*
  * Appends a duplication of <x> to <vector>.
@@ -55,8 +55,8 @@ vector_append(vector_t *vector, const void *x) {
 		vector_append_nocopy(vector, (void *)x);
 }
 
-void vector_free PARAMS((vector_t *));
-void vector_free_nofree PARAMS((vector_t *));
+void vector_free (vector_t *);
+void vector_free_nofree (vector_t *);
 
 /*
  * Returns the number of entries in <vector>.

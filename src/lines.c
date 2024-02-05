@@ -157,13 +157,13 @@ lines_apply(
 				line = 0;
 				while (*x >= '0' && *x <= '9') {
 					line *= 10;
-					line += *x++ - '0';
+					line += (unsigned) (*x++ - '0');
 				}
 				x++;
 				count = 0;
 				while (*x >= '0' && *x <= '9') {
 					count *= 10;
-					count += *x++ - '0';
+					count += (unsigned) (*x++ - '0');
 				}
 				
 				memcpy(to, from + from_line, (line - from_line) * sizeof(line_t *));
@@ -189,14 +189,14 @@ lines_apply(
 				line = 0;
 				while (*x >= '0' && *x <= '9') {
 					line *= 10;
-					line += *x++ - '0';
+					line += (unsigned) (*x++ - '0');
 				}
 				line--;
 				x++;
 				count = 0;
 				while (*x >= '0' && *x <= '9') {
 					count *= 10;
-					count += *x++ - '0';
+					count += (unsigned) (*x++ - '0');
 				}
 				
 				memcpy(to, from + from_line, (line - from_line) * sizeof(line_t *));
@@ -218,7 +218,7 @@ lines_apply(
 	}
 	memcpy(to, from + from_line, (lines_count(in) - from_line) * sizeof(line_t *));
 	
-	out->count = (to - out->lines) + (lines_count(in) - from_line);
+	out->count = (unsigned) ((to - out->lines) + (lines_count(in) - from_line));
 	return 0;
 }
 

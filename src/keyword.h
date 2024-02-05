@@ -40,9 +40,9 @@ typedef enum {
 	EXPAND_VALUE_ONLY
 } expand_t;
 
-char * keyword_extract_revision PARAMS((const char *, size_t));
-void keyword_annotate PARAMS((
+char * keyword_extract_revision (const char *, size_t);
+void keyword_annotate (
 	const line_t *, const struct rcs *, expand_t, const char *, long
-));
+);
 
 #endif /* _KEYWORD_H */

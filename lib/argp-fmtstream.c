@@ -103,7 +103,7 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
 #ifdef USE_IN_LIBIO
       __fxprintf (fs->stream, "%.*s", (int) (fs->p - fs->buf), fs->buf);
 #else
-      fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
+      fwrite_unlocked (fs->buf, 1, (size_t) (fs->p - fs->buf), fs->stream);
 #endif
     }
   free (fs->buf);
@@ -138,7 +138,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	    {
 	      /* We can fit in them in the buffer by moving the
 		 buffer text up and filling in the beginning.  */
-	      memmove (buf + pad, buf, fs->p - buf);
+	      memmove (buf + pad, buf, (size_t) (fs->p - buf));
 	      fs->p += pad; /* Compensate for bigger buffer. */
 	      memset (buf, ' ', pad); /* Fill in the spaces.  */
 	      buf += pad; /* Don't bother searching them.  */
@@ -157,10 +157,10 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 		    putc_unlocked (' ', fs->stream);
 		}
 	    }
-	  fs->point_col = pad;
+	  fs->point_col = (ssize_t) pad;
 	}
 
-      len = fs->p - buf;
+      len = (size_t) (fs->p - buf);
       nl = memchr (buf, '\n', len);
 
       if (fs->point_col < 0)
@@ -170,12 +170,12 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	{
 	  /* The buffer ends in a partial line.  */
 
-	  if (fs->point_col + len < fs->rmargin)
+	  if ((size_t) fs->point_col + len < fs->rmargin)
 	    {
 	      /* The remaining buffer text is a partial line and fits
 		 within the maximum line width.  Advance point for the
 		 characters to be written and stop scanning.  */
-	      fs->point_col += len;
+	      fs->point_col += (ssize_t) len;
 	      break;
 	    }
 	  else
@@ -201,8 +201,8 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	     newline and anything after it in the buffer.  */
 	  if (nl < fs->p)
 	    {
-	      memmove (buf + (r - fs->point_col), nl, fs->p - nl);
-	      fs->p -= buf + (r - fs->point_col) - nl;
+	      memmove (buf + (r - (size_t) fs->point_col), nl, (size_t) (fs->p - nl));
+	      fs->p -= buf + (r - (size_t) fs->point_col) - nl;
 	      /* Reset point for the next line and start scanning it.  */
 	      fs->point_col = 0;
 	      buf += r + 1; /* Skip full line plus \n. */
@@ -212,8 +212,8 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      /* The buffer ends with a partial line that is beyond the
 		 maximum line width.  Advance point for the characters
 		 written, and discard those past the max from the buffer.  */
-	      fs->point_col += len;
-	      fs->p -= fs->point_col - r;
+	      fs->point_col += (ssize_t) len;
+	      fs->p -= (size_t) fs->point_col - r;
 	      break;
 	    }
 	}
@@ -226,7 +226,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	  char *p, *nextline;
 	  int i;
 
-	  p = buf + (r + 1 - fs->point_col);
+	  p = buf + (r + 1 - (size_t) fs->point_col);
 	  while (p >= buf && !isblank (*p))
 	    --p;
 	  nextline = p + 1;	/* This will begin the next line.  */
@@ -244,7 +244,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	    {
 	      /* A single word that is greater than the maximum line width.
 		 Oh well.  Put it on an overlong line by itself.  */
-	      p = buf + (r + 1 - fs->point_col);
+	      p = buf + (r + 1 - (size_t) fs->point_col);
 	      /* Find the end of the long word.  */
 	      if (p < nl)
 		do
@@ -281,10 +281,10 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      if (fs->end - fs->p > fs->wmargin + 1)
 		/* Make some space for them.  */
 		{
-		  size_t mv = fs->p - nextline;
+		  size_t mv = (size_t) (fs->p - nextline);
 		  memmove (nl + 1 + fs->wmargin, nextline, mv);
 		  nextline = nl + 1 + fs->wmargin;
-		  len = nextline + mv - buf;
+		  len = (size_t) (nextline + mv - buf);
 		  *nl++ = '\n';
 		}
 	      else
@@ -295,11 +295,11 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 			      (int) (nl - fs->buf), fs->buf);
 #else
 		  if (nl > fs->buf)
-		    fwrite_unlocked (fs->buf, 1, nl - fs->buf, fs->stream);
+		    fwrite_unlocked (fs->buf, 1, (size_t) (nl - fs->buf), fs->stream);
 		  putc_unlocked ('\n', fs->stream);
 #endif
 
-		  len += buf - fs->buf;
+		  len += (size_t) (buf - fs->buf);
 		  nl = buf = fs->buf;
 		}
 	    }
@@ -325,8 +325,8 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	  /* Copy the tail of the original buffer into the current buffer
 	     position.  */
 	  if (nl < nextline)
-	    memmove (nl, nextline, buf + len - nextline);
-	  len -= nextline - buf;
+	    memmove (nl, nextline, (size_t) (buf + len - nextline));
+	  len -= (size_t) (nextline - buf);
 
 	  /* Continue the scan on the remaining lines in the buffer.  */
 	  buf = nl;
@@ -342,7 +342,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
     }
 
   /* Remember that we've scanned as far as the end of the buffer.  */
-  fs->point_offs = fs->p - fs->buf;
+  fs->point_offs = (size_t) (fs->p - fs->buf);
 }
 
 /* Ensure that FS has space for AMOUNT more bytes in its buffer, either by
@@ -361,7 +361,7 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
       __fxprintf (fs->stream, "%.*s", (int) (fs->p - fs->buf), fs->buf);
       wrote = fs->p - fs->buf;
 #else
-      wrote = fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
+      wrote = (ssize_t) fwrite_unlocked (fs->buf, 1, (size_t) (fs->p - fs->buf), fs->stream);
 #endif
       if (wrote == fs->p - fs->buf)
 	{
@@ -371,15 +371,15 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
       else
 	{
 	  fs->p -= wrote;
-	  fs->point_offs -= wrote;
-	  memmove (fs->buf, fs->buf + wrote, fs->p - fs->buf);
+	  fs->point_offs -= (size_t) wrote;
+	  memmove (fs->buf, fs->buf + wrote, (size_t) (fs->p - fs->buf));
 	  return 0;
 	}
 
       if ((size_t) (fs->end - fs->buf) < amount)
 	/* Gotta grow the buffer.  */
 	{
-	  size_t old_size = fs->end - fs->buf;
+	  size_t old_size = (size_t) (fs->end - fs->buf);
 	  size_t new_size = old_size + amount;
 	  char *new_buf;
 
@@ -413,11 +413,11 @@ __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
 	return -1;
 
       va_start (args, fmt);
-      avail = fs->end - fs->p;
+      avail = (size_t) (fs->end - fs->p);
       out = __vsnprintf (fs->p, avail, fmt, args);
       va_end (args);
       if ((size_t) out >= avail)
-	size_guess = out + 1;
+	size_guess = (size_t) (out + 1);
     }
   while ((size_t) out >= avail);
 

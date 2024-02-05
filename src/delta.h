@@ -119,8 +119,8 @@ delta_complete_text_nocopy(delta_t *delta, char *log, lines_t *text) {
 	delta->text = text;
 }
 
-delta_t * delta_dup PARAMS((const delta_t *));
-void delta_free PARAMS((delta_t *));
+delta_t * delta_dup (const delta_t *);
+void delta_free (delta_t *);
 
 /*
  * Dup and free functions for data structures that should not own the delta_t.

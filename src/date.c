@@ -242,10 +242,10 @@ _date_parse_fixed(const char *s, int digits, int *res) {
 	n = 0;
 	lim = s + digits;
 	while (s < lim) {
-		unsigned int d = *s++ - '0';
+		unsigned int d = (unsigned) (*s++ - '0');
 		if (9 < d)
 			return 0;
-		n = 10 * n + d;
+		n = 10 * n + (int) d;
 	}
 	*res = n;
 	return s;
@@ -306,7 +306,7 @@ _date_parse_decimal(
 			s = s1;
 			while (ISDIGIT(*++s))
 				denom10 *= 10;
-			s = _date_parse_fixed(s1, s - s1, &num10);
+			s = _date_parse_fixed(s1, (int) (s - s1), &num10);
 			product = num10 * resolution;
 			f = (product + (denom10 >> 1)) / denom10;
 			f -= f & (product % denom10 == denom10 >> 1); /* round to even */
@@ -855,7 +855,7 @@ adjzone(register struct tm *t, long seconds) {
 	int leap_second = t->tm_sec == 60;
 	long sec = seconds + (t->tm_sec - leap_second);
 	if (sec < 0) {
-		if ((t->tm_min -= (59 - sec) / 60) < 0) {
+		if ((t->tm_min -= (int) ((59 - sec) / 60)) < 0) {
 			if ((t->tm_hour -= (59 - t->tm_min) / 60) < 0) {
 				t->tm_hour += 24;
 				if (TM_DEFINED(t->tm_wday) && --t->tm_wday < 0)
@@ -871,7 +871,7 @@ adjzone(register struct tm *t, long seconds) {
 			t->tm_min += 24 * 60;
 		}
 		sec += 24L * 60 * 60;
-	} else if (60 <= (t->tm_min += sec / 60))
+	} else if (60 <= (t->tm_min += (int) (sec / 60)))
 		if (24 <= (t->tm_hour += t->tm_min / 60)) {
 			t->tm_hour -= 24;
 			if (TM_DEFINED(t->tm_wday) && ++t->tm_wday == 7)
@@ -1107,18 +1107,18 @@ date_sprintf(time_t date, long zone) {
 format_time: _UNUSED_LABEL
 		len = strftime(result, 40, "%Y-%m-%d %H:%M:%S", &tm);
 		if (zone >= 0)
-			len += sprintf(result + len, "+%02ld", zone / 3600);
+			len += (size_t) sprintf(result + len, "+%02ld", zone / 3600);
 		else {
 			zone = -zone;
-			len += sprintf(result + len, "-%02ld", zone / 3600);
+			len += (size_t) sprintf(result + len, "-%02ld", zone / 3600);
 		}
 		zone %= 3600;
 		if (zone) {
-			len += sprintf(result + len, ":%02ld", zone / 60);
+			len += (size_t) sprintf(result + len, ":%02ld", zone / 60);
 			zone %= 60;
 		}
 		if (zone)
-			len += sprintf(result + len, ":%02ld", zone);
+			len += (size_t) sprintf(result + len, ":%02ld", zone);
 		break;
 	}
 	return result;

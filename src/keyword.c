@@ -36,9 +36,9 @@ _keyword_unescape(const char *s) {
 	assert(s);
 	
 	end = s + strlen(s);
-	output = SALLOC(end - s);
+	output = SALLOC((size_t)(end - s));
 	while ( (escape = strchr(s, '\\')) ) {
-		strncat(output, s, escape - s);
+		strncat(output, s, (size_t) (escape - s));
 		switch (escape[1]) {
 		case 't':
 			strcat(output, "\t");
@@ -92,7 +92,7 @@ _keyword_escape(const char *s) {
 	len = 0;
 	
 	while ( (magic = strpbrk(s, (rcs_emulation >= 5 ? "\t\n $\\" : "\t\n $"))) ) {
-		len += magic - s;
+		len += (size_t) (magic - s);
 		switch (*magic) {
 		case '\t':
 			len += 2;
@@ -100,7 +100,7 @@ _keyword_escape(const char *s) {
 				capacity = len + 16;
 				output = REALLOC(output, capacity + 1, char);
 			}
-			strncat(output, s, magic - s);
+			strncat(output, s, (size_t) (magic - s));
 			strcat(output, "\\t");
 			break;
 		case '\n':
@@ -109,7 +109,7 @@ _keyword_escape(const char *s) {
 				capacity = len + 16;
 				output = REALLOC(output, capacity + 1, char);
 			}
-			strncat(output, s, magic - s);
+			strncat(output, s, (size_t) (magic - s));
 			strcat(output, "\\n");
 			break;
 		case ' ':
@@ -118,7 +118,7 @@ _keyword_escape(const char *s) {
 				capacity = len + 16;
 				output = REALLOC(output, capacity + 1, char);
 			}
-			strncat(output, s, magic - s);
+			strncat(output, s, (size_t) (magic - s));
 			strcat(output, "\\040");
 			break;
 		case '$':
@@ -127,7 +127,7 @@ _keyword_escape(const char *s) {
 				capacity = len + 16;
 				output = REALLOC(output, capacity + 1, char);
 			}
-			strncat(output, s, magic - s);
+			strncat(output, s, (size_t) (magic - s));
 			strcat(output, "\\044");
 			break;
 		case '\\':
@@ -136,7 +136,7 @@ _keyword_escape(const char *s) {
 				capacity = len + 16;
 				output = REALLOC(output, capacity + 1, char);
 			}
-			strncat(output, s, magic - s);
+			strncat(output, s, (size_t) (magic - s));
 			strcat(output, "\\\\");
 			break;
 		}
@@ -169,7 +169,7 @@ keyword_extract_revision(const char *line, size_t len) {
 	buffer = ALLOCA(256, char);
 	
 	while (
-		!rev && line && (dollar = (const char *)memchr(line, '$', end - line))
+		!rev && line && (dollar = (const char *)memchr(line, '$', (size_t) (end - line)))
 	) {
 		if (sscanf(dollar, "$Id: %*s %255s %*s %*s %*s $", buffer) == 1)
 			rev = _keyword_unescape(buffer);
@@ -185,7 +185,7 @@ keyword_extract_revision(const char *line, size_t len) {
 			rev = _keyword_unescape(buffer);
 		else if (sscanf(dollar, "$Name: %255s $", buffer) == 1)
 			rev = _keyword_unescape(buffer);
-		dollar = (const char *)memchr(dollar + 1, '$', end - dollar - 1);
+		dollar = (const char *)memchr(dollar + 1, '$', (size_t) (end - dollar - 1));
 		if (dollar) dollar++;
 		line = dollar;
 	}
@@ -204,12 +204,12 @@ _keyword_shrink_output(const void *data, size_t len) {
 	while (len) {
 		char *at = memchr(data, '@', len);
 		if (!at) break;
-		fwrite(data, VOIDP_DIFF(at, data) + 1, 1, stdout);
+		fwrite(data, (size_t) VOIDP_DIFF(at, data) + 1, 1, stdout);
 		if (*(const char *)VOIDP_OFFSET(at, 1) == '@') {
-			len -= VOIDP_DIFF(at, data) + 2;
+			len -= (size_t) VOIDP_DIFF(at, data) + 2;
 			data = VOIDP_OFFSET(at, 2);
 		} else {
-			len -= VOIDP_DIFF(at, data) + 1;
+			len -= (size_t) VOIDP_DIFF(at, data) + 1;
 			data = VOIDP_OFFSET(at, 1);
 		}
 	}
@@ -249,7 +249,7 @@ keyword_annotate(
 		log_end = NULL;
 	} else {
 		log_start = rcs_get_comment(rcs);
-		log_end = VOIDP_OFFSET(log_start, strlen((char *)log_start));
+		log_end = VOIDP_OFFSET(log_start, strlen((const char *)log_start));
 	}
 	
 	while (current < end) {
@@ -438,7 +438,7 @@ keyword_annotate(
 					do {
 						current = VOIDP_OFFSET(current, 1);
 					} while (
-						*(char *)current && ISSPACE(*(char *)current) && *(char *)current != '\n'
+						*(const char *)current && ISSPACE(*(const char *)current) && *(const char *)current != '\n'
 					);
 					continue;
 				}
@@ -517,7 +517,7 @@ keyword_annotate(
 			}
 			next = VOIDP_OFFSET(delim, 1);
 			fwrite(current, (size_t) VOIDP_DIFF(next, current), 1, stdout);
-			current = (*(char *)next == '@' ? VOIDP_OFFSET(next, 1) : next);
+			current = (*(const char *)next == '@' ? VOIDP_OFFSET(next, 1) : next);
 			break;
 		case '\n':
 			fwrite(current, chunk_len + 1, 1, stdout);

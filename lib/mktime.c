@@ -46,6 +46,10 @@
 # define mktime my_mktime
 #endif /* DEBUG */
 
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Wshift-negative-value"
+#endif
+
 /* Shift A right by B bits portably, by dividing A by 2**B and
    truncating towards minus infinity.  A and B should be free of side
    effects, and B should be in the range 0 <= B <= INT_BITS - 2, where
@@ -115,9 +119,15 @@ verify (twos_complement_arithmetic, TYPE_TWOS_COMPLEMENT (int));
 #define TM_YEAR_BASE 1900
 verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
+#if INT_MAX <= LONG_MAX / 2
+typedef long int long_int;
+#else
+typedef long long int long_int;
+#endif
+
 /* Return 1 if YEAR + TM_YEAR_BASE is a leap year.  */
 static inline int
-leapyear (long int year)
+leapyear (long_int year)
 {
   /* Don't add YEAR to TM_YEAR_BASE, as that might overflow.
      Also, work even if YEAR is negative.  */
@@ -163,17 +173,17 @@ const unsigned short int __mon_yday[2][13] =
    detect overflow.  */
 
 static inline time_t
-ydhms_diff (long int year1, long int yday1, int hour1, int min1, int sec1,
+ydhms_diff (long_int year1, long_int yday1, int hour1, int min1, int sec1,
 	    int year0, int yday0, int hour0, int min0, int sec0)
 {
   verify (C99_integer_division, -1 / 2 == 0);
   verify (long_int_year_and_yday_are_wide_enough,
-	  INT_MAX <= LONG_MAX / 2 || TIME_T_MAX <= UINT_MAX);
+          INT_MAX == INT_MAX * (long_int) 2 / 2);
 
   /* Compute intervening leap days correctly even if year is negative.
      Take care to avoid integer overflow here.  */
-  int a4 = SHR (year1, 2) + SHR (TM_YEAR_BASE, 2) - ! (year1 & 3);
-  int b4 = SHR (year0, 2) + SHR (TM_YEAR_BASE, 2) - ! (year0 & 3);
+  int a4 = (int) (SHR (year1, 2) + SHR (TM_YEAR_BASE, 2) - ! (year1 & 3));
+  int b4 = (int) (SHR (year0, 2) + SHR (TM_YEAR_BASE, 2) - ! (year0 & 3));
   int a100 = a4 / 25 - (a4 % 25 < 0);
   int b100 = b4 / 25 - (b4 % 25 < 0);
   int a400 = SHR (a100, 2);
@@ -199,7 +209,7 @@ ydhms_diff (long int year1, long int yday1, int hour1, int min1, int sec1,
    If overflow occurs, yield the minimal or maximal value, except do not
    yield a value equal to *T.  */
 static time_t
-guess_time_tm (long int year, long int yday, int hour, int min, int sec,
+guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
 	       const time_t *t, const struct tm *tp)
 {
   if (tp)
@@ -270,7 +280,7 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.
    This function is external because it is used also by timegm.c.  */
-time_t
+static time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
 		   time_t *offset)
@@ -301,8 +311,8 @@ __mktime_internal (struct tm *tp,
   int mon_remainder = mon % 12;
   int negative_mon_remainder = mon_remainder < 0;
   int mon_years = mon / 12 - negative_mon_remainder;
-  long int lyear_requested = year_requested;
-  long int year = lyear_requested + mon_years;
+  long_int lyear_requested = year_requested;
+  long_int year = lyear_requested + mon_years;
 
   /* The other values need not be in range:
      the remaining code handles minor overflows correctly,
@@ -314,8 +324,8 @@ __mktime_internal (struct tm *tp,
   int mon_yday = ((__mon_yday[leapyear (year)]
 		   [mon_remainder + 12 * negative_mon_remainder])
 		  - 1);
-  long int lmday = mday;
-  long int yday = mon_yday + lmday;
+  long_int lmday = mday;
+  long_int yday = mon_yday + lmday;
 
   time_t guessed_offset = *offset;
 
@@ -335,7 +345,7 @@ __mktime_internal (struct tm *tp,
      time.  */
 
   t0 = ydhms_diff (year, yday, hour, min, sec,
-		   EPOCH_YEAR - TM_YEAR_BASE, 0, 0, 0, - guessed_offset);
+		   EPOCH_YEAR - TM_YEAR_BASE, 0, 0, 0, (int) (- guessed_offset));
 
   if (TIME_T_MAX / INT_MAX / 366 / 24 / 60 / 60 < 3)
     {
@@ -367,7 +377,7 @@ __mktime_internal (struct tm *tp,
 	    ? 0
 	    : SHR (sec, ALOG2_SECONDS_PER_BIENNIUM)));
 
-      int approx_biennia = SHR (t0, ALOG2_SECONDS_PER_BIENNIUM);
+      int approx_biennia = (int) SHR (t0, ALOG2_SECONDS_PER_BIENNIUM);
       int diff = approx_biennia - approx_requested_biennia;
       int abs_diff = diff < 0 ? - diff : diff;
 
@@ -385,7 +395,7 @@ __mktime_internal (struct tm *tp,
 	  /* Overflow occurred.  Try repairing it; this might work if
 	     the time zone offset is enough to undo the overflow.  */
 	  time_t repaired_t0 = -1 - t0;
-	  approx_biennia = SHR (repaired_t0, ALOG2_SECONDS_PER_BIENNIUM);
+	  approx_biennia = (int) SHR (repaired_t0, ALOG2_SECONDS_PER_BIENNIUM);
 	  diff = approx_biennia - approx_requested_biennia;
 	  abs_diff = diff < 0 ? - diff : diff;
 	  if (overflow_threshold < abs_diff)

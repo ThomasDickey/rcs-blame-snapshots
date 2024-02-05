@@ -26,9 +26,9 @@
 #include <rcs.h>
 #include <vector.h>
 
-extern int yylex PARAMS((void));
-static void yyerror PARAMS((const char *, rcs_t *, char const *));
-static int _parser_count_deltalist PARAMS((const rcs_t *, const delta_t *, hash_t *));
+extern int yylex (void);
+static void yyerror (const char *, rcs_t *, char const *);
+static int _parser_count_deltalist (const rcs_t *, const delta_t *, hash_t *);
 
 typedef struct { unsigned int line; off_t off; off_t next; } loc_t;
 #define YYLTYPE loc_t

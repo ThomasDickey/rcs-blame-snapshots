@@ -22,7 +22,7 @@
 char *
 strchrnul (const char *s, int c_in)
 {
-  char c = c_in;
+  char c = (char) c_in;
   while (*s && (*s != c))
     s++;
 

@@ -1,37 +1,35 @@
 # Process this file with autoconf to produce a configure script.
+# $Id: configure.ac,v 1.27 2024/02/04 23:58:51 tom Exp $
 
 AC_INIT([blame], [1.3.1], [dickey@invisible-island.net])
 AC_CONFIG_SRCDIR([src/blame.c])
 AC_CONFIG_HEADER([config.h])
 AC_SUBST(RELEASE, 1)
 
-AC_DEFINE_UNQUOTED(PACKAGE_STRING,"$PACKAGE_STRING")
-AC_DEFINE_UNQUOTED(PACKAGE_BUGREPORT,"$PACKAGE_BUGREPORT")
+AC_SUBST(PACKAGE_STRING)
+AC_SUBST(PACKAGE_BUGREPORT)
 
 AC_AIX
 AC_MINIX
-gl_USE_SYSTEM_EXTENSIONS
 
-dnl AC_CONFIG_MACRO_DIR(m4)
-dnl AC_CONFIG_LIBOBJ_DIR(lib)
-dnl AC_CONFIG_TESTDIR(tests, tests:src)
-
-dnl AC_GNU_SOURCE
-
-CF_CYGPATH_W
+CF_WITHOUT_X
 
 # Checks for programs.
-AC_PROG_CC
-dnl FIXME: gl_EARLY
+CF_PROG_CC
 AC_PROG_LEX
 AC_PROG_YACC
 AC_PROG_RANLIB
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
+AC_PROG_AWK
+CF_AR_FLAGS
+CF_CYGPATH_W
 
 # Checks for libraries.
 
 # Checks for header files.
+gl_USE_SYSTEM_EXTENSIONS
+CF_XOPEN_SOURCE
 AC_HEADER_STDC
 AC_CHECK_HEADERS([libintl.h])
 
@@ -50,7 +48,12 @@ fi
 AC_SUBST(STDBOOL_H)
 AC_SUBST(HAVE__BOOL)
 
+CF_DISABLE_ECHO
+CF_ENABLE_WARNINGS(Wno-undef)
+
 # Checks for typedefs, structures, and compiler characteristics.
+dnl CF_LARGEFILE
+CF_SIZEOF_TIME_T
 AC_C_CONST
 AC_C_INLINE
 AC_C_PROTOTYPES
@@ -111,18 +114,6 @@ AC_MSG_RESULT($cf_have_func_obstack)
 if test "$cf_have_func_obstack" = no; then
 	AC_LIBOBJ(obstack)
 fi
-
-# canonicalize gnulib module needs this
-
-AH_BOTTOM([
-#ifndef PARAMS
-# if PROTOTYPES
-#  define PARAMS(protos) protos
-# else /* ! PROTOTYPES */
-#  define PARAMS(protos) ()
-# endif /* ! PROTOTYPES */
-#endif
-])
 
 AH_BOTTOM([
 /* Avoid memory leak in argp */
@@ -200,7 +191,6 @@ AC_CONFIG_FILES([
 	src/Makefile
 	tests/Makefile
 	tests/atlocal
-	blame.spec
 ])
 
 echo "creating tests/atconfig"

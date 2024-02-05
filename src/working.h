@@ -22,6 +22,6 @@
 
 #include <system.h>
 
-char * working_extract_revision PARAMS((const char *));
+char * working_extract_revision (const char *);
 
 #endif /* _WORKING_H */

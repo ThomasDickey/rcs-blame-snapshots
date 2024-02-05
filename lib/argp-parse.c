@@ -147,6 +147,7 @@ static const struct argp_option argp_version_options[] =
 static error_t
 argp_version_parser (int key, char *arg, struct argp_state *state)
 {
+  (void) arg;
   switch (key)
     {
     case 'V':
@@ -178,11 +179,11 @@ find_long_option (struct option *long_options, const char *name)
   struct option *l = long_options;
   while (l->name != NULL)
     if (name != NULL && strcmp (l->name, name) == 0)
-      return l - long_options;
+      return (int) (l - long_options);
     else
       l++;
   if (name == NULL)
-    return l - long_options;
+    return (int) (l - long_options);
   else
     return -1;
 }
@@ -311,7 +312,7 @@ convert_options (const struct argp *argp,
 		if (__option_is_short (opt))
 		  /* OPT can be used as a short option.  */
 		  {
-		    *cvt->short_end++ = opt->key;
+		    *cvt->short_end++ = (char) opt->key;
 		    if (real->arg)
 		      {
 			*cvt->short_end++ = ':';
@@ -340,8 +341,8 @@ convert_options (const struct argp *argp,
 		       values (the sign of the lower bits is preserved
 		       however)...  */
 		    cvt->long_end->val =
-		      ((opt->key | real->key) & USER_MASK)
-		      + (((group - cvt->parser->groups) + 1) << USER_BITS);
+		      (int) (((opt->key | real->key) & USER_MASK)
+		           + (((group - cvt->parser->groups) + 1) << USER_BITS));
 
 		    /* Keep the LONG_OPTS list terminated.  */
 		    (++cvt->long_end)->name = NULL;
@@ -437,7 +438,7 @@ calc_sizes (const struct argp *argp,  struct parser_sizes *szs)
       szs->num_groups++;
       if (opt)
 	{
-	  int num_opts = 0;
+	  size_t num_opts = 0;
 	  while (!__option_is_end (opt++))
 	    num_opts++;
 	  szs->short_len += num_opts * 3; /* opt + up to 2 `:'s */
@@ -510,7 +511,7 @@ parser_init (struct parser *parser, const struct argp *argp,
   parser->state.root_argp = parser->argp;
   parser->state.argc = argc;
   parser->state.argv = argv;
-  parser->state.flags = flags;
+  parser->state.flags = (unsigned) flags;
   parser->state.err_stream = stderr;
   parser->state.out_stream = stdout;
   parser->state.next = 0;	/* Tell getopt to initialize.  */
@@ -702,7 +703,7 @@ parser_parse_arg (struct parser *parser, char *val)
 	/* Remember that we successfully processed a non-option
 	   argument -- but only if the user hasn't gotten tricky and set
 	   the clock back.  */
-	(--group)->args_processed += (parser->state.next - index);
+	(--group)->args_processed += (unsigned) (parser->state.next - index);
       else
 	/* The user wants to reparse some args, give getopt another try.  */
 	parser->try_getopt = 1;
@@ -721,6 +722,7 @@ parser_parse_opt (struct parser *parser, int opt, char *val)
   int group_key = opt >> USER_BITS;
   error_t err = EBADKEY;
 
+  (void) val;
   if (group_key == 0)
     /* A short option.  By comparing OPT's position in SHORT_OPTS to the
        various starting positions in each group's SHORT_END field, we can
@@ -916,7 +918,7 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
     }
 
   /* Construct a parser for these arguments.  */
-  err = parser_init (&parser, argp, argc, argv, flags, input);
+  err = parser_init (&parser, argp, argc, argv, (int) flags, input);
 
   if (! err)
     /* Parse! */

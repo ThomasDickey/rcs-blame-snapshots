@@ -64,7 +64,7 @@ file_name_concat (char const *dir, char const *abase, char **base_in_result)
 {
   char const *dirbase = last_component (dir);
   size_t dirbaselen = base_len (dirbase);
-  size_t dirlen = dirbase - dir + dirbaselen;
+  size_t dirlen = (size_t) (dirbase - dir) + dirbaselen;
   size_t needs_separator = (dirbaselen && ! ISSLASH (dirbase[dirbaselen - 1]));
 
   char const *base = longest_relative_suffix (abase);

@@ -2,6 +2,7 @@
 /*
  * Blame - An RCS file annotator
  * Copyright (C) 2004  Michael Chapman
+ * Copyright 2024  Thomas E. Dickey
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +24,8 @@
 #define YY_NO_UNPUT
 typedef struct { unsigned int line; off_t off; off_t next; } loc_t;
 #define YYLTYPE loc_t
-#define YY_DECL int yylex YY_PROTO((void))
+#define YY_DECL int yylex (void)
+extern YY_DECL;
 
 #include <delta.h>
 #include <keyword.h>
@@ -32,8 +34,8 @@ typedef struct { unsigned int line; off_t off; off_t next; } loc_t;
 
 #include <parser.h>
 
-YYSTYPE yylval;
-YYLTYPE yylloc;
+extern YYSTYPE yylval;
+extern YYLTYPE yylloc;
 
 %}
 
@@ -75,7 +77,7 @@ text            { yylloc.off = yylloc.next; yylloc.next += 4; return TEXT; }
                 	int dot = 0, idchar = 0;
                 	yylloc.off = yylloc.next;
                 	yylloc.next += yyleng;
-                	yylval.i = count = yyleng;
+                	yylval.i = count = (unsigned) yyleng;
                 	for (temp = yytext; count--; temp++) {
                 		switch (*temp) {
                 		case '.':
@@ -97,13 +99,13 @@ text            { yylloc.off = yylloc.next; yylloc.next += 4; return TEXT; }
                 	yylloc.line++;
                 	yylloc.off = yylloc.next + 1;
                 	yylloc.next += yyleng;
-                	yylval.i = yyleng - 1;
+                	yylval.i = (unsigned) (yyleng - 1);
                 	return STR;
                 }
 @{STRING}@      {
                 	yylloc.off = yylloc.next + 1;
                 	yylloc.next += yyleng;
-                	yylval.i = yyleng - 2;
+                	yylval.i = (unsigned) (yyleng - 2);
                 	return STR_FINAL;
                 }
 @{STRING}       {
@@ -111,14 +113,14 @@ text            { yylloc.off = yylloc.next; yylloc.next += 4; return TEXT; }
                 	yylloc.line++;
                 	yylloc.off = yylloc.next + 1;
                 	yylloc.next += yyleng;
-                	yylval.i = yyleng - 1;
+                	yylval.i = (unsigned) (yyleng - 1);
                 	return STR_FINAL;
                 }
 <SA>{STRING}\n  {
                 	yylloc.line++;
                 	yylloc.off = yylloc.next;
                 	yylloc.next += yyleng;
-                	yylval.i = yyleng;
+                	yylval.i = (unsigned) yyleng;
                 	return STR;
                 }
 <SA>{STRING}@   {
@@ -126,7 +128,7 @@ text            { yylloc.off = yylloc.next; yylloc.next += 4; return TEXT; }
                 	yylloc.line++;
                 	yylloc.off = yylloc.next;
                 	yylloc.next += yyleng;
-                	yylval.i = yyleng - 1;
+                	yylval.i = (unsigned) (yyleng - 1);
                 	return STR_FINAL;
                 }
 <SA>{STRING}    {
@@ -135,7 +137,7 @@ text            { yylloc.off = yylloc.next; yylloc.next += 4; return TEXT; }
                 	yylloc.line++;
                 	yylloc.off = yylloc.next;
                 	yylloc.next += yyleng;
-                	yylval.i = yyleng;
+                	yylval.i = (unsigned) yyleng;
                 	return STR_FINAL;
                 }
 

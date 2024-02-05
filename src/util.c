@@ -48,9 +48,9 @@ does_working_filename_match_rcs_filename(
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
-		if (al + (to - from) == bl &&
+		if (al + (size_t) (to - from) == bl &&
 			!strncmp(a, b, al) &&
-			!strncmp(from, b + bl - (to - from), to - from)) goto out;
+			!strncmp(from, b + bl - (to - from), (size_t) (to - from))) goto out;
 		if (!*to)
 			break;
 		from = to + 1;
@@ -82,7 +82,7 @@ is_rcs_filename(const char *filename) {
 			if (!strncmp(filename, "RCS" SSLASH, 4)) return 1;
 			if (strstr(filename, SSLASH "RCS" SSLASH)) return 1;
 		} else {
-			if (!strncmp(from, filename + strlen(filename) - (to - from), to - from))
+			if (!strncmp(from, filename + strlen(filename) - (to - from), (size_t) (to - from)))
 				return 1;
 		}
 		if (!*to)
@@ -115,7 +115,7 @@ find_matching_rcs_filename(const char *working_filename) {
 		
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
 		
-		length = strlen(working_filename) + (to - from) + 4;
+		length = strlen(working_filename) + (size_t) (to - from) + 4;
 		
 		buffer = SALLOC(length);
 		strncat(buffer, working_filename, (size_t) (a - working_filename));
@@ -179,7 +179,7 @@ find_matching_working_filename(const char *rcs_filename) {
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
 		if (!strncmp(from, a + al - (to - from), (size_t) (to - from))) {
-			char *result = strndup(a, al - (to - from));
+			char *result = strndup(a, al - (size_t) (to - from));
 			FREE(a);
 			return result;
 		}

@@ -1,4 +1,5 @@
-# Copyright 2022, Thomas E. Dickey
+# $Id: Makefile.in,v 1.9 2024/02/04 19:35:38 tom Exp $
+# Copyright 2022,2024 Thomas E. Dickey
 # makefile-template for autoconf
 
 @SET_MAKE@
@@ -43,24 +44,31 @@ OBJECTS = \
 	vector.$(OBJEXT) \
 	working.$(OBJEXT)
 
-CC	= @CC@
-CPP	= @CPP@
-CFLAGS	= @CFLAGS@
-CPPFLAGS = @DEFS@ @CPPFLAGS@ -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/lib
-CYGPATH_W = @CYGPATH_W@
-LDFLAGS	= @LDFLAGS@
-LIBS	= @LIBS@
+PACKAGE_STRING		= "@PACKAGE_STRING@"
+PACKAGE_BUGREPORT	= "@PACKAGE_BUGREPORT@"
 
-COMPILE	= $(CC) $(CPPFLAGS) $(CFLAGS)
-LINK	= $(CC) $(CFLAGS) $(LDFLAGS) -o $@
+CC			= @CC@
+CPP			= @CPP@
+EXTRA_CFLAGS		= @EXTRA_CFLAGS@
+CFLAGS			= @CFLAGS@ $(EXTRA_CFLAGS)
+EXTRA_CPPFLAGS		= @EXTRA_CPPFLAGS@ \
+			  -DPACKAGE_STRING=\"$(PACKAGE_STRING)\" \
+			  -DPACKAGE_BUGREPORT=\"$(PACKAGE_BUGREPORT)\"
+CPPFLAGS		= @DEFS@ @CPPFLAGS@ -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/lib
+CYGPATH_W		= @CYGPATH_W@
+LDFLAGS			= @LDFLAGS@
+LIBS			= @LIBS@
 
-LEX	= @LEX@
-LEXLIB	= @LEXLIB@
-LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-LEXCOMPILE = $(LEX) $(LFLAGS)
+COMPILE			= $(CC) $(CPPFLAGS) $(EXTRA_CPPFLAGS) $(CFLAGS)
+LINK			= $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
-YACC	= @YACC@
-YACCCOMPILE = $(YACC) $(YFLAGS)
+LEX			= @LEX@
+LEXLIB			= @LEXLIB@
+LEX_OUTPUT_ROOT		= @LEX_OUTPUT_ROOT@
+LEXCOMPILE		= $(LEX) $(LFLAGS)
+
+YACC			= @YACC@
+YACCCOMPILE		= $(YACC) $(YFLAGS)
 
 SOURCES = \
 	blame.c \
@@ -104,16 +112,19 @@ parser.h: parser.c
 
 $(THIS)$(EXEEXT): $(OBJECTS) $(MY_LIBS) 
 	-@rm -f $@
-	$(LINK) $(LDFLAGS) $(OBJECTS) $(MY_LIBS) $(LIBS)
+	@ECHO_LD@$(LINK) $(LDFLAGS) $(OBJECTS) $(MY_LIBS) $(LIBS)
 
 .c.o:
-	$(COMPILE) -c $<
+	@RULE_CC@
+	@ECHO_CC@$(COMPILE) -c $<
 
 .c.i:
-	$(CPP) $(CPPFLAGS) -C $< >$@
+	@RULE_CC@
+	@ECHO_CC@$(CPP) $(CPPFLAGS) -C $< >$@
 
 .c.obj:
-	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+	@RULE_CC@
+	@ECHO_CC@$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .l.c:
 	$(LEXCOMPILE) $<

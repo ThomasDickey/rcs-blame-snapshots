@@ -42,15 +42,15 @@ typedef struct {
 	line_t **lines; /* The line pointers in the buffer.     */
 } lines_t;
 
-lines_t * lines_new PARAMS((void));
-lines_t * lines_new_with_capacity PARAMS((unsigned int));
-lines_t * lines_dup PARAMS((const lines_t *, unsigned int));
-void lines_free PARAMS((lines_t *));
+lines_t * lines_new (void);
+lines_t * lines_new_with_capacity (unsigned int);
+lines_t * lines_dup (const lines_t *, unsigned int);
+void lines_free (lines_t *);
 
-void lines_append_nocopy PARAMS((lines_t *, const char *, size_t));
+void lines_append_nocopy (lines_t *, const char *, size_t);
 
-int lines_apply PARAMS((const lines_t *, lines_t *, const struct _delta_t *, const struct _delta_t *, int));
-void lines_finalize PARAMS((lines_t *, const struct _delta_t *));
+int lines_apply (const lines_t *, lines_t *, const struct _delta_t *, const struct _delta_t *, int);
+void lines_finalize (lines_t *, const struct _delta_t *);
 
 #define lines_count(L) ((L)->count)
 #define lines_get(L, X) ((line_t *)((L)->lines[X]))

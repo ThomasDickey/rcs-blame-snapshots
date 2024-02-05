@@ -23,10 +23,10 @@
 #include <system.h>
 
 int does_working_filename_match_rcs_filename
-	PARAMS((const char *, const char *));
-int is_rcs_filename PARAMS((const char *));
-char * find_matching_rcs_filename PARAMS((const char *));
-char * find_matching_working_filename PARAMS((const char *));
+	(const char *, const char *);
+int is_rcs_filename (const char *);
+char * find_matching_rcs_filename (const char *);
+char * find_matching_working_filename (const char *);
 
 extern char *suffixes;
 

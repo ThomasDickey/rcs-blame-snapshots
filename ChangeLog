@@ -1,3 +1,19 @@
+2024-02-04 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* modify top-level makefile to work around pmake's reordering of rules
+	  (report by Robert Clausecker).
+
+	* fix a build problem with lib/mktime.c on NetBSD i386 (report by
+	  Robert Clausecker, patch adapted from Paul Eggert change in 2011
+	  for gnulib).
+
+	* modify configure script to permit building with 64-bit time_t on
+	  32-bit system.
+
+	* require standard C, e.g., c89 and later for compiler
+
+	* reduce stricter compiler warnings
+
 2024-02-01 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* fixes to build/work with MacOS and Solaris 10.

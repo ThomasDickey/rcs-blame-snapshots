@@ -61,7 +61,7 @@ xreadlink (char const *file, size_t size)
     {
       char *buffer = xmalloc (buf_size);
       ssize_t r = readlink (file, buffer, buf_size);
-      size_t link_length = r;
+      size_t link_length = (size_t) r;
 
       /* On AIX 5L v5.3 and HP-UX 11i v2 04/09, readlink returns -1
 	 with errno == ERANGE if the buffer is too small.  */

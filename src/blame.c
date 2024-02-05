@@ -135,7 +135,7 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 	assert(dot); /* since rcs_rev_is_valid(rev) */
 	dot = strchrnul(dot + 1, '.');
 	*dot = '\0';
-	length = dot - copy;
+	length = (size_t) (dot - copy);
 	
 	/*
 	 * Start from the head revision.
@@ -236,7 +236,7 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 		*dot = '.';
 		dot = strchrnul(dot + 1, '.');
 		*dot = '\0';
-		length = dot - copy;
+		length = (size_t) (dot - copy);
 		
 		/*
 		 * Continue along this branch until we find the correct revision or another
@@ -424,7 +424,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 			switch (*arg) {
 			case '3': case '4': case '5':
 				if (!*(arg + 1)) {
-					rcs_emulation = *arg - '0';
+					rcs_emulation = (unsigned) (*arg - '0');
 					break;
 				}
 				/* FALLTHRU */

@@ -237,6 +237,9 @@ _getopt_initialize (int argc, char **argv, const char *optstring,
      is the program name); the sequence of previously skipped
      non-option ARGV-elements is empty.  */
 
+  (void) argc;
+  (void) argv;
+
   d->__first_nonopt = d->__last_nonopt = d->optind;
 
   d->__nextchar = NULL;
@@ -496,7 +499,7 @@ _getopt_internal_r (int argc, char **argv, const char *optstring,
       /* Test all long options for either exact match
 	 or abbreviated matches.  */
       for (p = longopts, option_index = 0; p->name; p++, option_index++)
-	if (!strncmp (p->name, d->__nextchar, nameend - d->__nextchar))
+	if (!strncmp (p->name, d->__nextchar, (size_t) (nameend - d->__nextchar)))
 	  {
 	    if ((unsigned int) (nameend - d->__nextchar)
 		== (unsigned int) strlen (p->name))
@@ -684,6 +687,8 @@ _getopt_internal_r (int argc, char **argv, const char *optstring,
       if (!long_only || argv[d->optind][1] == '-'
 	  || strchr (optstring, *d->__nextchar) == NULL)
 	{
+	  static char empty[1];
+
 	  if (print_errors)
 	    {
 #if defined _LIBC && defined USE_IN_LIBIO
@@ -731,7 +736,7 @@ _getopt_internal_r (int argc, char **argv, const char *optstring,
 		}
 #endif
 	    }
-	  d->__nextchar = (char *) "";
+	  d->__nextchar = empty;
 	  d->optind++;
 	  d->optopt = 0;
 	  return '?';
@@ -867,7 +872,7 @@ _getopt_internal_r (int argc, char **argv, const char *optstring,
 	/* Test all long options for either exact match
 	   or abbreviated matches.  */
 	for (p = longopts, option_index = 0; p->name; p++, option_index++)
-	  if (!strncmp (p->name, d->__nextchar, nameend - d->__nextchar))
+	  if (!strncmp (p->name, d->__nextchar, (size_t) (nameend - d->__nextchar)))
 	    {
 	      if ((unsigned int) (nameend - d->__nextchar) == strlen (p->name))
 		{
