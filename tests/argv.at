@@ -23,23 +23,23 @@ AT_CLEANUP
 AT_SETUP([-V and --version])
 AT_KEYWORDS([argv])
 cat <<EOF > expout
-$package_string; emulating RCS version 5
+$package_string ($package_date); emulating RCS version 5
 EOF
 AT_CHECK([[blame -V]], 0, expout, )
 AT_CHECK([[blame --version]], 0, stdout, )
 AT_CLEANUP
 
-AT_SETUP([Non-existant working file])
+AT_SETUP([Non-existent working file])
 AT_KEYWORDS([argv])
 AT_KEYWORDS([errors])
-AT_CHECK([[blame /nonexistant]], 1, , stderr)
+AT_CHECK([[blame /nonexistent]], 1, , stderr)
 MAC_CHECK_STDERR
 AT_CLEANUP
 
-AT_SETUP([Non-existant RCS file])
+AT_SETUP([Non-existent RCS file])
 AT_KEYWORDS([argv])
 AT_KEYWORDS([errors])
-AT_CHECK([[blame /nonexistant,v]], 1, , stderr)
+AT_CHECK([[blame /nonexistent,v]], 1, , stderr)
 MAC_CHECK_STDERR
 AT_CLEANUP
 

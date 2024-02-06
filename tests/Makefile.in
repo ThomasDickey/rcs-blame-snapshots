@@ -58,6 +58,7 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 		echo 'm4_define([AT_PACKAGE_TARNAME],   [@PACKAGE_TARNAME@])'; \
 		echo 'm4_define([AT_PACKAGE_VERSION],   [@PACKAGE_VERSION@])'; \
 		echo 'm4_define([AT_PACKAGE_STRING],    [@PACKAGE_STRING@])'; \
+		echo 'm4_define([AT_PACKAGE_DATE],      [@PACKAGE_DATE@])'; \
 		echo 'm4_define([AT_PACKAGE_BUGREPORT], [@PACKAGE_BUGREPORT@])'; \
 	} >$(srcdir)/package.m4
 $(TESTSUITE): package.m4 $(TESTSUITE_AT)
@@ -65,6 +66,6 @@ $(TESTSUITE): package.m4 $(TESTSUITE_AT)
 	mv $@.tmp $@
 
 check: atconfig atlocal $(top_builddir)/src/blame$(EXEEXT)
-	$(SHELL) $(TESTSUITE)
+	$(SHELL) -c "unset RCS_DIR; PATH=$(top_builddir)/src:$$PATH $(TESTSUITE)"
 
 .PHONY: all check clean distclean install uninstall

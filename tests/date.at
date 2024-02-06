@@ -50,7 +50,7 @@ AT_CHECK([[blame -d'2000-01-01 UTC' $testdir/simple,v]], 1, , stderr)
 MAC_CHECK_STDERR
 AT_CLEANUP
 
-AT_SETUP([Unparseable date])
+AT_SETUP([Unparsable date])
 AT_KEYWORDS([date])
 AT_KEYWORDS([errors])
 AT_CHECK([[blame -d'floopy' $testdir/simple,v]], 1, , stderr)

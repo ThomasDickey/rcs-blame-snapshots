@@ -1,6 +1,7 @@
 /*
  * Blame - An RCS file annotator
  * Copyright (C) 2004, 2005  Michael Chapman
+ * Copyright 2024 Thomas E. Dickey
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +44,7 @@ extern const char *program_name;
 /*
  * Package name/bug address for argp
  */
-const char *argp_program_version = PACKAGE_STRING "; emulating RCS version 5";
+const char *argp_program_version = PACKAGE_STRING " (" PACKAGE_DATE "); emulating RCS version 5";
 const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
 
 /*

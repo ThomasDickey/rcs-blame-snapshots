@@ -205,7 +205,7 @@ struct group
      particular short options is from.  */
   char *short_end;
 
-  /* The number of non-option args sucessfully handled by this parser.  */
+  /* The number of non-option args successfully handled by this parser.  */
   unsigned args_processed;
 
   /* This group's parser's parent's group.  */
@@ -387,7 +387,7 @@ convert_options (const struct argp *argp,
   return group;
 }
 
-/* Find the merged set of getopt options, with keys appropiately prefixed. */
+/* Find the merged set of getopt options, with keys appropriately prefixed. */
 static void
 parser_convert (struct parser *parser, const struct argp *argp, int flags)
 {

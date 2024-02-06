@@ -194,7 +194,7 @@ keyword_extract_revision(const char *line, size_t len) {
 }
 
 /*
- * Outputs <data>, of length <len>, to stdout, replacing each occurence of
+ * Outputs <data>, of length <len>, to stdout, replacing each occurrence of
  * @@ with @.
  */
 static inline void

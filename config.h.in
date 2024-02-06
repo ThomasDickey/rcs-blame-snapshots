@@ -139,9 +139,6 @@
 /* Define if you have the `flockfile' function. */
 #undef HAVE_FLOCKFILE
 
-/* Define if fseeko (and presumably ftello) exists and is declared. */
-#undef HAVE_FSEEKO
-
 /* Define if you have the `funlockfile' function. */
 #undef HAVE_FUNLOCKFILE
 
@@ -231,9 +228,6 @@
 /* Define if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if we have struct dirent64 */
-#undef HAVE_STRUCT_DIRENT64
-
 /* Define if you have the <sysexits.h> header file. */
 #undef HAVE_SYSEXITS_H
 
@@ -278,6 +272,9 @@
 /* Define to 1 to provide canonicalize_filename_mode. */
 #undef PROVIDE_CANONICALIZE_FILENAME_MODE
 
+/* The size of a `time_t', as computed by sizeof. */
+#undef SIZEOF_TIME_T
+
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at run-time.
@@ -306,15 +303,6 @@
 # undef _ALL_SOURCE
 #endif
 
-/* Number of bits in a file offset, on hosts where this is settable. */
-#undef _FILE_OFFSET_BITS
-
-/* Define to make fseeko visible on some hosts (e.g. glibc 2.2). */
-#undef _LARGEFILE_SOURCE
-
-/* Define for large files, on AIX-style hosts. */
-#undef _LARGE_FILES
-
 /* Define if on MINIX. */
 #undef _MINIX
 
@@ -324,17 +312,6 @@
 
 /* Define if you need to in order for `stat' and other things to work. */
 #undef _POSIX_SOURCE
-
-/* Enable extensions on Solaris.  */
-#ifndef __EXTENSIONS__
-# undef __EXTENSIONS__
-#endif
-#ifndef _POSIX_PTHREAD_SEMANTICS
-# undef _POSIX_PTHREAD_SEMANTICS
-#endif
-#ifndef _TANDEM_SOURCE
-# undef _TANDEM_SOURCE
-#endif
 
 /* Define to rpl_ if the getcwd replacement function should be used. */
 #undef __GETCWD_PREFIX

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.9 2024/02/04 19:35:38 tom Exp $
+# $Id: Makefile.in,v 1.10 2024/02/06 00:13:39 tom Exp $
 # Copyright 2022,2024 Thomas E. Dickey
 # makefile-template for autoconf
 
@@ -45,6 +45,7 @@ OBJECTS = \
 	working.$(OBJEXT)
 
 PACKAGE_STRING		= "@PACKAGE_STRING@"
+PACKAGE_DATE		= "@PACKAGE_DATE@"
 PACKAGE_BUGREPORT	= "@PACKAGE_BUGREPORT@"
 
 CC			= @CC@
@@ -53,6 +54,7 @@ EXTRA_CFLAGS		= @EXTRA_CFLAGS@
 CFLAGS			= @CFLAGS@ $(EXTRA_CFLAGS)
 EXTRA_CPPFLAGS		= @EXTRA_CPPFLAGS@ \
 			  -DPACKAGE_STRING=\"$(PACKAGE_STRING)\" \
+			  -DPACKAGE_DATE=\"$(PACKAGE_DATE)\" \
 			  -DPACKAGE_BUGREPORT=\"$(PACKAGE_BUGREPORT)\"
 CPPFLAGS		= @DEFS@ @CPPFLAGS@ -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/lib
 CYGPATH_W		= @CYGPATH_W@

@@ -83,7 +83,7 @@ static inline unsigned int
 hash_count(const hash_t *hash) { assert(hash); return hash->count; }
 
 /*
- * A hash table interator.
+ * A hash table iterator.
  *
  * This points to the current slot, the end of the slot array, and the
  * current element in the current slot.

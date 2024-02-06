@@ -1,3 +1,14 @@
+2024-02-06 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* change version to "1.4", with patch-date
+
+	* spelling/documentation fixes
+
+	* support $RCS_DIR for compatibility with cm_tools utilities.
+
+	* make test-suite run from the build-directory rather than the
+	  installed copy of blame.
+
 2024-02-04 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* modify top-level makefile to work around pmake's reordering of rules
@@ -451,7 +462,7 @@
 	
 	* rcs.c (rcs_resolve_tag): Error if a tag is resolved but the date is
 	  too late.
-	* blame.c (parse_options): Error on multiple keyword substituion types.
+	* blame.c (parse_options): Error on multiple keyword substitution types.
 
 2004-09-23  Michael Chapman  <foonly@users.sourceforge.net>
 

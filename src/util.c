@@ -1,6 +1,7 @@
 /*
  * Blame - An RCS file annotator
  * Copyright (C) 2004  Michael Chapman
+ * Copyright 2024  Thomas E. Dickey
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +25,67 @@
 #include <util.h>
 
 /*
+ * Allow $RCS_DIR to override the conventional "RCS", for compatibility with
+ * https://invisible-island.net/ded/
+ */
+static const char *
+rcs_dir(void)
+{
+	static char *result;
+	if (result == NULL) {
+		result = getenv("RCS_DIR");
+		if (result == NULL || *result == '\0')
+			result = strdup("RCS");
+	}
+	return (const char *) result;
+}
+
+/*
+ * "RCS/"
+ */
+static const char *
+rcs_slash(void)
+{
+	static char *result;
+	if (result == NULL) {
+		const char *part = rcs_dir();
+		size_t need = strlen(part) + strlen(SSLASH) + 1;
+		result = malloc(need);
+		strcpy(result, part);
+		strcat(result, SSLASH);
+	}
+	return (const char *) result;
+}
+
+/*
+ * "/RCS/"
+ */
+static const char *
+slash_rcs_slash(void)
+{
+	static char *result;
+	if (result == NULL) {
+		const char *part = rcs_slash();
+		if (*part == SSLASH[0]) {
+			result = strdup(part);
+		} else {
+			size_t need = strlen(SSLASH) + strlen(part) + 1;
+			result = malloc(need);
+			strcpy(result, SSLASH);
+			strcat(result, part);
+		}
+	}
+	return (const char *) result;
+}
+
+/*
  * Returns true iff <working_filename> and <rcs_filename> constitute a valid
  * working file/RCS file pair.
  */
 int
 does_working_filename_match_rcs_filename(
-	const char *working_filename, const char *rcs_filename
+	const char *working_filename,
+	const char *rcs_filename
 ) {
 	const char *from, *to;
 	char *a, *b;
@@ -79,8 +135,9 @@ is_rcs_filename(const char *filename) {
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
 		if (from == to) {
-			if (!strncmp(filename, "RCS" SSLASH, 4)) return 1;
-			if (strstr(filename, SSLASH "RCS" SSLASH)) return 1;
+			const char *leading = rcs_slash();
+			if (!strncmp(filename, leading, strlen(leading))) return 1;
+			if (strstr(filename, slash_rcs_slash())) return 1;
 		} else {
 			if (!strncmp(from, filename + strlen(filename) - (to - from), (size_t) (to - from)))
 				return 1;
@@ -119,7 +176,7 @@ find_matching_rcs_filename(const char *working_filename) {
 		
 		buffer = SALLOC(length);
 		strncat(buffer, working_filename, (size_t) (a - working_filename));
-		strcat(buffer, "RCS" SSLASH);
+		strcat(buffer, rcs_slash());
 		strncat(buffer, a, base_len(a));
 		strncat(buffer, from, (size_t) (to - from));
 		

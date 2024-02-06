@@ -1,13 +1,20 @@
 # Process this file with autoconf to produce a configure script.
-# $Id: configure.ac,v 1.27 2024/02/04 23:58:51 tom Exp $
+# $Id: configure.ac,v 1.28 2024/02/05 09:21:33 tom Exp $
 
-AC_INIT([blame], [1.3.1], [dickey@invisible-island.net])
+AC_INIT([blame], [1.4], [dickey@invisible-island.net])
 AC_CONFIG_SRCDIR([src/blame.c])
 AC_CONFIG_HEADER([config.h])
-AC_SUBST(RELEASE, 1)
 
+CHECK_VERSION=`sed -e 's/[[ 	]].*//' $srcdir/VERSION`
+test "[$]CHECK_VERSION" = "[$]PACKAGE_VERSION" || AC_MSG_ERROR(inconsistent VERSION)
+
+PACKAGE_DATE=`sed -e 's/^[[^ 	]]*[[ 	]]*//' $srcdir/VERSION`
+
+AC_SUBST(PACKAGE_DATE)
 AC_SUBST(PACKAGE_STRING)
 AC_SUBST(PACKAGE_BUGREPORT)
+
+echo "configuring $PACKAGE_NAME ($PACKAGE_VERSION $PACKAGE_DATE)"
 
 AC_AIX
 AC_MINIX
