@@ -34,10 +34,10 @@ typedef struct rcs {
 	char *filename;       /* Absolute/relative RCS filename. */
 	char *full_filename;  /* Absolute RCS filename.          */
 	char *short_filename; /* Last component of RCS filename. */
-	
+
 	char *start;
 	size_t length;
-	
+
 	delta_t *head;        /* The head revision; NULL if RCS file is empty.   */
 	char *branch;         /* The default branch (NULL if RCS file is empty). */
 	hash_t *branches;     /* Branches on the trunk.                          */
@@ -47,9 +47,9 @@ typedef struct rcs {
 	int strict;           /* Strict locking; parsed but not used.            */
 	const char *comment;  /* Comment prefix.                                 */
 	expand_t expand;      /* Default expansion mode.                         */
-	
+
 	hash_t *delta_list;   /* Mapping of revision to delta.                   */
-	
+
 	unsigned int lines;
 } rcs_t;
 
@@ -107,10 +107,10 @@ rcs_get_branch(const rcs_t *rcs) {
 static inline const char *
 rcs_get_symbol(const rcs_t *rcs, const char *symbol) {
 	const char **rev;
-	
+
 	assert(rcs);
 	assert(symbol);
-	
+
 	rev = (const char **)hash_get(rcs->symbols, symbol);
 	return (rev ? *rev : NULL);
 }
@@ -141,10 +141,10 @@ rcs_get_expand(const rcs_t *rcs) {
 static inline const delta_t *
 rcs_get_delta(const rcs_t *rcs, const char *rev) {
 	const delta_t **d;
-	
+
 	assert(rcs);
 	assert(rev);
-	
+
 	d = (const delta_t **)hash_get(rcs->delta_list, rev);
 	return (d ? *d : NULL);
 }
@@ -156,10 +156,10 @@ rcs_get_delta(const rcs_t *rcs, const char *rev) {
 static inline delta_t *
 rcs_get_delta_template(const rcs_t *rcs, const char *rev) {
 	delta_t **d, *delta;
-	
+
 	assert(rcs);
 	assert(rev);
-	
+
 	d = (delta_t **)hash_get(rcs->delta_list, rev);
 	if (d) return *d;
 	delta = delta_new_template(rev);

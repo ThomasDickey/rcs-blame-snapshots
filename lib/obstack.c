@@ -180,7 +180,7 @@ _obstack_begin (struct obstack *h,
 					       alignment - 1);
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
-  chunk->prev = 0;
+  chunk->prev = NULL;
   /* The initial chunk now contains no empty object.  */
   h->maybe_empty_object = 0;
   h->alloc_failed = 0;
@@ -228,7 +228,7 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
 					       alignment - 1);
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
-  chunk->prev = 0;
+  chunk->prev = NULL;
   /* The initial chunk now contains no empty object.  */
   h->maybe_empty_object = 0;
   h->alloc_failed = 0;
@@ -274,14 +274,14 @@ _obstack_newchunk (struct obstack *h, int length)
      is sufficiently aligned.  */
   if (h->alignment_mask + 1 >= DEFAULT_ALIGNMENT)
     {
-      for (i = obj_size / sizeof (COPYING_UNIT) - 1;
+      for (i = obj_size / (long) (sizeof (COPYING_UNIT) - 1);
 	   i >= 0; i--)
 	((COPYING_UNIT *)object_base)[i]
 	  = ((COPYING_UNIT *)h->object_base)[i];
       /* We used to copy the odd few remaining bytes as one extra COPYING_UNIT,
 	 but that can cross a page boundary on a machine
 	 which does not do strict alignment for COPYING_UNITS.  */
-      already = obj_size / sizeof (COPYING_UNIT) * sizeof (COPYING_UNIT);
+      already = obj_size / (long) sizeof (COPYING_UNIT) * (long) sizeof (COPYING_UNIT);
     }
   else
     already = 0;
@@ -328,12 +328,12 @@ _obstack_allocated_p (struct obstack *h, void *obj)
   /* We use >= rather than > since the object cannot be exactly at
      the beginning of the chunk but might be an empty object exactly
      at the end of an adjacent chunk.  */
-  while (lp != 0 && ((void *) lp >= obj || (void *) (lp)->limit < obj))
+  while (lp != NULL && ((void *) lp >= obj || (void *) (lp)->limit < obj))
     {
       plp = lp->prev;
       lp = plp;
     }
-  return lp != 0;
+  return lp != NULL;
 }
 
 /* Free objects in obstack H, including OBJ and everything allocate
@@ -351,7 +351,7 @@ __obstack_free (struct obstack *h, void *obj)
   /* We use >= because there cannot be an object at the beginning of a chunk.
      But there can be an empty object at that address
      at the end of another chunk.  */
-  while (lp != 0 && ((void *) lp >= obj || (void *) (lp)->limit < obj))
+  while (lp != NULL && ((void *) lp >= obj || (void *) (lp)->limit < obj))
     {
       plp = lp->prev;
       CALL_FREEFUN (h, lp);
@@ -366,7 +366,7 @@ __obstack_free (struct obstack *h, void *obj)
       h->chunk_limit = lp->limit;
       h->chunk = lp;
     }
-  else if (obj != 0)
+  else if (obj != NULL)
     /* obj is not in any of the chunks! */
     abort ();
 }
@@ -383,9 +383,9 @@ _obstack_memory_used (struct obstack *h)
   register struct _obstack_chunk* lp;
   register int nbytes = 0;
 
-  for (lp = h->chunk; lp != 0; lp = lp->prev)
+  for (lp = h->chunk; lp != NULL; lp = lp->prev)
     {
-      nbytes += lp->limit - (char *) lp;
+      nbytes += (int) (lp->limit - (char *) lp);
     }
   return nbytes;
 }

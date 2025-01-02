@@ -77,6 +77,8 @@ static char *date_arg;   /* Argument to -d, --date   */
 static char *author_arg; /* Argument to -w, --author */
 static char *state_arg;  /* Argument to -s, --state  */
 
+extern char *format_dates;  /* Argument to -f, --format-date */
+
 static expand_t expand;  /* Argument to -k, --expand */
 static char *symbol;     /* Argument to -r, --rev
                             (only if it was a single symbol) */
@@ -107,27 +109,27 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 	unsigned int i;
 	expand_t rcs_expand;
 	int result;
-	
+
 	result = -1;
-	
+
 	assert(rcs);
 	assert(rev && rcs_rev_is_valid(rev));
-	
+
 	rcs_expand = expand;
 	if (rcs_expand == EXPAND_UNDEFINED)
 		rcs_expand = rcs_get_expand(rcs);
 	if (rcs_expand == EXPAND_UNDEFINED)
 		rcs_expand = EXPAND_KEY_VALUE;
-	
+
 	/*
 	 * Print the banner immediately after parsing the RCS file.
 	 * TODO: Add a -q, --quiet option?
 	 */
 	fprintf(stderr, "\nAnnotations for %s\n***************\n", filename);
-	
+
 	total_length = strlen(rev);
 	copy = strdup(rev);
-	
+
 	/*
 	 * Find the second dot (or end-of-string). All deltas with a single dot
 	 * are on the trunk.
@@ -137,21 +139,21 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 	dot = strchrnul(dot + 1, '.');
 	*dot = '\0';
 	length = (size_t) (dot - copy);
-	
+
 	/*
 	 * Start from the head revision.
 	 */
 	delta = rcs_get_head(rcs);
-	
+
 	lines = lines_dup(delta->text, rcs->lines);
 	spare = lines_new_with_capacity(rcs->lines);
-	
+
 	target = rcs_get_delta(rcs, copy);
 	while (delta != target) {
 		lines_t *temp;
 		const delta_t *next = delta_get_next(delta);
 		assert(next); /* since rev exists and is reachable */
-		
+
 		if (lines_apply(lines, spare, delta, next, 1)) {
 			error(
 				0, 0, "%s: could not apply diff between revisions %s and %s",
@@ -163,10 +165,10 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 		temp = lines;
 		lines = spare;
 		spare = temp;
-		
+
 		delta = next;
 	}
-	
+
 	/*
 	 * We've found the branch point. Duplicate the line buffer, and continue
 	 * on the trunk until we hit the end. This will update the original line
@@ -174,13 +176,13 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 	 */
 	dup = lines_dup(lines, rcs->lines);
 	save = delta;
-	
+
 	while (delta) {
 		const delta_t *next = delta_get_next(delta);
-		
+
 		if (next) {
 			lines_t *temp;
-			
+
 			if (lines_apply(dup, spare, delta, next, 1)) {
 				error(
 					0, 0, "%s: could not apply diff between revisions %s and %s",
@@ -195,31 +197,31 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 			spare = temp;
 		} else
 			lines_finalize(dup, delta);
-		
+
 		delta = next;
 	}
-	
+
 	lines_free(dup);
 	delta = save;
-	
+
 	/*
 	 * Back to the branch point.
 	 */
 	while (length != total_length) {
 		lines_t *temp;
 		const delta_t *next;
-		
+
 		*dot = '.';
 		dot = strchr(dot + 1, '.');
 		assert(dot); /* since rcs_rev_is_valid(rev) */
-		
+
 		/*
 		 * Look up the branch.
 		 */
 		*dot = '\0';
 		next = delta_get_branch(delta, copy);
 		assert(next); /* since rev exists and is reachable */
-		
+
 		if (lines_apply(lines, spare, delta, next, 0)) {
 			error(
 				0, 0, "%s: could not apply diff between revisions %s and %s",
@@ -231,14 +233,14 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 		temp = lines;
 		lines = spare;
 		spare = temp;
-		
+
 		delta = next;
-		
+
 		*dot = '.';
 		dot = strchrnul(dot + 1, '.');
 		*dot = '\0';
 		length = (size_t) (dot - copy);
-		
+
 		/*
 		 * Continue along this branch until we find the correct revision or another
 		 * branch point.
@@ -246,7 +248,7 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 		target = rcs_get_delta(rcs, copy);
 		while (delta != target) {
 			next = delta_get_next(delta);
-			
+
 			if (lines_apply(lines, spare, delta, next, 0)) {
 				error(
 					0, 0, "%s: could not apply diff between revisions %s and %s",
@@ -258,11 +260,11 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 			temp = lines;
 			lines = spare;
 			spare = temp;
-			
+
 			delta = next;
 		}
 	}
-	
+
 	/*
 	 * OK, should have ownership info for each line in the selected revision.
 	 * For each line, we print out the owner's revision, author and date,
@@ -270,25 +272,25 @@ annotate_revision(const char *filename, const rcs_t *rcs, const char *rev) {
 	 */
 	for (i = 0; i < lines_count(lines); i++) {
 		const line_t *line = lines_get(lines, i);
-		
+
 		/*
 		 * If the final line is empty, don't print anything.
 		 */
 		if ((i + 1 == lines_count(lines)) && !line->len)
 			break;
-		
+
 		keyword_annotate(line, rcs, rcs_expand, symbol, zone_offset);
 	}
-	
+
 	result = 0;
-	
+
 fail:
 	if (cleanup) {
 		lines_free(lines);
 		lines_free(spare);
 		FREE(copy);
 	}
-	
+
 	return result;
 }
 
@@ -302,36 +304,36 @@ annotate(const char *working_filename, const char *rcs_filename) {
 	char *working_filename2, *rcs_filename2;
 	char *tag, *rev;
 	int result;
-	
+
 	OINIT(&blame_lines_obstack);
-	
+
 	result = -1;
-	
+
 	assert(working_filename || rcs_filename);
-	
+
 	rcs = NULL;
 	working_filename2 = rcs_filename2 = NULL;
 	tag = rev = NULL;
-	
+
 	/*
 	 * Resolve a missing working_filename or rcs_filename.
 	 */
-	
+
 	if (!rcs_filename)
 		rcs_filename2 = find_matching_rcs_filename(working_filename);
 	else
 		rcs_filename2 = strdup(rcs_filename);
 	if (!rcs_filename2)
 		goto fail;
-	
+
 	if (!working_filename)
 		working_filename2 = find_matching_working_filename(rcs_filename);
 	else
 		working_filename2 = strdup(working_filename);
-	
+
 	assert(is_rcs_filename(rcs_filename2));
 	assert(!is_rcs_filename(working_filename2));
-	
+
 	/*
 	 * If a tag is specified, extract it from the working file if it is "$".
 	 * The value in the working file can have symbols in it, but it can't
@@ -350,7 +352,7 @@ annotate(const char *working_filename, const char *rcs_filename) {
 		} else
 			tag = strdup(tag_arg);
 	}
-	
+
 	/*
 	 * Read in the RCS file. If this succeeds, the delta tree is guaranteed to
 	 * be valid (no loops, all deltas reachable, branches on appropriate
@@ -359,7 +361,7 @@ annotate(const char *working_filename, const char *rcs_filename) {
 	rcs = rcs_parse(rcs_filename2);
 	if (!rcs)
 		goto fail;
-	
+
 	/*
 	 * If there's no head revision, the RCS file is empty (created with
 	 * "rcs -i"). No point in going any further.
@@ -368,14 +370,14 @@ annotate(const char *working_filename, const char *rcs_filename) {
 		error(0, 0, "%s: no revisions present", working_filename2);
 		goto fail;
 	}
-	
+
 	/*
 	 * Try to resolve the specified tag.
 	 */
 	rev = rcs_resolve_tag(rcs, tag, date, zone_offset, author_arg, state_arg);
 	if (!rev)
 		goto fail;
-	
+
 	/*
 	 * Save the tag if it was a single symbol. We need this in case we expand
 	 * any Symbol keywords.
@@ -384,13 +386,13 @@ annotate(const char *working_filename, const char *rcs_filename) {
 		symbol = tag;
 	else
 		symbol = NULL;
-	
+
 	/*
 	 * We know the numerical revision we want, and we know it's somewhere in
 	 * delta tree. Annotate it.
 	 */
 	result = annotate_revision(working_filename2, rcs, rev);
-	
+
 fail:
 	if (cleanup) {
 		if (rcs) rcs_free(rcs);
@@ -400,7 +402,7 @@ fail:
 		if (rev) FREE(rev);
 		OFREEALL(&blame_lines_obstack);
 	}
-	
+
 	return result;
 }
 
@@ -412,7 +414,7 @@ static error_t
 parse_options(int key, char *arg, struct argp_state *state) {
 	static const char *working_filename;
 	static const char *rcs_filename;
-	
+
 	switch (key) {
 	case '?':
 		argp_state_help(state, state->out_stream, ARGP_HELP_STD_HELP);
@@ -466,6 +468,17 @@ parse_options(int key, char *arg, struct argp_state *state) {
 		}
 		date_arg = strdup(arg);
 		break;
+	case 'f': /* --format-date */
+		assert(arg); /* argument is mandatory */
+		if (format_dates) {
+			argp_failure(
+				state, EXIT_FAILURE, 0,
+				"multiple format-date options may not be specified"
+			);
+			FREE(format_dates);
+		}
+		format_dates = strdup(arg);
+		break;
 	case 'w': /* --author */
 		if (author_arg) {
 			argp_failure(
@@ -480,7 +493,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 			author_arg = strdup(arg);
 		else {
 			struct passwd *pw;
-			
+
 			/*
 			 * Use the user's username.
 			 */
@@ -490,7 +503,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 				argp_failure(state, EXIT_FAILURE, 0, "could not determine username");
 				break;
 			}
-			
+
 			author_arg = strdup(pw->pw_name);
 		}
 		break;
@@ -571,12 +584,12 @@ parse_options(int key, char *arg, struct argp_state *state) {
 	case ARGP_KEY_END:
 		if (!parsing_rcsinit) {
 			unsigned int i;
-			
+
 			if (!vector_count(filenames)) {
 				argp_failure(state, EXIT_FAILURE, 0, "no files specified");
 				assert(0);
 			}
-			
+
 			/*
 			 * Resolve the zone, if it was specified.
 			 */
@@ -585,7 +598,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 				argp_failure(state, EXIT_FAILURE, 0, "invalid time zone: %s", zone);
 				break;
 			}
-	
+
 			/*
 			 * Check the tag doesn't contain "..", if it was specified.
 			 */
@@ -597,7 +610,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 					break;
 				}
 			}
-			
+
 			/*
 			 * Resolve the date, if it was specified.
 			 */
@@ -608,17 +621,17 @@ parse_options(int key, char *arg, struct argp_state *state) {
 					break;
 				}
 			}
-			
+
 			/*
 			 * If a matching working filename and RCS filename are beside each
 			 * other on the command line, we pair them together.
 			 */
 			for (i = 0; i < vector_count(filenames); i++) {
 				const char *filename;
-				
+
 				filename = (const char *)vector_get(filenames, i);
 				assert(filename);
-				
+
 				if (is_rcs_filename(filename)) {
 					if (rcs_filename)
 						failures |= annotate(NULL, rcs_filename);
@@ -660,14 +673,14 @@ parse_options(int key, char *arg, struct argp_state *state) {
 						}
 					}
 				}
-				
+
 				/*
 				 * If we had both working_filename and rcs_filename we should
 				 * have processed at least one of them.
 				 */
 				assert(!working_filename || !rcs_filename);
 			}
-			
+
 			/*
 			 * Handle any remaining working filename or RCS filename.
 			 */
@@ -681,7 +694,7 @@ parse_options(int key, char *arg, struct argp_state *state) {
 	default:
 		return ARGP_ERR_UNKNOWN;
 	}
-	
+
 	return 0;
 }
 
@@ -696,6 +709,8 @@ main(int argc, char **argv) {
 		{      "rev",   0,       NULL, OPTION_HIDDEN | OPTION_ALIAS,   NULL, 0  },
 		{     "date", 'd',     "DATE",                   0,
 		                                     "Date of revision to annotate", 0  },
+		{ "format-date", 'f',  "FORMAT-DATE",            0,
+		                                     "Format of displayed dates, per strftime", 0  },
 		{   "author", 'w',    "LOGIN", OPTION_ARG_OPTIONAL,
 		                                   "Author of revision to annotate", 0  },
 		{    "state", 's',    "STATE",                   0,
@@ -726,18 +741,18 @@ main(int argc, char **argv) {
 		NULL, NULL, NULL
 	};
 	parser.options = options;
-	
+
 #if HAVE_LOCALE_H && HAVE_SETLOCALE
 	/*
 	 * Use the environment's locale, not "C".
 	 */
 	setlocale(LC_ALL, "");
 #endif /* HAVE_LOCALE_H && HAVE_SETLOCALE */
-	
+
 	set_program_name(argv[0]);
-	
+
 	argp_err_exit_status = EXIT_FAILURE;
-	
+
 	failures = 0;
 	rcs_emulation = 5;
 	filenames = vector_new((dup_fn_t)string_dup, (free_fn_t)string_free);
@@ -746,7 +761,7 @@ main(int argc, char **argv) {
 	suffixes = zone = NULL;
 	date = (time_t)(-1);
 	cleanup = 1;
-	
+
 	/*
 	 * Parse RCSINIT environment variable first, if it exists.
 	 * We try to ignore arguments we don't expect.
@@ -757,18 +772,18 @@ main(int argc, char **argv) {
 		char *a, *b, *c;
 		int escape, rcsinit_argc;
 		unsigned int spaces = 0;
-		
+
 		copy = strdup(rcsinit);
-		
+
 		/* Count spaces */
 		for (c = copy; *c; c++)
 			if (ISSPACE(*c))
 				spaces++;
-		
+
 		rcsinit_argv = MALLOC(spaces + 2, char *);
 		rcsinit_argv[0] = argv[0];
 		rcsinit_argc = 1;
-		
+
 		escape = 0;
 		a = b = c = copy;
 		while (1) {
@@ -788,10 +803,10 @@ main(int argc, char **argv) {
 				escape = 0;
 				*a++ = *b;
 			}
-				
+
 			b++;
 		}
-		
+
 		argp_parse(
 			&parser, rcsinit_argc, rcsinit_argv,
 			ARGP_NO_HELP | ARGP_NO_EXIT, /* Warn but don't exit on argp_failure */
@@ -801,21 +816,22 @@ main(int argc, char **argv) {
 		FREE(copy);
 	}
 	parsing_rcsinit = 0;
-	
+
 	/*
 	 * Annotations occur in the parser function's ARGP_KEY_END state.
 	 */
 	failures |= argp_parse(&parser, argc, argv, ARGP_NO_HELP, NULL, NULL);
-	
+
 	if (cleanup) {
 		vector_free(filenames);
 		if (suffixes) FREE(suffixes);
 		if (zone) FREE(zone);
 		if (tag_arg) FREE(tag_arg);
 		if (date_arg) FREE(date_arg);
+		if (format_dates) FREE(format_dates);
 		if (author_arg) FREE(author_arg);
 		if (state_arg) FREE(state_arg);
 	}
-	
+
 	return (failures ? EXIT_FAILURE : EXIT_SUCCESS);
 }

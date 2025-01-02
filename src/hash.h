@@ -32,7 +32,7 @@ typedef struct {
 	/* Local copies of the hash table's dup and free functions. */
 	dup_fn_t dup_fn;
 	free_fn_t free_fn;
-	
+
 	char *key; /* The (immutable) key for this entry. */
 	unsigned int hash; /* The key's hash value. */
 	void *value;       /* The entry's value.    */
@@ -46,10 +46,10 @@ typedef struct {
 typedef struct {
 	dup_fn_t dup_fn;
 	free_fn_t free_fn;
-	
+
 	unsigned int capacity; /* Number of slots in hash table.   */
 	unsigned int count;    /* Number of entries in hash table. */
-	
+
 	vector_t **data;       /* The slot array. */
 } hash_t;
 
@@ -66,7 +66,7 @@ void hash_insert_nocopy (hash_t *, const char *, void *);
 static inline void
 hash_insert(hash_t *hash, const char *key, const void *value) {
 	assert(hash);
-	
+
 	if (hash->dup_fn)
 		hash_insert_nocopy(hash, key, (hash->dup_fn)(value));
 	else

@@ -64,7 +64,7 @@
 
 /* EZ alias for ARGP_ERR_UNKNOWN.  */
 #define EBADKEY ARGP_ERR_UNKNOWN
-
+
 /* Default options.  */
 
 /* When argp is given the --HANG switch, _ARGP_HANG is set and argp will sleep
@@ -79,12 +79,12 @@ static volatile int _argp_hang;
 
 static const struct argp_option argp_default_options[] =
 {
-  {"help",	  '?',    	0, 0,  N_("give this help list"), -1},
-  {"usage",	  OPT_USAGE,	0, 0,  N_("give a short usage message"), 0},
+  {"help",	  '?',    	NULL, 0,  N_("give this help list"), -1},
+  {"usage",	  OPT_USAGE,	NULL, 0,  N_("give a short usage message"), 0},
   {"program-name",OPT_PROGNAME,N_("NAME"), OPTION_HIDDEN, N_("set the program name"), 0},
   {"HANG",	  OPT_HANG,    N_("SECS"), OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
      N_("hang for SECS seconds (default 3600)"), 0},
-  {NULL, 0, 0, 0, NULL, 0}
+  {NULL, 0, NULL, 0, NULL, 0}
 };
 
 static error_t
@@ -137,11 +137,11 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
 static const struct argp argp_default_argp =
   {argp_default_options, &argp_default_parser, NULL, NULL, NULL, NULL, "libc"};
 
-
+
 static const struct argp_option argp_version_options[] =
 {
-  {"version",	  'V',    	0, 0,  N_("print program version"), -1},
-  {NULL, 0, 0, 0, NULL, 0}
+  {"version",	  'V',    	NULL, 0,  N_("print program version"), -1},
+  {NULL, 0, NULL, 0, NULL, 0}
 };
 
 static error_t
@@ -169,7 +169,7 @@ argp_version_parser (int key, char *arg, struct argp_state *state)
 
 static const struct argp argp_version_argp =
   {argp_version_options, &argp_version_parser, NULL, NULL, NULL, NULL, "libc"};
-
+
 /* Returns the offset into the getopt long options array LONG_OPTIONS of a
    long option with called NAME, or -1 if none is found.  Passing NULL as
    NAME will return the number of options.  */
@@ -188,7 +188,7 @@ find_long_option (struct option *long_options, const char *name)
     return -1;
 }
 
-
+
 /* The state of a `group' during parsing.  Each group corresponds to a
    particular argp structure from the tree of such descending from the top
    level argp passed to argp_parse.  */
@@ -238,7 +238,7 @@ group_parse (struct group *group, struct argp_state *state, int key, char *arg)
   else
     return EBADKEY;
 }
-
+
 struct parser
 {
   const struct argp *argp;
@@ -271,7 +271,7 @@ struct parser
   /* Memory used by this parser.  */
   void *storage;
 };
-
+
 /* The next usable entries in the various parser tables being filled in by
    convert_options.  */
 struct parser_convert_state
@@ -333,7 +333,7 @@ convert_options (const struct argp *argp,
 			  ? optional_argument
 			  : required_argument)
 		       : no_argument);
-		    cvt->long_end->flag = 0;
+		    cvt->long_end->flag = NULL;
 		    /* we add a disambiguating code to all the user's
 		       values (which is removed before we actually call
 		       the function to parse the value); this means that
@@ -356,9 +356,9 @@ convert_options (const struct argp *argp,
       group->args_processed = 0;
       group->parent = parent;
       group->parent_index = parent_index;
-      group->input = 0;
-      group->hook = 0;
-      group->child_inputs = 0;
+      group->input = NULL;
+      group->hook = NULL;
+      group->child_inputs = NULL;
 
       if (children)
 	/* Assign GROUP's CHILD_INPUTS field some space from
@@ -374,7 +374,7 @@ convert_options (const struct argp *argp,
       parent = group++;
     }
   else
-    parent = 0;
+    parent = NULL;
 
   if (children)
     {
@@ -409,11 +409,11 @@ parser_convert (struct parser *parser, const struct argp *argp, int flags)
   parser->argp = argp;
 
   if (argp)
-    parser->egroup = convert_options (argp, 0, 0, parser->groups, &cvt);
+    parser->egroup = convert_options (argp, NULL, 0, parser->groups, &cvt);
   else
     parser->egroup = parser->groups; /* No parsers at all! */
 }
-
+
 /* Lengths of various parser fields which we will allocated.  */
 struct parser_sizes
 {
@@ -538,7 +538,7 @@ parser_init (struct parser *parser, const struct argp *argp,
 	   makes very simple wrapper argps more convenient).  */
 	group->child_inputs[0] = group->input;
 
-      err = group_parse (group, &parser->state, ARGP_KEY_INIT, 0);
+      err = group_parse (group, &parser->state, ARGP_KEY_INIT, NULL);
     }
   if (err == EBADKEY)
     err = 0;			/* Some parser didn't understand.  */
@@ -565,7 +565,7 @@ parser_init (struct parser *parser, const struct argp *argp,
 
   return 0;
 }
-
+
 /* Free any storage consumed by PARSER (but not PARSER itself).  */
 static error_t
 parser_finalize (struct parser *parser,
@@ -587,11 +587,11 @@ parser_finalize (struct parser *parser,
 	       group < parser->egroup && (!err || err==EBADKEY);
 	       group++)
 	    if (group->args_processed == 0)
-	      err = group_parse (group, &parser->state, ARGP_KEY_NO_ARGS, 0);
+	      err = group_parse (group, &parser->state, ARGP_KEY_NO_ARGS, NULL);
 	  for (group = parser->egroup - 1;
 	       group >= parser->groups && (!err || err==EBADKEY);
 	       group--)
-	    err = group_parse (group, &parser->state, ARGP_KEY_END, 0);
+	    err = group_parse (group, &parser->state, ARGP_KEY_END, NULL);
 
 	  if (err == EBADKEY)
 	    err = 0;		/* Some parser didn't understand.  */
@@ -630,7 +630,7 @@ parser_finalize (struct parser *parser,
 
       /* Since we didn't exit, give each parser an error indication.  */
       for (group = parser->groups; group < parser->egroup; group++)
-	group_parse (group, &parser->state, ARGP_KEY_ERROR, 0);
+	group_parse (group, &parser->state, ARGP_KEY_ERROR, NULL);
     }
   else
     /* Notify parsers of success, and propagate back values from parsers.  */
@@ -641,14 +641,14 @@ parser_finalize (struct parser *parser,
       for (group = parser->egroup - 1
 	   ; group >= parser->groups && (!err || err == EBADKEY)
 	   ; group--)
-	err = group_parse (group, &parser->state, ARGP_KEY_SUCCESS, 0);
+	err = group_parse (group, &parser->state, ARGP_KEY_SUCCESS, NULL);
       if (err == EBADKEY)
 	err = 0;		/* Some parser didn't understand.  */
     }
 
   /* Call parsers once more, to do any final cleanup.  Errors are ignored.  */
   for (group = parser->egroup - 1; group >= parser->groups; group--)
-    group_parse (group, &parser->state, ARGP_KEY_FINI, 0);
+    group_parse (group, &parser->state, ARGP_KEY_FINI, NULL);
 
   if (err == EBADKEY)
     err = EINVAL;
@@ -657,7 +657,7 @@ parser_finalize (struct parser *parser,
 
   return err;
 }
-
+
 /* Call the user parsers to parse the non-option argument VAL, at the current
    position, returning any error.  The state NEXT pointer is assumed to have
    been adjusted (by getopt) to point after this argument; this function will
@@ -687,7 +687,7 @@ parser_parse_arg (struct parser *parser, char *val)
 	{
 	  parser->state.next--;	/* For ARGP_KEY_ARGS, put back the arg.  */
 	  key = ARGP_KEY_ARGS;
-	  err = group_parse (group, &parser->state, key, 0);
+	  err = group_parse (group, &parser->state, key, NULL);
 	}
     }
 
@@ -711,7 +711,7 @@ parser_parse_arg (struct parser *parser, char *val)
 
   return err;
 }
-
+
 /* Call the user parsers to parse the option OPT, with argument VAL, at the
    current position, returning any error.  */
 static error_t
@@ -742,7 +742,7 @@ parser_parse_opt (struct parser *parser, int opt, char *val)
     }
   else
     {
-      int user_key =                                                            
+      int user_key =
         ((opt & (1 << (USER_BITS - 1))) ? ~USER_MASK : 0) | (opt & USER_MASK);
       err =
         group_parse (&parser->groups[group_key - 1], &parser->state,
@@ -772,7 +772,7 @@ parser_parse_opt (struct parser *parser, int opt, char *val)
 
   return err;
 }
-
+
 /* Parse the next argument in PARSER (as indicated by PARSER->state.next).
    Any error from the parsers is returned, and *ARGP_EBADKEY indicates
    whether a value of EBADKEY is due to an unrecognized argument (which is
@@ -799,11 +799,11 @@ parser_parse_next (struct parser *parser, int *arg_ebadkey)
       parser->opt_data.optopt = KEY_END;
       if (parser->state.flags & ARGP_LONG_ONLY)
 	opt = _getopt_long_only_r (parser->state.argc, parser->state.argv,
-				   parser->short_opts, parser->long_opts, 0,
+				   parser->short_opts, parser->long_opts, NULL,
 				   &parser->opt_data);
       else
 	opt = _getopt_long_r (parser->state.argc, parser->state.argv,
-			      parser->short_opts, parser->long_opts, 0,
+			      parser->short_opts, parser->long_opts, NULL,
 			      &parser->opt_data);
       /* And see what getopt did.  */
       parser->state.next = parser->opt_data.optind;
@@ -863,7 +863,7 @@ parser_parse_next (struct parser *parser, int *arg_ebadkey)
 
   return err;
 }
-
+
 /* Parse the options strings in ARGC & ARGV according to the argp in ARGP.
    FLAGS is one of the ARGP_ flags above.  If END_INDEX is non-NULL, the
    index in ARGV of the first unparsed option is returned in it.  If an
@@ -893,7 +893,7 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
 #endif
     }
 #endif
-	
+
   if (! (flags & ARGP_NO_HELP))
     /* Add our own options.  */
     {
@@ -912,7 +912,7 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
       (child++)->argp = &argp_default_argp;
       if (argp_program_version || argp_program_version_hook)
 	(child++)->argp = &argp_version_argp;
-      child->argp = 0;
+      child->argp = NULL;
 
       argp = top_argp;
     }
@@ -933,7 +933,7 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
 #ifdef weak_alias
 weak_alias (__argp_parse, argp_parse)
 #endif
-
+
 /* Return the input field for ARGP in the parser corresponding to STATE; used
    by the help routines.  */
 void *
@@ -949,7 +949,7 @@ __argp_input (const struct argp *argp, const struct argp_state *state)
 	  return group->input;
     }
 
-  return 0;
+  return NULL;
 }
 #ifdef weak_alias
 weak_alias (__argp_input, _argp_input)

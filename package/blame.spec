@@ -1,10 +1,10 @@
 %define AppProgram blame
 %define AppVersion 1.4
-%define AppRelease 20240206
+%define AppRelease 20250101
 Name:  %{AppProgram}
 Version:  %{AppVersion}
 Release:  %{AppRelease}
-Summary:  annotate RCS files
+Summary:  Annotate RCS files
 License:  GPLv2
 Group:  Applications/Development
 URL:  https://invisible-island.net/%{AppProgram}

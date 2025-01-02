@@ -32,9 +32,9 @@ static char *
 _keyword_unescape(const char *s) {
 	const char *end, *escape;
 	char *output;
-	
+
 	assert(s);
-	
+
 	end = s + strlen(s);
 	output = SALLOC((size_t)(end - s));
 	while ( (escape = strchr(s, '\\')) ) {
@@ -72,7 +72,7 @@ _keyword_unescape(const char *s) {
 		}
 	}
 	strcat(output, s);
-	
+
 	return output;
 }
 
@@ -84,13 +84,13 @@ _keyword_escape(const char *s) {
 	const char *magic;
 	char *output;
 	size_t capacity, len;
-	
+
 	assert(s);
-	
+
 	capacity = strlen(s);
 	output = SALLOC(capacity);
 	len = 0;
-	
+
 	while ( (magic = strpbrk(s, (rcs_emulation >= 5 ? "\t\n $\\" : "\t\n $"))) ) {
 		len += (size_t) (magic - s);
 		switch (*magic) {
@@ -142,14 +142,14 @@ _keyword_escape(const char *s) {
 		}
 		s = magic + 1;
 	}
-	
+
 	len += strlen(s);
 	if (len > capacity) {
 		capacity = len + 16;
 		output = REALLOC(output, capacity + 1, char);
 	}
 	strcat(output, s);
-	
+
 	return output;
 }
 
@@ -161,13 +161,13 @@ char *
 keyword_extract_revision(const char *line, size_t len) {
 	const char *end, *dollar;
 	char *buffer, *rev;
-	
+
 	assert(line);
-	
+
 	end = line + len;
 	rev = NULL;
 	buffer = ALLOCA(256, char);
-	
+
 	while (
 		!rev && line && (dollar = (const char *)memchr(line, '$', (size_t) (end - line)))
 	) {
@@ -189,7 +189,7 @@ keyword_extract_revision(const char *line, size_t len) {
 		if (dollar) dollar++;
 		line = dollar;
 	}
-	
+
 	return rev;
 }
 
@@ -200,7 +200,7 @@ keyword_extract_revision(const char *line, size_t len) {
 static inline void
 _keyword_shrink_output(const void *data, size_t len) {
 	assert(data);
-	
+
 	while (len) {
 		char *at = memchr(data, '@', len);
 		if (!at) break;
@@ -226,24 +226,28 @@ keyword_annotate(
 ) {
 	const void *current, *end, *log_start, *log_end;
 	size_t len;
-	char prefix[36];
+#define FMT_REV_WHO "%-12s (%-8.8s "
+#define LEN_REV_WHO 23
+	char prefix[LEN_REV_WHO + 1 + MAX_FORMAT_DATE];
 	int do_prefix;
-	
+
 	assert(line);
 	assert(rcs);
-	
-	sprintf(prefix, "%-12s (%-8.8s ",
+
+	sprintf(prefix, FMT_REV_WHO,
 		delta_get_revision(line->delta),
 		delta_get_author(line->delta)
 	);
-	date_sprintf_prefix(delta_get_date(line->delta), prefix + 23, 10);
+	date_sprintf_prefix(delta_get_date(line->delta),
+			    prefix + LEN_REV_WHO,
+			    sizeof(prefix) - LEN_REV_WHO - 1);
 	strcat(prefix, "): ");
-	
+
 	current = line->text;
 	len = line->len;
 	end = VOIDP_OFFSET(current, len);
 	do_prefix = 1;
-	
+
 	if (rcs_emulation >= 5) {
 		log_start = current;
 		log_end = NULL;
@@ -251,16 +255,16 @@ keyword_annotate(
 		log_start = rcs_get_comment(rcs);
 		log_end = VOIDP_OFFSET(log_start, strlen((const char *)log_start));
 	}
-	
+
 	while (current < end) {
 		size_t chunk_len;
 		const void *delim, *delim2, *next;
-		
+
 		if (do_prefix) {
 			fputs(prefix, stdout);
 			do_prefix = 0;
 		}
-		
+
 		chunk_len = strcspn(current, (
 			expand == EXPAND_OLD_STRING || expand == EXPAND_BINARY_STRING
 			? "@\n"
@@ -276,7 +280,7 @@ keyword_annotate(
 				current = VOIDP_OFFSET(delim, 1);
 				break;
 			}
-			
+
 			if (!memcmp(delim, "$Author", 7)) {
 				if (expand != EXPAND_VALUE_ONLY)
 					fputs("$Author", stdout);
@@ -366,7 +370,7 @@ keyword_annotate(
 				char *t;
 				const char *log, *n;
 				int local_log_prefix = 0;
-			
+
 				if (expand != EXPAND_VALUE_ONLY)
 					fputs("$Log", stdout);
 				if (expand != EXPAND_KEY_ONLY && expand != EXPAND_VALUE_ONLY) {
@@ -394,7 +398,7 @@ keyword_annotate(
 							break;
 					if (
 						(const char *)t2 < ((const char *)(log_end) - 2) &&
-						(*(const char *)t2 == '/' || *(const char *)t2 == '(') && 
+						(*(const char *)t2 == '/' || *(const char *)t2 == '(') &&
 						*(const char *)VOIDP_OFFSET(t2, 1) == '*'
 					) {
 						void *t3;
@@ -507,7 +511,7 @@ keyword_annotate(
 				putchar('$');
 				delim2 = delim;
 			}
-			
+
 			current = VOIDP_OFFSET(delim2, 1);
 			break;
 		case '@':

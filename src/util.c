@@ -91,16 +91,16 @@ does_working_filename_match_rcs_filename(
 	char *a, *b;
 	size_t al, bl;
 	int result;
-	
+
 	assert(working_filename && rcs_filename);
-	
+
 	a = base_name(working_filename);
 	al = base_len(a);
 	b = base_name(rcs_filename);
 	bl = base_len(b);
-	
+
 	result = 1;
-	
+
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
@@ -111,14 +111,14 @@ does_working_filename_match_rcs_filename(
 			break;
 		from = to + 1;
 	}
-	
+
 	result = 0;
-	
+
 out:
-	
+
 	FREE(a);
 	FREE(b);
-	
+
 	return result;
 }
 
@@ -128,9 +128,9 @@ out:
 int
 is_rcs_filename(const char *filename) {
 	const char *from, *to;
-	
+
 	assert(filename);
-	
+
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
@@ -146,7 +146,7 @@ is_rcs_filename(const char *filename) {
 			break;
 		from = to + 1;
 	}
-	
+
 	return 0;
 }
 
@@ -159,37 +159,37 @@ find_matching_rcs_filename(const char *working_filename) {
 	const char *from, *to, *a;
 	char *first;
 	int first_error;
-	
+
 	assert(working_filename);
-	
+
 	a = last_component(working_filename);
-	
+
 	first = NULL; first_error = 0;
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		char *buffer;
 		size_t length;
-		
+
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
-		
+
 		length = strlen(working_filename) + (size_t) (to - from) + 4;
-		
+
 		buffer = SALLOC(length);
 		strncat(buffer, working_filename, (size_t) (a - working_filename));
 		strcat(buffer, rcs_slash());
 		strncat(buffer, a, base_len(a));
 		strncat(buffer, from, (size_t) (to - from));
-		
+
 		if (!access(buffer, F_OK)) {
 			if (first) FREE(first);
 			return buffer;
 		}
-		
+
 		if (!first) {
 			first_error = errno;
 			first = strdup(buffer);
 		}
-		
+
 		if (from != to) {
 			memset(buffer, '\0', length);
 			strncpy(buffer, working_filename, (size_t) (a - working_filename));
@@ -201,19 +201,19 @@ find_matching_rcs_filename(const char *working_filename) {
 				return buffer;
 			}
 		}
-		
+
 		FREE(buffer);
-		
+
 		if (!*to)
 			break;
 		from = to + 1;
 	}
-	
+
 	assert(first);
 	assert(first_error);
 	error(0, first_error, "%s", first);
 	FREE(first);
-	
+
 	return NULL;
 }
 
@@ -226,12 +226,12 @@ find_matching_working_filename(const char *rcs_filename) {
 	const char *from, *to;
 	char *a;
 	size_t al;
-	
+
 	assert(rcs_filename);
-	
+
 	a = base_name(rcs_filename);
 	al = base_len(a);
-	
+
 	from = (suffixes ? suffixes : SUFFIXES);
 	while (1) {
 		to = strchrnul(from, DIRECTORY_SEPARATOR);
@@ -244,8 +244,8 @@ find_matching_working_filename(const char *rcs_filename) {
 			break;
 		from = to + 1;
 	}
-	
+
 	FREE(a);
-	
+
 	return NULL;
 }

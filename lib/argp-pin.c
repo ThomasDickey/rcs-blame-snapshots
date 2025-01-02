@@ -19,10 +19,12 @@
 # include <config.h>
 #endif
 
+#include <stdio.h>
+
 #ifndef HAVE_PROGRAM_INVOCATION_SHORT_NAME
-char *program_invocation_short_name = 0;
+char *program_invocation_short_name = NULL;
 #endif
 #ifndef HAVE_PROGRAM_INVOCATION_NAME
-char *program_invocation_name = 0;
+char *program_invocation_name = NULL;
 #endif
 

@@ -235,16 +235,16 @@ static const char *
 _date_parse_fixed(const char *s, int digits, int *res) {
 	int n;
 	char const *lim;
-	
+
 	assert(s);
 	assert(res);
-	
+
 	n = 0;
 	lim = s + digits;
 	while (s < lim) {
 		unsigned int d = (unsigned) (*s++ - '0');
 		if (9 < d)
-			return 0;
+			return NULL;
 		n = 10 * n + (int) d;
 	}
 	*res = n;
@@ -261,9 +261,9 @@ static const char *
 _date_parse_ranged(const char *s, int digits, int lo, int hi, int *res) {
 	assert(s);
 	assert(res);
-	
+
 	s = _date_parse_fixed(s, digits, res);
-	return (s && lo <= *res && *res <= hi) ? s : 0;
+	return (s && lo <= *res && *res <= hi) ? s : NULL;
 }
 
 /*
@@ -281,7 +281,7 @@ _date_parse_decimal(
 ) {
 	const char *dp;
 	size_t dpl;
-	
+
 	assert(s);
 	assert(res);
 	assert(fres);
@@ -296,7 +296,7 @@ _date_parse_decimal(
 	dp = ".";
 #endif /* ! HAVE_NL_LANGINFO */
 	dpl = strlen(dp);
-	
+
 	s = _date_parse_fixed(s, digits, res);
 	if (s && lo <= *res && *res <= hi) {
 		int f = 0;
@@ -311,12 +311,12 @@ _date_parse_decimal(
 			f = (product + (denom10 >> 1)) / denom10;
 			f -= f & (product % denom10 == denom10 >> 1); /* round to even */
 			if (f < 0 || product / resolution != num10)
-				return 0; /* overflow */
+				return NULL; /* overflow */
 		}
 		*fres = f;
 		return s;
 	}
-	return 0;
+	return NULL;
 }
 
 /*
@@ -332,7 +332,7 @@ date_parse_zone(const char *s, long *zone) {
 	int minutesEastOfUTC;
 	long offset, z;
 	const struct time_zone *tz;
-	
+
 	assert(s);
 	assert(zone);
 
@@ -356,7 +356,7 @@ date_parse_zone(const char *s, long *zone) {
 				break;
 			}
 		}
-		
+
 		if (minutesEastOfUTC == -1)
 			return NULL;
 
@@ -391,7 +391,7 @@ TRAILING_DST:
 			*zone = z + 60*60;
 			return s;
 		}
-		
+
 		*zone = z;
 		switch (*s) {
 			case '-': case '+': break;
@@ -441,7 +441,7 @@ parse_pattern_letter(const char *s, char c, struct parse_state *state) {
 	assert(s);
 	assert(c);
 	assert(state);
-	
+
 	switch (c) {
 	case '$': /* The next character must be a non-digit.  */
 		if (ISDIGIT(*s))
@@ -708,7 +708,7 @@ CASE_R:
 	default: /* bad pattern */
 		return NULL;
 	}
-	
+
 	return s;
 }
 
@@ -784,7 +784,7 @@ tm2time(struct tm *tm, int localzone) {
 
 	time_t d, gt;
 	const struct tm *gtm;
-	
+
 	/*
 	* The maximum number of iterations should be enough to handle any
 	* combinations of leap seconds, time zone rule changes, and solar time.
@@ -894,29 +894,29 @@ date_parse(const char *s, int use_zone_offset, long zone_offset) {
 	struct tm tm, *tm0;
 	int localzone, wday;
 	time_t r;
-	
+
 	assert(s);
-	
+
 	if (!use_zone_offset)
 		zone_offset = (rcs_emulation < 5 ? TM_LOCAL_ZONE : 0);
-	
+
 	memset(&state, '\0', sizeof(state));
 	undefine(&state);
-	
+
 	while (*s) {
 		char c;
 		const char * const *pattern;
-		
+
 		for (; !ISALNUM(c = *s) && c && c != '-' && c != '+'; s++)
 			;
 		if (!c)
 			break;
-		
+
 		/* Find first pattern that can merge successfully */
 		for (pattern = patterns; *pattern; pattern++) {
 			struct parse_state temp;
 			const char *s2, *c2;
-			
+
 			s2 = s;
 			undefine(&temp);
 			for (c2 = *pattern; s2 && *c2; c2++)
@@ -961,19 +961,19 @@ date_parse(const char *s, int use_zone_offset, long zone_offset) {
 #undef conflict
 #undef merge
 		}
-		
+
 		return -1;
 OUTER:
 		;
 	}
-	
+
 	if (state.zone == TM_UNDEFINED_ZONE)
 		state.zone = zone_offset;
-	
+
 	tm0 = NULL;
 	localzone = state.zone == TM_LOCAL_ZONE;
 	tm = state.tm;
-	
+
 	if (TM_DEFINED(state.ymodulus) || !TM_DEFINED(tm.tm_year)) {
 		/* Get tm corresponding to current time.  */
 		tm0 = time2tm(time(NULL), localzone);
@@ -1006,23 +1006,23 @@ OUTER:
 	if (!localzone)
 		adjzone(&tm, -state.zone);
 	wday = tm.tm_wday;
-	
+
 	/* Convert and fill in the rest of the tm.  */
 	r = tm2time(&tm, localzone);
-	
+
 	/* Check weekday.  */
 	if (r != -1 && TM_DEFINED(wday) && wday != tm.tm_wday)
 		return -1;
-	
+
 	return r;
 }
 
 time_t
 date_parse_rev(const char *rev) {
 	struct tm tm;
-	
+
 	assert(rev);
-	
+
 	if (
 		sscanf(rev, "%d.%d.%d.%d.%d.%d",
 			&tm.tm_year, &tm.tm_mon, &tm.tm_mday,
@@ -1031,17 +1031,17 @@ date_parse_rev(const char *rev) {
 	) {
 		char *tz;
 		time_t result;
-		
+
 		/* Dates can be on the form "99.12.15.08.09.04" before year 2000,
 		 * only subtract 1900 years if year >= 1900
 		 */
 		if (tm.tm_year >= 1900) {
 			tm.tm_year -= 1900;
 		}
-		
+
 		tm.tm_mon--;
 		tm.tm_wday = tm.tm_yday = tm.tm_isdst = 0;
-		
+
 		tz = getenv("TZ");
 		if (setenv("TZ", "UTC", 1))
 			return -1;
@@ -1051,7 +1051,7 @@ date_parse_rev(const char *rev) {
 			setenv("TZ", tz, 1);
 		else
 			unsetenv("TZ");
-		
+
 		return result;
 	} else
 		return -1;
@@ -1061,9 +1061,9 @@ char *
 date_format(time_t date) {
 	struct tm *tm;
 	char *result;
-	
+
 	assert(date >= 0);
-	
+
 	tm = gmtime(&date); /* if RCS version < 5 then localtime ? */
 	result = MALLOC(20, char);
 	sprintf(result, "%04u.%02u.%02u.%02u.%02u.%02u",
@@ -1082,9 +1082,9 @@ date_sprintf(time_t date, long zone) {
 	struct tm tm;
 	char *result;
 	size_t len;
-	
+
 	assert(date >= 0);
-	
+
 	result = MALLOC(40, char);
 	switch (zone) {
 	case TM_UNDEFINED_ZONE:
@@ -1124,10 +1124,27 @@ format_time: _UNUSED_LABEL
 	return result;
 }
 
+char *format_dates = NULL;
+
 size_t
 date_sprintf_prefix(time_t date, char *buffer, size_t len) {
+	size_t result;
+	char my_buffer[MAX_FORMAT_DATE + 1];
+	char *format = format_dates;
 	assert(date >= 0);
-	
+
+	if (format == NULL)
+		format = "%d-%b-%y";
+
 	/* if RCS version < 5 then localtime ? */
-	return strftime(buffer, len, "%d-%b-%y", gmtime(&date));
+	result = strftime(my_buffer, sizeof(my_buffer) - 1, format, gmtime(&date));
+	buffer[0] = '\0';
+	if (result != 0) {
+		/* see keyword_annotate() usage... */
+		if (result <= len) {
+			memcpy(buffer, my_buffer, result);
+			buffer[result] = '\0';
+		}
+	}
+	return result;
 }

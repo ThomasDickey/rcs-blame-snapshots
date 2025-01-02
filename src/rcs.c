@@ -46,15 +46,15 @@ rcs_parse(const char *rcs_filename) {
 	FILE *stream;
 	struct stat stat_buf;
 	YY_BUFFER_STATE current_buffer;
-	
+
 	assert(rcs_filename);
-	
+
 	stream = fopen(rcs_filename, "r");
 	if (!stream) {
 		error(0, errno, "%s", rcs_filename);
 		return NULL;
 	}
-	
+
 	rcs = CALLOC(1, rcs_t);
 	rcs->filename = strdup(rcs_filename);
 	rcs->full_filename = canonicalize_file_name(rcs_filename);
@@ -65,7 +65,7 @@ rcs_parse(const char *rcs_filename) {
 		return NULL;
 	}
 	rcs->short_filename = base_name(rcs_filename);
-	
+
 	if (fstat(fileno(stream), &stat_buf)) {
 		FREE(rcs->full_filename);
 		FREE(rcs->filename);
@@ -86,7 +86,7 @@ rcs_parse(const char *rcs_filename) {
 	}
 	current_buffer = yy_scan_bytes(rcs->start, (yy_size_t)rcs->length);
 	yy_switch_to_buffer(current_buffer);
-	
+
 	if (yyparse(rcs_filename, rcs)) {
 		if (fclose(stream))
 			error(0, errno, "%s", rcs_filename);
@@ -94,10 +94,10 @@ rcs_parse(const char *rcs_filename) {
 		return NULL;
 	}
 	yy_delete_buffer(current_buffer);
-	
+
 	if (fclose(stream))
 		error(0, errno, "%s", rcs_filename);
-	
+
 	if (!rcs->head)
 		return rcs;
 
@@ -113,20 +113,20 @@ rcs_free(rcs_t *rcs) {
 	assert(rcs->filename);
 	assert(rcs->full_filename);
 	assert(rcs->short_filename);
-	
+
 	FREE(rcs->filename);
 	FREE(rcs->short_filename);
 	FREE(rcs->full_filename);
-	
+
 	if (rcs->head) delta_ref_free(rcs->head);
 	if (rcs->branch) FREE(rcs->branch);
 	if (rcs->branches) hash_free(rcs->branches);
 	if (rcs->access) vector_free(rcs->access);
 	if (rcs->symbols) hash_free(rcs->symbols);
 	if (rcs->locks) hash_free(rcs->locks);
-	
+
 	if (rcs->delta_list) hash_free(rcs->delta_list);
-	
+
 	munmap(rcs->start, rcs->length);
 
 	FREE(rcs);
@@ -150,16 +150,16 @@ int
 rcs_rev_is_valid(const char *rev) {
 	unsigned int dots;
 	const char *c;
-	
+
 	assert(rev);
-	
+
 	dots = 0;
 	for (c = rev; *c; c++)
 		if (*c == '.')
 			dots++;
 		else if (!ISDIGIT(*c))
 			return 0;
-	
+
 	return dots % 2;
 }
 
@@ -170,16 +170,16 @@ int
 rcs_branch_is_valid(const char *branch) {
 	unsigned int dots;
 	const char *c;
-	
+
 	assert(branch);
-	
+
 	dots = 0;
 	for (c = branch; *c; c++)
 		if (*c == '.')
 			dots++;
 		else if (!ISDIGIT(*c))
 			return 0;
-	
+
 	return !(dots % 2);
 }
 
@@ -189,9 +189,9 @@ rcs_branch_is_valid(const char *branch) {
 char *
 rcs_rev_to_branch(const char *rev) {
 	char *branch;
-	
+
 	assert(rev && rcs_rev_is_valid(rev));
-	
+
 	branch = strdup(rev);
 	*(strrchr(branch, '.')) = '\0';
 	return branch;
@@ -204,46 +204,46 @@ static const delta_t *
 _rcs_get_base(const rcs_t *rcs, const char *branch) {
 	char *rev, *dot;
 	const delta_t *result;
-	
+
 	assert(rcs);
 	assert(branch && rcs_branch_is_valid(branch));
-	
+
 	result = NULL;
-	
+
 	rev = strdup(branch);
 	dot = strrchr(rev, '.');
 	if (dot) {
 		const delta_t *from, **base;
-		
+
 		*dot = '\0';
 		from = rcs_get_delta(rcs, rev);
-		
+
 		if (!from) {
 			error(0, 0, "%s: revision %s absent", rcs->filename, rev);
 			FREE(rev);
 			return NULL;
 		}
-		
+
 		FREE(rev);
-		
+
 		if (from->branches) {
 			base = (const delta_t **)hash_get(from->branches, branch);
 			if (base) result = *base;
 		}
 	} else {
 		const delta_t **base;
-		
+
 		FREE(rev);
-		
+
 		base = (const delta_t **)hash_get(
 			rcs->branches, branch
 		);
 		if (base) result = *base;
 	}
-	
+
 	if (!result)
 		error(0, 0, "%s: branch %s absent", rcs->filename, branch);
-	
+
 	return result;
 }
 
@@ -266,33 +266,33 @@ _rcs_find_rev(
 	int trunk;
 	char *cond;
 	size_t len;
-	
+
 	assert(rcs && rcs->delta_list);
 	assert(branch && rcs_branch_is_valid(branch));
-	
+
 	/* The trunk is in reverse. */
 	trunk = (strchr(branch, '.') == NULL);
-	
+
 	delta = _rcs_get_base(rcs, branch);
 	if (!delta)
 		return NULL;
-	
+
 	result = NULL;
-	
+
 	while (delta && (!trunk || !result)) {
 		int ok = ((date == -1) || (delta_get_date(delta) <= date));
 		ok = ok && (!author || !strcmp(delta_get_author(delta), author));
 		ok = ok && (!state || !strcmp(delta_get_state(delta), state));
-		
+
 		if (ok)
 			result = delta;
-		
+
 		delta = delta_get_next(delta);
 	}
-	
+
 	if (result)
 		return strdup(delta_get_revision(result));
-	
+
 	cond = SALLOC(1);
 	len = 0;
 
@@ -301,7 +301,7 @@ _rcs_find_rev(
 		cond = SREALLOC(cond, len);
 		strcat(cond, " has");
 	}
-	
+
 	if (date >= 0) {
 		char *date_str = date_sprintf(date, zone_offset);
 		len += 15 + strlen(date_str);
@@ -310,7 +310,7 @@ _rcs_find_rev(
 		strcat(cond, date_str);
 		FREE(date_str);
 	}
-	
+
 	if (author) {
 		if (date >= 0) len += 4;
 		len += 8 + strlen(author);
@@ -319,7 +319,7 @@ _rcs_find_rev(
 		strcat(cond, " author ");
 		strcat(cond, author);
 	}
-	
+
 	if (state) {
 		if ((date >= 0) || author) len += 4;
 		len += 7 + strlen(state);
@@ -328,10 +328,10 @@ _rcs_find_rev(
 		strcat(cond, " state ");
 		strcat(cond, state);
 	}
-	
+
 	error(0, 0, "%s: no revision on branch %s%s",
 		rcs->filename, branch, cond);
-	
+
 	FREE(cond);
 	return NULL;
 }
@@ -357,40 +357,40 @@ _rcs_find_rev_before(const rcs_t *rcs, const char *rev) {
 	char *branch;
 	const delta_t *delta, *result;
 	int trunk;
-	
+
 	assert(rcs && rcs->delta_list);
 	assert(rev && rcs_rev_is_valid(rev));
-	
+
 	branch = rcs_rev_to_branch(rev);
-	
+
 	/* The trunk is in reverse. */
 	trunk = (strchr(branch, '.') == NULL);
-	
+
 	delta = _rcs_get_base(rcs, branch);
 	FREE(branch);
 	if (!delta)
 		return NULL;
-	
+
 	result = NULL;
-	
+
 	while (delta && (!trunk || !result)) {
 		const char *r, *dot;
-		
+
 		r = delta_get_revision(delta);
 		dot = strrchr(r, '.');
 		assert(dot);
 		if (strncmp(rev, r, (size_t) (dot - r + 1)))
 			break;
-		
+
 		if (_revcmp(r, rev) <= 0)
 			result = delta;
-		
+
 		delta = delta_get_next(delta);
 	}
-	
+
 	if (!result)
 		error(0, 0, "%s: revision %s is too low", rcs->filename, rev);
-	
+
 	return result;
 }
 
@@ -402,15 +402,15 @@ _rcs_find_rev_before(const rcs_t *rcs, const char *rev) {
 static const char *
 _rcs_resolve_symbol(const rcs_t *rcs, const char *symbol) {
 	const char *rev, *c;
-	
+
 	assert(rcs);
 	assert(rcs->symbols);
 	assert(symbol);
-	
+
 	rev = rcs_get_symbol(rcs, symbol);
 	if (rev)
 		return rev;
-	
+
 	for (c = symbol; *c && !_isidchar(*c); c++)
 		;
 	if (*c)
@@ -428,7 +428,7 @@ _rcs_append_component(
 	const rcs_t *rcs, const char *symbol, char **rev, size_t *len
 ) {
 	const char *r;
-	
+
 	assert(rcs);
 	assert(symbol);
 	assert(rev && *rev);
@@ -441,7 +441,7 @@ _rcs_append_component(
 	*rev = REALLOC(*rev, *len + 1, char);
 	if ((*rev)[0]) strcat(*rev, ".");
 	strcat(*rev, r);
-	
+
 	return 0;
 }
 
@@ -452,10 +452,10 @@ _rcs_append_component(
 const char *
 rcs_get_locker(const rcs_t *rcs, const char *rev) {
 	hash_iter_t iter;
-	
+
 	assert(rcs);
 	assert(rev && rcs_rev_is_valid(rev));
-	
+
 	for (iter = hash_iter(rcs->locks); iter; iter = hash_next(iter))
 		if (
 			!strcmp(rev, delta_get_revision((const delta_t *)hash_get_value(iter)))
@@ -484,9 +484,9 @@ rcs_resolve_tag(
 ) {
 	char *rev;
 	int is_branch;
-	
+
 	assert(rcs);
-	
+
 	is_branch = 0;
 	if (!tag || !*tag) {
 		/* If tag wasn't specified, choose the default branch. */
@@ -495,7 +495,7 @@ rcs_resolve_tag(
 	} else {
 		char *copy, *dot, *start, *end;
 		size_t len;
-		
+
 		if (tag[0] == '.') {
 			/* Start with the default branch. */
 			rev = strdup(rcs->branch);
@@ -506,14 +506,14 @@ rcs_resolve_tag(
 			rev = strdup("");
 			len = 0;
 		}
-		
+
 		/*
 		 * We're going to inch our way along tag, marking off each
 		 * component in turn.
 		 */
 		start = copy = strdup(tag);
 		end = copy + strlen(copy);
-		
+
 		for (start = copy; (dot = strchr(start, '.')); start = dot + 1) {
 			*dot = '\0';
 			if (_rcs_append_component(rcs, start, &rev, &len)) {
@@ -523,7 +523,7 @@ rcs_resolve_tag(
 				return NULL;
 			}
 		}
-		
+
 		/*
 		 * We're at the last component. If it's not empty, resolve
 		 * it, then extract the branch.
@@ -551,7 +551,7 @@ rcs_resolve_tag(
 		}
 		FREE(copy);
 	}
-	
+
 	/*
 	 * If it's a branch, find the appropriate rev.
 	 */
@@ -561,7 +561,7 @@ rcs_resolve_tag(
 		return result;
 	} else {
 		const delta_t *delta;
-		
+
 		delta = rcs_get_delta(rcs, rev);
 		if (!delta) {
 			delta = _rcs_find_rev_before(rcs, rev);

@@ -36,18 +36,18 @@ typedef struct _delta_t {
 	time_t date;          /* The delta's date.      */
 	const char *author;   /* The delta's author.    */
 	const char *state;    /* The delta's state.     */
-	
+
 	hash_t *branches; /* Maps (char *) to (delta_t). */
-	
+
 	/* The delta's log entry. */
 	const char *log;
-	
+
 	/*
 	 * The delta's text. Verbatim for the head revision; otherwise a sequence
 	 * of deletions or additions.
 	 */
 	lines_t *text;
-	
+
 	/*
 	 * A pointer to the next revision, or NULL if it is at a branch tip or
 	 * the bottom of the trunk. During RCS file parsing this may point to
@@ -72,15 +72,15 @@ typedef struct _delta_t {
 static inline delta_t *
 delta_new_template(const char *rev) {
 	delta_t *delta;
-	
+
 	assert(rev);
-	
+
 	delta = MALLOC(1, delta_t);
 	delta->template = 1;
 	delta->revision = rev;
 	delta->log = NULL;
 	delta->text = NULL;
-	
+
 	return delta;
 }
 
@@ -96,7 +96,7 @@ delta_complete_template_nocopy(delta_t *delta,
 	assert(date >= 0);
 	assert(author);
 	assert(state);
-	
+
 	delta->template = 0;
 	delta->date = date;
 	delta->author = author;
@@ -114,7 +114,7 @@ delta_complete_text_nocopy(delta_t *delta, char *log, lines_t *text) {
 	assert(delta && !delta->template);
 	assert(log);
 	assert(text);
-	
+
 	delta->log = log;
 	delta->text = text;
 }
@@ -182,7 +182,7 @@ delta_get_state(const delta_t *delta) {
 static inline const delta_t *
 delta_get_branch(const delta_t *delta, const char *branch) {
 	const delta_t **base;
-	
+
 	assert(delta && !delta_is_template(delta));
 	base = (const delta_t **)hash_get(delta->branches, branch);
 	return (base ? *base : NULL);

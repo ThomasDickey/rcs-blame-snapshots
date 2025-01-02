@@ -38,7 +38,7 @@ typedef struct {
 typedef struct {
 	unsigned int capacity;
 	unsigned int count;
-	
+
 	line_t **lines; /* The line pointers in the buffer.     */
 } lines_t;
 

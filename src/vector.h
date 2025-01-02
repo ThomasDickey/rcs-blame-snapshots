@@ -30,10 +30,10 @@
 typedef struct {
 	dup_fn_t dup_fn;
 	free_fn_t free_fn;
-	
+
 	unsigned int capacity; /* Number of slots in vector.   */
 	unsigned int count;    /* Number of entries in vector. */
-	
+
 	void **data;           /* The slot array.              */
 } vector_t;
 
@@ -48,7 +48,7 @@ void vector_append_nocopy (vector_t *, void *);
 static inline void
 vector_append(vector_t *vector, const void *x) {
 	assert(vector);
-	
+
 	if (vector->dup_fn)
 		vector_append_nocopy(vector, (vector->dup_fn)(x));
 	else

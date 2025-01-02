@@ -30,7 +30,7 @@
 static inline unsigned int
 hash_fn(const char *key) {
 	unsigned int h, t;
-	
+
 	h = 0;
 	if (key) {
 		while (*key) {
@@ -49,7 +49,7 @@ hash_fn(const char *key) {
 hash_t *
 hash_new(dup_fn_t dup_fn, free_fn_t free_fn) {
 	hash_t *hash;
-	
+
 	hash = MALLOC(1, hash_t);
 	hash->dup_fn = dup_fn;
 	hash->free_fn = free_fn;
@@ -67,19 +67,19 @@ hash_t *
 hash_dup(const hash_t *hash) {
 	hash_t *result;
 	unsigned int i;
-	
+
 	assert(hash && hash->data);
-	
+
 	result = MALLOC(1, hash_t);
 	result->dup_fn = hash->dup_fn;
 	result->free_fn = hash->free_fn;
 	result->capacity = hash->capacity;
 	result->count = hash->count;
 	result->data = MALLOC(hash->capacity, vector_t *);
-	
+
 	for (i = 0; i < hash->capacity; i++)
 		result->data[i] = (hash->data[i] ? vector_dup(hash->data[i]) : NULL);
-	
+
 	return result;
 }
 
@@ -91,14 +91,14 @@ _hash_entry_new(
 	dup_fn_t dup_fn, free_fn_t free_fn, const char *key, void *value
 ) {
 	hash_entry_t *entry;
-	
+
 	entry = MALLOC(1, hash_entry_t);
 	entry->dup_fn = dup_fn;
 	entry->free_fn = free_fn;
 	entry->key = (key ? strdup(key) : NULL);
 	entry->hash = hash_fn(key);
 	entry->value = value;
-	
+
 	return entry;
 }
 
@@ -108,9 +108,9 @@ _hash_entry_new(
 static hash_entry_t *
 _hash_entry_dup(const hash_entry_t *entry) {
 	hash_entry_t *result;
-	
+
 	assert(entry);
-	
+
 	result = MALLOC(1, hash_entry_t);
 	result->dup_fn = entry->dup_fn;
 	result->free_fn = entry->free_fn;
@@ -121,7 +121,7 @@ _hash_entry_dup(const hash_entry_t *entry) {
 		? (entry->dup_fn)(entry->value)
 		: entry->value
 	);
-	
+
 	return result;
 }
 
@@ -131,7 +131,7 @@ _hash_entry_dup(const hash_entry_t *entry) {
 static void
 _hash_entry_free(hash_entry_t *entry) {
 	assert(entry);
-	
+
 	if (entry->key) FREE(entry->key);
 	if (entry->free_fn) (entry->free_fn)(entry->value);
 	FREE(entry);
@@ -151,17 +151,17 @@ _hash_insert_entry_nocopy(hash_t *hash, hash_entry_t *entry) {
 	unsigned int slot;
 	unsigned int i;
 	hash_entry_t *e;
-	
+
 	assert(hash);
 	assert(hash->data);
 	assert(entry);
-	
+
 	slot = entry->hash % hash->capacity;
 	if (!hash->data[slot])
 		hash->data[slot] = vector_new(
 			(dup_fn_t)_hash_entry_dup, (free_fn_t)_hash_entry_free
 		);
-	
+
 	for (i = 0; i < vector_count(hash->data[slot]); i++) {
 		e = (hash_entry_t *)vector_get(hash->data[slot], i);
 		if (
@@ -188,25 +188,25 @@ void
 hash_expand(hash_t *hash, unsigned int c) {
 	unsigned int i, j, cap;
 	vector_t **data;
-	
+
 	assert(hash);
 	assert(hash->data);
-	
+
 	if (c <= hash->capacity)
 		return;
-	
+
 	cap = hash->capacity;
 	hash->capacity = c;
 	data = hash->data;
 	hash->data = CALLOC(hash->capacity, vector_t *);
-	
+
 	for (i = 0; i < cap; i++)
 		if (data[i]) {
 			for (j = 0; j < vector_count(data[i]); j++)
 				_hash_insert_entry_nocopy(hash, (hash_entry_t *)vector_get(data[i], j));
 			vector_free_nofree(data[i]);
 		}
-	
+
 	FREE(data);
 }
 
@@ -217,12 +217,12 @@ hash_expand(hash_t *hash, unsigned int c) {
 void
 hash_insert_nocopy(hash_t *hash, const char *key, void *value) {
 	hash_entry_t *entry;
-	
+
 	assert(hash);
-	
+
 	if (hash->count++ * 2 > hash->capacity)
 		hash_expand(hash, hash->capacity * 2);
-	
+
 	entry = _hash_entry_new(hash->dup_fn, hash->free_fn, key, value);
 	_hash_insert_entry_nocopy(hash, entry);
 }
@@ -235,10 +235,10 @@ void **
 hash_get(hash_t *hash, const char *key) {
 	unsigned int h, i, slot;
 	hash_entry_t *e;
-	
+
 	assert(hash);
 	assert(hash->data);
-	
+
 	h = hash_fn(key);
 	slot = h % hash->capacity;
 	if (!hash->data[slot])
@@ -261,13 +261,13 @@ hash_get(hash_t *hash, const char *key) {
 void
 hash_free(hash_t *hash) {
 	unsigned int i;
-	
+
 	assert(hash);
 	assert(hash->data);
-	
+
 	for (i = 0; i < hash->capacity; i++)
 		if (hash->data[i]) vector_free(hash->data[i]);
-	
+
 	FREE(hash->data);
 	FREE(hash);
 }
@@ -279,10 +279,10 @@ hash_iter_t
 hash_iter(hash_t *hash) {
 	unsigned int i;
 	hash_iter_struct_t *iter;
-	
+
 	assert(hash);
 	assert(hash->data);
-	
+
 	for (i = 0; i < hash->capacity; i++)
 		if (hash->data[i]) {
 			iter = MALLOC(1, hash_iter_struct_t);
@@ -292,7 +292,7 @@ hash_iter(hash_t *hash) {
 
 			return iter;
 		}
-	
+
 	return NULL;
 }
 
@@ -302,7 +302,7 @@ hash_iter(hash_t *hash) {
 hash_iter_t
 hash_next(hash_iter_t iter) {
 	assert(iter);
-	
+
 	if (++iter->i < vector_count(*iter->base))
 		return iter;
 	while (++iter->base != iter->end)

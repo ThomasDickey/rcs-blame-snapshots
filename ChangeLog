@@ -1,3 +1,15 @@
+2025-01-01 Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* add "--format-date" option (request by Jonathan Leffler).
+
+	* fix stricter gcc 15 warnings
+
+	* update configure script macros
+
+	* config.guess: update to 2024-07-27
+
+	* config.sub: update to 2024-05-27
+
 2024-02-06 Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* change version to "1.4", with patch-date

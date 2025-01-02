@@ -29,6 +29,8 @@ const char * date_parse_zone (const char *, long *);
 time_t date_parse (const char *, int, long);
 time_t date_parse_rev (const char *);
 
+#define MAX_FORMAT_DATE 40
+
 char * date_format (time_t);
 char * date_sprintf (time_t, long);
 size_t date_sprintf_prefix (time_t, char *, size_t);

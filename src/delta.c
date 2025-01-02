@@ -28,26 +28,26 @@
 delta_t *
 delta_dup(const delta_t *delta) {
 	delta_t *result;
-	
+
 	assert(delta);
-	
+
 	result = MALLOC(1, delta_t);
 	result->template = delta->template;
 	result->revision = delta->revision;
-	
+
 	if (!delta->template) {
 		result->date = delta->date;
 		result->author = delta->author;
 		result->state = delta->state;
-		
+
 		result->branches = (delta->branches ? hash_dup(delta->branches) : NULL);
-		
+
 		result->log = delta->log;
 		result->text = (delta->text ? lines_dup(delta->text, delta->text->capacity) : NULL);
 
 		result->next = (delta->next ? delta_ref_dup(delta->next) : NULL);
 	}
-	
+
 	return result;
 }
 
@@ -64,6 +64,6 @@ delta_free(delta_t *delta) {
 		if (delta->text) lines_free(delta->text);
 		if (delta->next) delta_ref_free(delta->next);
 	}
-	
+
 	FREE(delta);
 }

@@ -36,17 +36,17 @@ working_extract_revision(const char *filename) {
 	char *rev, *line;
 	size_t len;
 	ssize_t read;
-	
+
 	assert(filename);
-	
+
 	stream = fopen(filename, "r");
 	if (!stream) {
 		error(0, errno, "%s", filename);
 		return NULL;
 	}
-	
+
 	rev = NULL;
-	
+
 	line = NULL;
 	len = 0;
 	while ( (read = getline(&line, &len, stream)) != -1)
@@ -54,12 +54,12 @@ working_extract_revision(const char *filename) {
 			break;
 	if (line)
 		FREE(line);
-	
+
 	if (!rev)
 		error(0, 0, "%s: no revision found", filename);
-	
+
 	if (fclose(stream))
 		error(0, errno, "%s", filename);
-	
+
 	return rev;
 }

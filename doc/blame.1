@@ -2,7 +2,7 @@
 .ds Rv \\$3
 .ds Dt \\$4
 ..
-.Id $Id: blame.1,v 1.5 2024/02/06 01:05:24 tom Exp $
+.Id $Id: blame.1,v 1.6 2025/01/02 01:21:02 tom Exp $
 .ds b \fBblame\fP
 .ds i \&\s-1ISO\s0
 .ds r \&\s-1RCS\s0
@@ -227,6 +227,10 @@ defaults to
 10:30:00 \*u of the 20th of the \*u time zone's current month and year.
 The date/time must be quoted if it contains spaces.
 .RE
+.TP
+.BR \-f ", " \-\^\-format-date "=\fIformat\fP"
+Format the date using \fIformat\fP (passed to \fBstrftime\fP).
+The default value is "%d-%b-%y".
 .TP
 .BR \-s ", " \-\^\-state "=\fIstate\fP"
 Retrieves the latest revision on the selected branch whose state is set to

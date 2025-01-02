@@ -30,14 +30,14 @@
 vector_t *
 vector_new(dup_fn_t dup_fn, free_fn_t free_fn) {
 	vector_t *vector;
-	
+
 	vector = MALLOC(1, vector_t);
 	vector->dup_fn = dup_fn;
 	vector->free_fn = free_fn;
 	vector->capacity = DEFAULT_VECTOR_CAPACITY;
 	vector->count = 0;
 	vector->data = MALLOC(vector->capacity, void *);
-	
+
 	return vector;
 }
 
@@ -48,9 +48,9 @@ vector_t *
 vector_dup(const vector_t *vector) {
 	vector_t *result;
 	unsigned int i;
-	
+
 	assert(vector);
-	
+
 	result = MALLOC(1, vector_t);
 	result->dup_fn = vector->dup_fn;
 	result->free_fn = vector->free_fn;
@@ -62,7 +62,7 @@ vector_dup(const vector_t *vector) {
 			result->data[i] = (result->dup_fn)(vector->data[i]);
 	else
 		memcpy(result->data, vector->data, result->count * sizeof(void *));
-	
+
 	return result;
 }
 
@@ -72,10 +72,10 @@ vector_dup(const vector_t *vector) {
 void
 vector_expand(vector_t *vector, unsigned int c) {
 	assert(vector);
-	
+
 	if (c <= vector->capacity)
 		return;
-	
+
 	vector->capacity = c;
 	vector->data = REALLOC(vector->data, vector->capacity, void *);
 }
@@ -86,7 +86,7 @@ vector_expand(vector_t *vector, unsigned int c) {
 void
 vector_append_nocopy(vector_t *vector, void *x) {
 	assert(vector);
-	
+
 	if (vector->count == vector->capacity)
 		vector_expand(vector, 2 * vector->count);
 	vector->data[vector->count] = x;
@@ -99,9 +99,9 @@ vector_append_nocopy(vector_t *vector, void *x) {
 void
 vector_free(vector_t *vector) {
 	unsigned int i;
-	
+
 	assert(vector);
-	
+
 	if (vector->free_fn)
 		for (i = 0; i < vector->count; i++)
 			(vector->free_fn)(vector->data[i]);

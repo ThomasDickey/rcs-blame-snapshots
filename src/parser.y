@@ -117,13 +117,13 @@ rcstext:
 		{
 			if ($2) {
 				int count;
-				
+
 				$<trunk>$.head = (delta_t *)rcs_get_delta(rcs, $2);
 				if (!$<trunk>$.head) {
 					yyerror(filename, rcs, "head revision is missing");
 					YYERROR;
 				}
-				
+
 				$<trunk>$.branches = hash_new(NULL, NULL);
 				count = _parser_count_deltalist(rcs, $<trunk>$.head, $<trunk>$.branches);
 				if (count < 0) {
@@ -148,7 +148,7 @@ rcstext:
 			rcs->access = $4;
 			rcs->symbols = $5;
 			rcs->locks = $6;
-			rcs->strict = $7;
+			rcs->strict = (int) $7;
 			rcs->comment = $8;
 			rcs->expand = $9;
 			rcs->lines = lines;
@@ -421,7 +421,7 @@ yyerror(
 	assert(filename);
 	assert(rcs);
 	assert(err);
-	
+
 	error(0, 0, "%s: %s at line %u", filename, err, yylloc.line);
 }
 
@@ -433,49 +433,49 @@ static int
 _parser_count_deltalist(const rcs_t *rcs, const delta_t *delta, hash_t *branches) {
 	int count;
 	const char *prev;
-	
+
 	if (delta_is_template(delta))
 		return -1;
-	
+
 	prev = NULL;
 	count = 0;
-	
+
 	while (delta) {
 		const delta_t *base;
 		hash_iter_t iter;
-		
+
 		count++;
-		
+
 		if (branches) {
 			const char *rev, *dot;
 			rev = delta_get_revision(delta);
 			dot = strrchr(rev, '.');
 			assert(dot);
-			
-			if (!prev || strncmp(prev, rev, dot - rev + 1)) {
-				char *copy = strndup(rev, dot - rev);
+
+			if (!prev || strncmp(prev, rev, (size_t)(dot - rev + 1))) {
+				char *copy = strndup(rev, (size_t)(dot - rev));
 				hash_insert(branches, copy, delta);
 				FREE(copy);
 				prev = rev;
 			}
 		}
-		
+
 		for_each_branch_base(base, delta, iter) {
 			int c;
-			
+
 			assert(base);
-			
+
 			if ((c = _parser_count_deltalist(rcs, base, NULL)) < 0) {
 				hash_iter_free(iter);
 				return -1;
 			}
-			
+
 			count += c;
 		}
 		hash_iter_free(iter);
-		
+
 		delta = delta_get_next(delta);
 	}
-	
+
 	return count;
 }

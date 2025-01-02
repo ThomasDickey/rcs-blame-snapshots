@@ -327,7 +327,7 @@ __getcwd (char *buf, size_t size)
 	  }
 	}
 
-      dirroom = dirp - dir;
+      dirroom = (size_t) (dirp - dir);
       namlen = _D_EXACT_NAMLEN (d);
 
       if (dirroom <= namlen)
@@ -377,7 +377,7 @@ __getcwd (char *buf, size_t size)
     free (dotlist);
 #endif
 
-  used = dir + allocated - dirp;
+  used = (size_t) (dir + allocated - dirp);
   memmove (dir, dirp, used);
 
   if (buf == NULL && size == 0)
