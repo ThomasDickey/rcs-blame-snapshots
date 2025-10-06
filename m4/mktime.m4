@@ -46,10 +46,14 @@ AC_CACHE_CHECK([for working mktime], ac_cv_func_working_mktime,
 static time_t time_t_max;
 static time_t time_t_min;
 
+static char TZ_GMT[] = "TZ=GMT0";
+static char TZ_JST[] = "TZ=JST-9";
+static char TZ_EST[] = "TZ=EST+3EDT+2,M10.1.0/00:00:00,M2.3.0/00:00:00";
+static char TZ_PST[] = "TZ=PST8PDT,M4.1.0,M10.5.0";
+
 /* Values we'll use to set the TZ environment variable.  */
 static char *tz_strings[] = {
-  (char *) 0, "TZ=GMT0", "TZ=JST-9",
-  "TZ=EST+3EDT+2,M10.1.0/00:00:00,M2.3.0/00:00:00"
+  (char *) 0, TZ_GMT, TZ_JST, TZ_EST
 };
 #define N_STRINGS (sizeof (tz_strings) / sizeof (tz_strings[0]))
 
@@ -65,7 +69,7 @@ spring_forward_gap (void)
      instead of "TZ=America/Vancouver" in order to detect the bug even
      on systems that don't support the Olson extension, or don't have the
      full zoneinfo tables installed.  */
-  putenv ("TZ=PST8PDT,M4.1.0,M10.5.0");
+  putenv (TZ_PST);
 
   tm.tm_year = 98;
   tm.tm_mon = 3;
@@ -88,8 +92,8 @@ static int
 mktime_test (time_t now)
 {
   return (mktime_test1 (now)
-	  && mktime_test1 ((time_t) (time_t_max - now))
-	  && mktime_test1 ((time_t) (time_t_min + now)));
+          && mktime_test1 ((time_t) (time_t_max - now))
+          && mktime_test1 ((time_t) (time_t_min + now)));
 }
 
 static int
@@ -119,17 +123,17 @@ bigtime_test (int j)
     {
       struct tm *lt = localtime (&now);
       if (! (lt
-	     && lt->tm_year == tm.tm_year
-	     && lt->tm_mon == tm.tm_mon
-	     && lt->tm_mday == tm.tm_mday
-	     && lt->tm_hour == tm.tm_hour
-	     && lt->tm_min == tm.tm_min
-	     && lt->tm_sec == tm.tm_sec
-	     && lt->tm_yday == tm.tm_yday
-	     && lt->tm_wday == tm.tm_wday
-	     && ((lt->tm_isdst < 0 ? -1 : 0 < lt->tm_isdst)
-		  == (tm.tm_isdst < 0 ? -1 : 0 < tm.tm_isdst))))
-	return 0;
+             && lt->tm_year == tm.tm_year
+             && lt->tm_mon == tm.tm_mon
+             && lt->tm_mday == tm.tm_mday
+             && lt->tm_hour == tm.tm_hour
+             && lt->tm_min == tm.tm_min
+             && lt->tm_sec == tm.tm_sec
+             && lt->tm_yday == tm.tm_yday
+             && lt->tm_wday == tm.tm_wday
+             && ((lt->tm_isdst < 0 ? -1 : 0 < lt->tm_isdst)
+                  == (tm.tm_isdst < 0 ? -1 : 0 < tm.tm_isdst))))
+        return 0;
     }
   return 1;
 }
@@ -153,7 +157,7 @@ year_2050_test (void)
      instead of "TZ=America/Vancouver" in order to detect the bug even
      on systems that don't support the Olson extension, or don't have the
      full zoneinfo tables installed.  */
-  putenv ("TZ=PST8PDT,M4.1.0,M10.5.0");
+  putenv (TZ_PST);
 
   t = mktime (&tm);
 
@@ -161,51 +165,58 @@ year_2050_test (void)
      to the correct answer that we can assume the discrepancy is
      due to leap seconds.  */
   return (t == (time_t) -1
-	  || (0 < t && answer - 120 <= t && t <= answer + 120));
+          || (0 < t && (time_t) answer - 120 <= t && t <= (time_t) answer + 120));
 }
 
 int
 main (void)
 {
+  int max_bits = 36;
   time_t t, delta;
-  int i, j;
+  int i, j, k;
 
   /* This test makes some buggy mktime implementations loop.
      Give up after a few seconds; a mktime slower than that
      isn't worth using anyway.  */
   alarm (3);
 
-  for (time_t_max = 1; 0 < time_t_max; time_t_max *= 2)
+  for (time_t_max = 1; 0 < time_t_max; time_t_max *= 2) {
+    if (++k > max_bits) break;
     continue;
+  }
   time_t_max--;
-  if ((time_t) -1 < 0)
-    for (time_t_min = -1; (time_t) (time_t_min * 2) < 0; time_t_min *= 2)
+  if ((time_t) -1 < 0) {
+    k = 0;
+    for (time_t_min = -1; (time_t) (time_t_min * 2) < 0; time_t_min *= 2) {
+      if (++k > max_bits) break;
       continue;
+    }
+  }
   delta = time_t_max / 997; /* a suitable prime number */
-  for (i = 0; i < N_STRINGS; i++)
+  for (i = 0; i < (int) N_STRINGS; i++)
     {
       if (tz_strings[i])
-	putenv (tz_strings[i]);
+        putenv (tz_strings[i]);
 
       for (t = 0; t <= time_t_max - delta; t += delta)
-	if (! mktime_test (t))
-	  return 1;
+        if (! mktime_test (t))
+          return 1;
       if (! (mktime_test ((time_t) 1)
-	     && mktime_test ((time_t) (60 * 60))
-	     && mktime_test ((time_t) (60 * 60 * 24))))
-	return 1;
+             && mktime_test ((time_t) (60 * 60))
+             && mktime_test ((time_t) (60 * 60 * 24))))
+        return 1;
 
-      for (j = 1; 0 < j; j *= 2)
-	if (! bigtime_test (j))
-	  return 1;
+      for (j = 1, k = 0; (++k <= max_bits) && (0 < j); j *= 2)
+        if (! bigtime_test (j))
+          return 1;
       if (! bigtime_test (j - 1))
-	return 1;
+        return 1;
     }
   return ! (irix_6_4_bug () && spring_forward_gap () && year_2050_test ());
 }]])],
-	       [ac_cv_func_working_mktime=yes],
-	       [ac_cv_func_working_mktime=no],
-	       [ac_cv_func_working_mktime=no])])
+               [ac_cv_func_working_mktime=yes],
+               [ac_cv_func_working_mktime=no],
+               [ac_cv_func_working_mktime=no])])
 if test $ac_cv_func_working_mktime = no; then
   AC_LIBOBJ([mktime])
 fi

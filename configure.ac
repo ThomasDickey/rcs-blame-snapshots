@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-# $Id: configure.ac,v 1.28 2024/02/05 09:21:33 tom Exp $
+# $Id: configure.ac,v 1.30 2025/10/06 21:36:38 tom Exp $
 
 AC_INIT([blame], [1.4], [dickey@invisible-island.net])
 AC_CONFIG_SRCDIR([src/blame.c])
@@ -23,10 +23,8 @@ CF_WITHOUT_X
 
 # Checks for programs.
 CF_PROG_CC
-AC_PROG_LEX
-AC_PROG_YACC
 AC_PROG_RANLIB
-AC_PROG_INSTALL
+CF_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PROG_AWK
 CF_AR_FLAGS
@@ -57,6 +55,10 @@ AC_SUBST(HAVE__BOOL)
 
 CF_DISABLE_ECHO
 CF_ENABLE_WARNINGS(Wno-undef)
+
+# Checks for programs which need headers
+AC_PROG_LEX
+AC_PROG_YACC
 
 # Checks for typedefs, structures, and compiler characteristics.
 dnl CF_LARGEFILE

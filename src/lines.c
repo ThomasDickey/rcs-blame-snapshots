@@ -44,7 +44,7 @@ _lines_expand(lines_t *lines, unsigned int c) {
  * Returns a new line buffer.
  */
 lines_t *
-lines_new() {
+lines_new(void) {
 	lines_t *lines = lines_new_with_capacity(DEFAULT_LINES_CAPACITY);
 
 	return lines;

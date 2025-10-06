@@ -15,11 +15,8 @@ AC_DEFUN([gl_FUNC_GETCWD_NULL],
         [
 #	 include <stdlib.h>
 #	 include <unistd.h>
-#	 ifndef getcwd
-	 char *getcwd ();
-#	 endif
 	 int
-	 main ()
+	 main (void)
 	 {
 	   if (chdir ("/") != 0)
 	     exit (1);

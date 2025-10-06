@@ -1,5 +1,6 @@
 # Check for stdbool.h that conforms to C99.
 
+dnl Copyright 2025 Thomas E. Dickey
 dnl Copyright (C) 2002-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -14,6 +15,8 @@ AC_DEFUN([AC_HEADER_STDBOOL],
      [AC_TRY_COMPILE(
 	[
 	  #include <stdbool.h>
+      #if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L
+      #else
 	  #ifndef bool
 	   "error: bool is not defined"
 	  #endif
@@ -26,6 +29,7 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  #ifndef true
 	   "error: true is not defined"
 	  #endif
+	  #endif /* __STDC_VERSION__ */
 	  #if true != 1
 	   "error: true is not 1"
 	  #endif
@@ -78,8 +82,11 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  *pq |= q;
 	  *pq |= ! q;
 	  /* Refer to every declared value, to avoid compiler optimizations.  */
-	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
-		  + !m + !n + !o + !p + !q + !pq);
+	  (void) a; (void) b; (void) c; (void) d;
+	  (void) e; (void) f; (void) g; (void) h;
+	  (void) i; (void) j; (void) k; (void) l;
+	  (void) m; (void) n; (void) o; (void) p;
+	  return 0;
 	],
 	[ac_cv_header_stdbool_h=yes],
 	[ac_cv_header_stdbool_h=no])])

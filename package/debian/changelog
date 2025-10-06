@@ -1,3 +1,9 @@
+rcs-blame (1.4+20251006) unstable; urgency=low
+
+  * maintenance updates
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Sun, 05 Oct 2025 20:12:36 -0400
+
 rcs-blame (1.4+20250101) unstable; urgency=low
 
   * maintenance updates

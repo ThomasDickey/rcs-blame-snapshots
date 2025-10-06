@@ -128,7 +128,7 @@ static const struct uparam_name uparam_names[] =
   { "header-col",     0, offsetof (struct uparams, header_col) },
   { "usage-indent",   0, offsetof (struct uparams, usage_indent) },
   { "rmargin",        0, offsetof (struct uparams, rmargin) },
-  { NULL }
+  { NULL,             0, 0 }
 };
 
 static void

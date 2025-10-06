@@ -1,6 +1,6 @@
 %define AppProgram blame
 %define AppVersion 1.4
-%define AppRelease 20250101
+%define AppRelease 20251006
 Name:  %{AppProgram}
 Version:  %{AppVersion}
 Release:  %{AppRelease}
@@ -45,6 +45,9 @@ make install DESTDIR="$RPM_BUILD_ROOT"
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Mon Oct 06 2025 Thomas E. Dickey
+- testing blame 1.4-20251006
 
 * Sun Feb 07 2021 Thomas Dickey
 - initial version

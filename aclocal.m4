@@ -1,4 +1,4 @@
-dnl $Id: aclocal.m4,v 1.16 2025/01/01 19:27:45 tom Exp $
+dnl $Id: aclocal.m4,v 1.17 2025/10/06 00:10:41 tom Exp $
 dnl ---------------------------------------------------------------------------
 dnl
 dnl Copyright 2022-2024,2025 by Thomas E. Dickey
@@ -213,6 +213,41 @@ define([CF_APPEND_TEXT],
 	$1="[$]{$1}$2"
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_ARG_DISABLE version: 3 updated: 1999/03/30 17:24:31
+dnl --------------
+dnl Allow user to disable a normally-on option.
+AC_DEFUN([CF_ARG_DISABLE],
+[CF_ARG_OPTION($1,[$2],[$3],[$4],yes)])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ARG_ENABLE version: 3 updated: 1999/03/30 17:24:31
+dnl -------------
+dnl Allow user to enable a normally-off option.
+AC_DEFUN([CF_ARG_ENABLE],
+[CF_ARG_OPTION($1,[$2],[$3],[$4],no)])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ARG_OPTION version: 6 updated: 2025/08/05 04:09:09
+dnl -------------
+dnl Restricted form of AC_ARG_ENABLE that ensures user doesn't give bogus
+dnl values.
+dnl
+dnl Parameters:
+dnl $1 = option name
+dnl $2 = help-string
+dnl $3 = action to perform if option is not default
+dnl $4 = action to perform if option is default
+dnl $5 = default option value (either 'yes' or 'no')
+AC_DEFUN([CF_ARG_OPTION],
+[AC_ARG_ENABLE([$1],[$2],[test "$enableval" != ifelse([$5],no,yes,no) && enableval=ifelse([$5],no,no,yes)
+	if test "$enableval" != "$5" ; then
+ifelse([$3],,[    :]dnl
+,[    $3]) ifelse([$4],,,[
+	else
+		$4])
+	fi],[enableval=$5 ifelse([$4],,,[
+	$4
+])dnl
+])])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_AR_FLAGS version: 9 updated: 2021/01/01 13:31:04
 dnl -----------
 dnl Check for suitable "ar" (archiver) options for updating an archive.
@@ -285,41 +320,6 @@ fi
 
 AC_SUBST(ARFLAGS)
 ])
-dnl ---------------------------------------------------------------------------
-dnl CF_ARG_DISABLE version: 3 updated: 1999/03/30 17:24:31
-dnl --------------
-dnl Allow user to disable a normally-on option.
-AC_DEFUN([CF_ARG_DISABLE],
-[CF_ARG_OPTION($1,[$2],[$3],[$4],yes)])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_ARG_ENABLE version: 3 updated: 1999/03/30 17:24:31
-dnl -------------
-dnl Allow user to enable a normally-off option.
-AC_DEFUN([CF_ARG_ENABLE],
-[CF_ARG_OPTION($1,[$2],[$3],[$4],no)])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_ARG_OPTION version: 5 updated: 2015/05/10 19:52:14
-dnl -------------
-dnl Restricted form of AC_ARG_ENABLE that ensures user doesn't give bogus
-dnl values.
-dnl
-dnl Parameters:
-dnl $1 = option name
-dnl $2 = help-string
-dnl $3 = action to perform if option is not default
-dnl $4 = action if perform if option is default
-dnl $5 = default option value (either 'yes' or 'no')
-AC_DEFUN([CF_ARG_OPTION],
-[AC_ARG_ENABLE([$1],[$2],[test "$enableval" != ifelse([$5],no,yes,no) && enableval=ifelse([$5],no,no,yes)
-	if test "$enableval" != "$5" ; then
-ifelse([$3],,[    :]dnl
-,[    $3]) ifelse([$4],,,[
-	else
-		$4])
-	fi],[enableval=$5 ifelse([$4],,,[
-	$4
-])dnl
-])])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_C11_NORETURN version: 4 updated: 2023/02/18 17:41:25
 dnl ---------------
@@ -423,7 +423,42 @@ case "$CC" in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_SIZEOF version: 4 updated: 2021/01/02 09:31:20
+dnl CF_CHECK_CACHE version: 13 updated: 2020/12/31 10:54:15
+dnl --------------
+dnl Check if we're accidentally using a cache from a different machine.
+dnl Derive the system name, as a check for reusing the autoconf cache.
+dnl
+dnl If we've packaged config.guess and config.sub, run that (since it does a
+dnl better job than uname).  Normally we'll use AC_CANONICAL_HOST, but allow
+dnl an extra parameter that we may override, e.g., for AC_CANONICAL_SYSTEM
+dnl which is useful in cross-compiles.
+dnl
+dnl Note: we would use $ac_config_sub, but that is one of the places where
+dnl autoconf 2.5x broke compatibility with autoconf 2.13
+AC_DEFUN([CF_CHECK_CACHE],
+[
+if test -f "$srcdir/config.guess" || test -f "$ac_aux_dir/config.guess" ; then
+	ifelse([$1],,[AC_CANONICAL_HOST],[$1])
+	system_name="$host_os"
+else
+	system_name="`(uname -s -r) 2>/dev/null`"
+	if test -z "$system_name" ; then
+		system_name="`(hostname) 2>/dev/null`"
+	fi
+fi
+test -n "$system_name" && AC_DEFINE_UNQUOTED(SYSTEM_NAME,"$system_name",[Define to the system name.])
+AC_CACHE_VAL(cf_cv_system_name,[cf_cv_system_name="$system_name"])
+
+test -z "$system_name" && system_name="$cf_cv_system_name"
+test -n "$cf_cv_system_name" && AC_MSG_RESULT(Configuring for $cf_cv_system_name)
+
+if test ".$system_name" != ".$cf_cv_system_name" ; then
+	AC_MSG_RESULT(Cached system name ($system_name) does not agree with actual ($cf_cv_system_name))
+	AC_MSG_ERROR("Please remove config.cache and try again.")
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_SIZEOF version: 6 updated: 2025/07/29 16:47:04
 dnl ---------------
 dnl Improve on AC_CHECK_SIZEOF for cases when the build-environment is
 dnl deficient, e.g., if someone tries to build in busybox.  Use the second
@@ -433,20 +468,20 @@ dnl By the way, 2.13/2.52 differ in AC_CHECK_SIZEOF regarding the types they
 dnl can detect; the former includes only stdio.h for types while the latter
 dnl includes several header files.
 AC_DEFUN([CF_CHECK_SIZEOF],[
-AC_CHECK_SIZEOF([$1],[$2])
-if test "${ac_cv_type_$1+set}" = set; then
-	cf_cv_sizeof="$ac_cv_sizeof_$1"
-	if test "${ac_cv_sizeof_$1+set}" != set; then
+AC_CHECK_SIZEOF($@)
+if test "${AS_TR_SH([ac_cv_type_$1])+set}" = set; then
+	cf_my_sizeof="$AS_TR_SH([ac_cv_sizeof_$1])"
+	if test "${AS_TR_SH([ac_cv_sizeof_$1])+set}" != set; then
 		AC_MSG_WARN(using $2 for sizeof $1)
-		ac_cv_sizeof_$1=$2
-	elif test "x${ac_cv_sizeof_$1}" = x0; then
+		AS_TR_SH([ac_cv_sizeof_$1])=$2
+	elif test "x${AS_TR_SH([ac_cv_sizeof_$1])}" = x0; then
 		AC_MSG_WARN([sizeof $1 not found, using $2])
-		ac_cv_sizeof_$1=$2
+		AS_TR_SH([ac_cv_sizeof_$1])=$2
 	fi
-	if test "x$ac_cv_sizeof_$1" != "x$cf_cv_sizeof"
+	if test "x$AS_TR_SH([ac_cv_sizeof_$1])" != "x$cf_my_sizeof"
 	then
-		CF_UPPER(cf_cv_type,sizeof_$1)
-		sed -e "s/\\([[ 	]]${cf_cv_type}[[ 	]]\\).*/\\1$ac_cv_sizeof_$1/" confdefs.h >conftest.val
+		CF_UPPER(cf_cv_type,AS_TR_SH([sizeof_$1]))
+		sed -e "s/\\([[ 	]]${cf_cv_type}[[ 	]]\\).*/\\1$AS_TR_SH([ac_cv_sizeof_$1])/" confdefs.h >conftest.val
 		mv conftest.val confdefs.h
 	fi
 fi
@@ -594,6 +629,11 @@ if test -z "$CYGPATH_W"; then
 fi
 AC_SUBST(CYGPATH_W)
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_DIRNAME version: 5 updated: 2020/12/31 20:19:42
+dnl ----------
+dnl "dirname" is not portable, so we fake it with a shell script.
+AC_DEFUN([CF_DIRNAME],[$1=`echo "$2" | sed -e 's%/[[^/]]*$%%'`])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_DISABLE_ECHO version: 14 updated: 2021/09/04 06:35:04
 dnl ---------------
@@ -946,6 +986,26 @@ rm -rf ./conftest*
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_GLOB_FULLPATH version: 2 updated: 2024/08/03 12:34:02
+dnl ----------------
+dnl Use this in case-statements to check for pathname syntax, i.e., absolute
+dnl pathnames.  The "x" is assumed since we provide an alternate form for DOS.
+AC_DEFUN([CF_GLOB_FULLPATH],[
+AC_REQUIRE([CF_WITH_SYSTYPE])dnl
+case "$cf_cv_system_name" in
+(cygwin*|msys*|mingw32*|mingw64|os2*)
+	GLOB_FULLPATH_POSIX='/*'
+	GLOB_FULLPATH_OTHER='[[a-zA-Z]]:[[\\/]]*'
+	;;
+(*)
+	GLOB_FULLPATH_POSIX='/*'
+	GLOB_FULLPATH_OTHER=$GLOB_FULLPATH_POSIX
+	;;
+esac
+AC_SUBST(GLOB_FULLPATH_POSIX)
+AC_SUBST(GLOB_FULLPATH_OTHER)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 10 updated: 2018/12/10 20:09:41
 dnl -------------
 dnl Check if we must define _GNU_SOURCE to get a reasonable value for
@@ -1287,6 +1347,34 @@ CF_ACVERSION_CHECK(2.52,
 CF_CC_ENV_FLAGS
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_PROG_INSTALL version: 12 updated: 2025/09/28 16:56:33
+dnl ---------------
+dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
+dnl misc/tabset install won't work properly.  Usually this happens only when
+dnl using the fallback mkinstalldirs script
+AC_DEFUN([CF_PROG_INSTALL],
+[AC_PROG_INSTALL
+AC_REQUIRE([CF_GLOB_FULLPATH])dnl
+if test "x$INSTALL" = "x./install-sh -c"; then
+	if test -f /usr/sbin/install ; then
+		case "$host_os" in
+		(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnuabielfv*|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
+			INSTALL=/usr/sbin/install 
+			;;
+		esac
+	fi
+fi
+case x$INSTALL in
+(x$GLOB_FULLPATH_POSIX|x$GLOB_FULLPATH_OTHER)
+	;;
+(*)
+	CF_DIRNAME(cf_dir,$INSTALL)
+	test -z "$cf_dir" && cf_dir=.
+	INSTALL="`cd \"$cf_dir\" && pwd`"/"`echo "$INSTALL" | sed -e 's%^.*/%%'`"
+	;;
+esac
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Remove a given option from CFLAGS/CPPFLAGS
@@ -1430,7 +1518,27 @@ AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LIBS)
 [])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 68 updated: 2024/11/09 18:07:29
+dnl CF_WITH_SYSTYPE version: 1 updated: 2013/01/26 16:26:12
+dnl ---------------
+dnl For testing, override the derived host system-type which is used to decide
+dnl things such as the linker commands used to build shared libraries.  This is
+dnl normally chosen automatically based on the type of system which you are
+dnl building on.  We use it for testing the configure script.
+dnl
+dnl This is different from the --host option: it is used only for testing parts
+dnl of the configure script which would not be reachable with --host since that
+dnl relies on the build environment being real, rather than mocked up.
+AC_DEFUN([CF_WITH_SYSTYPE],[
+CF_CHECK_CACHE([AC_CANONICAL_SYSTEM])
+AC_ARG_WITH(system-type,
+	[  --with-system-type=XXX  test: override derived host system-type],
+[AC_MSG_WARN(overriding system type to $withval)
+	cf_cv_system_name=$withval
+	host_os=$withval
+])
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_XOPEN_SOURCE version: 69 updated: 2025/07/26 14:09:49
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -1490,7 +1598,7 @@ case "$host_os" in
 	cf_xopen_source="-D_SGI_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
+(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnuabielfv*|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
 	CF_GNU_SOURCE($cf_XOPEN_SOURCE)
 	;;
 linux*musl)
